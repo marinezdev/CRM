@@ -1,0 +1,236 @@
+﻿
+@{
+    ViewBag.Title = "UnidadNegocio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+<style>
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="d-flex align-items-end row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <h5 class="card-header">
+                                    UNIDAD DE NEGOCIO: @ViewBag.Oportunidad[0].CatUnidadNegocio.Nombre
+                                    <br />
+                                    MONTO TOTAL: <strong><span id="totalSuma"> $ 0.00</span></strong>
+                                </h5>
+                                <div class="card-body">
+                                    <div class="table-responsive text-nowrap">
+                                        <table class="table table-hover table-striped" id="TableListaOportunidades">
+                                            <thead>
+                                                <tr>
+                                                    <th>Oportunidad </th>
+                                                    <th>Importe </th>
+                                                    <th>Empresa </th>
+                                                    <th>Estatus</th>
+                                                    <th>Progreso</th>
+                                                    <th>Fecha cierre </th>
+                                                    <th>Fecha creación </th>
+                                                    <th>Tipo </th>
+                                                    <th>Prioridad </th>
+                                                    <th>Propietario </th>
+                                                    <th>Unidad de negocio </th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Oportunidad </th>
+                                                    <th>Importe </th>
+                                                    <th>Empresa </th>
+                                                    <th>Estatus</th>
+                                                    <th>Progreso</th>
+                                                    <th>Fecha cierre </th>
+                                                    <th>Fecha creación </th>
+                                                    <th>Tipo </th>
+                                                    <th>Prioridad </th>
+                                                    <th>Propietario </th>
+                                                    <th>Unidad de negocio </th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody class="table-border-bottom-0">
+                                                @{
+                                                    if (ViewBag.Oportunidad != null)
+                                                    {
+                                                        foreach (var item1 in ViewBag.Oportunidad)
+                                                        {
+                                                            <tr>
+                                                                <td onclick="MostrarOportunidad(@item1.Id)"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong style="cursor: pointer;">@item1.Nombre</strong></td>
+                                                                <td class="valor" style="text-align:right">@item1.Importe</td>
+                                                                <td>@item1.Empresa</td>
+                                                                <td><span class="badge bg-label-primary me-1">@item1.CatEstatusOpurtunidad.Nombre</span></td>
+                                                                <td class="text-center">
+                                                                    @if (item1.Progreso != null)
+                                                                    {
+                                                                        <span class="badge bg-label-primary me-1">@item1.Progreso %</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge bg-label-primary me-1">0%</span>
+                                                                    }
+                                                                </td>
+                                                                <td>@Convert.ToDateTime(@item1.FechaCierre).ToString("yyyy-MM-dd")</td>
+                                                                <td>@Convert.ToDateTime(@item1.FechaRegistro).ToString("yyyy-MM-dd")</td>
+                                                                <td>@item1.CatTipoOportunidad.Nombre</td>
+                                                                <td>@item1.CatPrioridad.Nombre</td>
+                                                                <td>@item1.Propietario</td>
+                                                                <td>@item1.CatUnidadNegocio.Nombre</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var tabla = $('#TableListaOportunidades').DataTable({
+            scrollY: 420,
+            scrollX: true,
+            columnDefs: [
+                {
+                    //"orderable": false,
+                    //"targets": [0, 8],
+                    //"width": "0px"
+                }
+            ],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+        });
+
+        var total = 0;
+
+        function calcularSuma() {
+            total = 0;
+            tabla.rows({ search: 'applied' }).nodes().to$().find('.valor').each(function () {
+                var valorTexto = $(this).text().replace('$', '').replace(/,/g, '');
+                total += parseFloat(valorTexto);
+            });
+            if (formatProdPrice(total.toFixed(2)) == '$NaN') {
+                $('#totalSuma').text('$ 0.00');
+            } else {
+                $('#totalSuma').text('' + formatProdPrice(total.toFixed(2)));
+            }
+
+        }
+
+        tabla.on('draw.dt', calcularSuma);
+
+        calcularSuma(); // Calcular la suma inicial al cargar la página
+
+
+        $('#TableListaOportunidades_filter input').on('keyup', function () {
+            alert(1);
+            calcularSuma();
+        });
+    });
+
+    function formatProdPrice(value) {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function MostrarOportunidad(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Oportunidad", "Oportunidad")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+    $('#Nv1Oportunidad').addClass("active open");
+    $('#Nv1OportunidadLista').addClass("active");
+</script>

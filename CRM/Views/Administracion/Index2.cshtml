@@ -1,0 +1,749 @@
+﻿
+@{
+    ViewBag.Title = "Index2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    h6, .h6 {
+        font-size: 0.8rem;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-6 mb-1">
+                <div class="card h-100 border border-success mb-3">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 text-center">
+                            <h5 class="m-0 me-2 ">Porcentaje oportunidades cerradas ganadas</h5>
+                            <span class="badge bg-label-success p-2"><i class="bx bxs-trophy text-success"></i></span>
+                            <small class="text-muted">
+                                Año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </small>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-end row">
+                        <div class="col-sm-7 text-center">
+                            <h2 class="mb-2" id="Label_TotalPorcentaje_OportunidadGanada" style="font-size: 50px; color: #38a100">0 % <br /></h2>
+                            <h2 class="mb-2" id="Label_TotalImporte_OportunidadGanada" style="font-size: 19px;">$ 0 <br /></h2>
+                        </div>
+                        <div class="col-sm-5 text-center text-sm-left">
+                            <img src="~/assets/img/illustrations/win-award-trophy-cup-icon-sign-flat-style-vector-illustration-isolated-white-background_503038-367.jpg" height="100" alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png" data-app-light-img="illustrations/man-with-laptop-light.png" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12 col-6 ">
+                <div class="card  h-100 border border-primary">
+                    <h5 class="card-header text-center">Objetivos 2023</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <canvas id="GraficaTareasDona" width="100%" height="200"></canvas>
+                            </div>
+                            <div class="col-md-5">
+                                <div id="TablaEstatusTarea"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-7 col-md-12 col-6 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">Oportunidades (Estatus)</h5>
+                            <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                            <small class="text-muted">
+                                Total año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </small>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="justify-content-between align-items-center mb-3">
+                            <div class="d-flex flex-column align-items-center gap-1">
+
+                                <span>Distribución de oportunidades</span>
+                            </div>
+                            <div id="GraficaPocentaje" style="height: 150px"><img src="~/assets/img/icons/SoupyLazyGnatcatcher-size_restricted.gif" width="100%" height="100%" /></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12 col-6 mb-1">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            <span>Distribución de oportunidades (Estatus)</span>
+                        </div>
+                        <h2 class="mb-2 text-center" id="Label_Total_OportunidadesEstatus">0</h2>
+                        <ul class="p-0 m-0" id="TablaOportunidadesEstatus">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-7 col-md-12 col-6 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Oportunidades (Estatus - Importe)</h5>
+                            <span class="badge bg-label-primary p-2"><i class="bx bxs-dollar-circle text-primary"></i></span>
+                            <small class="text-muted">
+                                Total año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </small>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="justify-content-between align-items-center mb-3">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <span>Distribución de oportunidades</span>
+                            </div>
+                            <div id="GraficaImportes" style="height: 150px"><img src="~/assets/img/icons/SoupyLazyGnatcatcher-size_restricted.gif" width="100%" height="100%" /></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12 col-6 mb-1">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            <span>Oportunidades (Estatus - Importe)</span>
+                        </div>
+                        <h2 class="mb-2 text-center" id="Label_Total_OportunidadesImporte">0</h2>
+                        <ul class="p-0 m-0" id="TablaOportunidadesImporte">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-6 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Oportunidades (Unidad de negocio)</h5>
+                            <span class="badge bg-label-primary p-2"><i class="bx bxs-box text-primary"></i></span>
+                            <small class="text-muted">
+                                Total año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </small>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="justify-content-between align-items-center mb-3">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <h2 class="mb-2" id=""> <br /></h2>
+                                <span>Distribución de oportunidades</span>
+                            </div>
+                            <div id="GraficaImportesUnidadNegocio" style="height: 150px"><img src="~/assets/img/icons/SoupyLazyGnatcatcher-size_restricted.gif" width="100%" height="100%" /></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-6 mb-1">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            <span>Oportunidades (Unidad de negocio)</span>
+                        </div>
+                        <ul class="p-0 m-0" id="TablaOportunidadesUnidadNegocio">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-6 mb-1">
+                <div class="card h-100  mb-3">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <canvas id="densityChartPorcentajesDocumentosLista" width="600" height="210"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/chart.js/chart.min.js"></script>
+@*<script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>*@
+
+
+<script>
+    $(document).ready(function () {
+        CargaImportes();
+        CargaImportesUsuarios();
+        CargaImportesUnidadNegocio();
+    });
+
+    function CargaImportes() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Administracion_Oportunidad_Dhasbord_Importe", "Oportunidad")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                $('#GraficaPocentaje').html('');
+                $('#GraficaPocentaje').html('<canvas id="densityChartAvance" width="100%" height="200"></canvas>');
+                $('#GraficaImportes').html('');
+                $('#GraficaImportes').html('<canvas id="GraficaImportesDona" width="100%" height="200"></canvas>');
+                PintaGraficaEstatus(data);
+                PintaGraficaImportes(data);
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaGraficaImportes(data) {
+        const Nombres = [];
+        const Porcentajes = [];
+        const BackgroundColor = [];
+        const HoverBackgroundColor = [];
+        var SumTotal = 0;
+        var Tabla = "";
+        var TotalOportunidad = 0;
+        var TotalOportunidadPorcentaje = 0;
+        for (var b = 0; b < data.length; b++) {
+            SumTotal += data[b].OportunidadImporte.Valor;
+            if (data[b].CatEstatusOpurtunidad.Nombre == 'CERRADO GANADO') {
+                TotalOportunidad = data[b].OportunidadImporte.Valor;
+            }
+        }
+
+        for (var b = 0; b < data.length; b++) {
+            var Porcentaje = 0;
+            Nombres.push(data[b].CatEstatusOpurtunidad.Nombre);
+            Porcentaje = ((data[b].OportunidadImporte.Valor * 100) / SumTotal).toFixed(2);
+            Porcentajes.push(Porcentaje).toFixed(2);
+            BackgroundColor.push(data[b].CatEstatusOpurtunidad.BackgroundColor);
+            HoverBackgroundColor.push(data[b].CatEstatusOpurtunidad.HoverBackgroundColor);
+
+            Tabla += " <li class='d-flex mb-2 pb-1'>" +
+                "<div class='avatar flex-shrink-0 me-3'>" +
+                "<span class='avatar-initial rounded bg-label-" + data[b].CatEstatusOpurtunidad.Color + "'>" +
+                "<i class='bx bx-" + data[b].CatEstatusOpurtunidad.Icono + "'></i>" +
+                "</span>" +
+                "</div>" +
+                "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                "<div class='me-2'>" +
+                "<h6 class='mb-0'>" + data[b].CatEstatusOpurtunidad.Nombre + "</h6>" +
+                "<small class='text-muted'>" + Porcentaje + " %</small>" +
+                "</div>" +
+                "<div class='user-progress'>" +
+                "<small class='fw-semibold'>$" + data[b].OportunidadImporte.Valor.toLocaleString('en') + "</small>" +
+                "</div>" +
+                "</div>" +
+                "</li>";
+
+            if (data[b].CatEstatusOpurtunidad.Nombre == 'CERRADO GANADO') {
+                TotalOportunidadPorcentaje = Porcentaje;
+            }
+
+        }
+
+        $('#Label_Total_OportunidadesImporte').html("$" + SumTotal.toLocaleString('en'));
+        $('#TablaOportunidadesImporte').html(Tabla);
+
+        $('#Label_TotalImporte_OportunidadGanada').html("$" + TotalOportunidad.toLocaleString('en'));
+        $('#Label_TotalPorcentaje_OportunidadGanada').html(TotalOportunidadPorcentaje + "%");
+
+
+
+        var densityCanvas = document.getElementById("GraficaImportesDona");
+
+        Chart.defaults.global.defaultFontFamily = "Arial, sans-serifapple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+        Chart.defaults.global.defaultFontSize = 14;
+
+        var densityData = {
+            //options: {
+            //    plugins: {
+            //        legend: {
+            //            display: false,
+            //        }
+            //    }
+            //},
+
+            data: Porcentajes,
+            backgroundColor: BackgroundColor,
+            borderWidth: 1,
+            hoverBorderWidth: 0,
+            hoverBackgroundColor: HoverBackgroundColor,
+        };
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        fontSize: 0
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    display: false // Hide Y axis labels
+                },
+                x: {
+                    display: false // Hide X axis labels
+                }
+            }
+        };
+
+        var barChart = new Chart(densityCanvas, {
+            type: 'bar',
+            data: {
+                labels: Nombres,
+                datasets: [densityData],
+            },
+            options: chartOptions
+        });
+    }
+
+    function PintaGraficaEstatus(data) {
+        const Nombres = [];
+        const Porcentajes = [];
+        const BackgroundColor = [];
+        const HoverBackgroundColor = [];
+        var SumTotal = 0;
+        var Tabla = "";
+        for (var b = 0; b < data.length; b++) {
+            SumTotal += data[b].Total;
+        }
+
+        console.log(data);
+
+        for (var b = 0; b < data.length; b++) {
+            var Porcentaje = 0;
+            Nombres.push(data[b].CatEstatusOpurtunidad.Nombre);
+            Porcentaje = ((data[b].Total * 100) / SumTotal);
+            Porcentajes.push(data[b].Total);
+            BackgroundColor.push(data[b].CatEstatusOpurtunidad.BackgroundColor);
+            HoverBackgroundColor.push(data[b].CatEstatusOpurtunidad.HoverBackgroundColor);
+
+            Tabla += " <li class='d-flex mb-2 pb-1'>" +
+                "<div class='avatar flex-shrink-0 me-3'>" +
+                "<span class='avatar-initial rounded bg-label-" + data[b].CatEstatusOpurtunidad.Color + "'>" +
+                "<i class='bx bx-" + data[b].CatEstatusOpurtunidad.Icono + "'></i>" +
+                "</span>" +
+                "</div>" +
+                "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                "<div class='me-2'>" +
+                "<h6 class='mb-0'>" + data[b].CatEstatusOpurtunidad.Nombre + "</h6>" +
+                "<small class='text-muted'>" + Porcentaje.toFixed(2) + " %</small>" +
+                "</div>" +
+                "<div class='user-progress'>" +
+                "<small class='fw-semibold'>" + data[b].Total + "</small>" +
+                "</div>" +
+                "</div>" +
+                "</li>";
+
+        }
+
+        $('#Label_Total_OportunidadesEstatus').html(SumTotal);
+        $('#TablaOportunidadesEstatus').html(Tabla);
+
+
+
+        var densityCanvas = document.getElementById("densityChartAvance");
+
+        Chart.defaults.global.defaultFontFamily = "Arial, sans-serifapple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+        Chart.defaults.global.defaultFontSize = 14;
+
+        var densityData = {
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            },
+
+            data: Porcentajes,
+            backgroundColor: BackgroundColor,
+            borderWidth: 1,
+            hoverBorderWidth: 0,
+            hoverBackgroundColor: HoverBackgroundColor,
+        };
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false
+        };
+
+        var barChart = new Chart(densityCanvas, {
+            type: 'bar',
+            data: {
+                labels: Nombres,
+                datasets: [densityData],
+            },
+            options: chartOptions
+        });
+    }
+
+
+    function CargaImportesUsuarios() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Administracion_Oportunidad_Dhasbord_Seleccionar_Usuarios", "Oportunidad")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                const obj = JSON.parse(data);
+                PintGraficaImportesUsuarios(obj);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintGraficaImportesUsuarios(obj) {
+
+
+        const consulta = [];
+
+        var flag = false;
+        var NombreUsuario = "";
+        var SumTotal = 0;
+        obj.forEach(function (item) {
+            Object.keys(item).forEach(function (key) {
+                if (flag) {
+                    var OportunidadesEstatusUsuairo = new Object();
+                    OportunidadesEstatusUsuairo.TicketsAsignedTo = NombreUsuario;
+                    OportunidadesEstatusUsuairo.TicketsCount = (item[key]).toFixed(2);
+                    OportunidadesEstatusUsuairo.TicketsClasificationType = key;
+                    consulta.push(OportunidadesEstatusUsuairo);
+                    SumTotal += item[key];
+                } else {
+                    NombreUsuario = item[key];
+                    flag = true;
+                }
+            });
+            flag = false;
+
+        })
+
+
+
+        console.log(SumTotal);
+
+        const labels = Object.keys(
+            consulta.reduce((obj, label) => (obj[label.TicketsAsignedTo] = true, obj), {})
+        );
+
+        const colors = {
+            "EN PROCESO": "#d7f5fc",
+            "CERRADO PERDIDA": "#dcdfe1",
+            "CERRADO GANADO": "#e8fadf",
+            "CANCELADO": "#ffe0db",
+            "SUSPENDIDO": "#fff2d6"
+        };
+
+        const datasetsObject = consulta.reduce((obj, item) => {
+            obj[item.TicketsClasificationType] = obj[item.TicketsClasificationType] || {};
+            obj[item.TicketsClasificationType][item.TicketsAsignedTo] = item.TicketsCount;
+            return obj;
+        }, {});
+
+        const datasets = Object.keys(datasetsObject).map(name => ({
+            label: name,
+            backgroundColor: colors[name],
+            data: labels.map(l => datasetsObject[name][l] || 0)
+        }));
+
+        const context = document.getElementById("densityChartPorcentajesDocumentosLista").getContext("2d");
+        Chart.defaults.global.defaultFontFamily = "Arial, sans-serifapple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+        Chart.defaults.global.defaultFontSize = 15;
+
+        const myBarChart = new Chart(context, {
+            type: "horizontalBar",
+            data: { labels, datasets },
+            options: {
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function (t, d) {
+                            var xLabel = d.datasets[t.datasetIndex].label;
+                            var yLabel = t.xLabel >= 1000 ? '$' + t.xLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.xLabel;
+                            /*var yLabel = t.yLabel >= 1000 ? '$' + t.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.yLabel;*/
+                            return xLabel + ': ' + yLabel;
+                        }
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        ticks: {
+                            callback: function (value, index, values) {
+                                if (parseInt(value) >= 1000) {
+                                    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                } else {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        scaleFontSize: 8
+                    }],
+                    yAxes: [{ stacked: true, scaleFontSize: 8 }]
+                },
+                responsive: true,
+                /*scales: {*/
+                //    xAxes: [{
+                //        ticks: {
+                //            callback: function (value, index, values) {
+                //                if (parseInt(value) >= 1000) {
+                //                    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                //                } else {
+                //                    return '$' + value;
+                //                }
+                //            }
+                //        },
+                //    }],
+
+                /*}*/
+            }
+        });
+    }
+
+
+    function CargaImportesUnidadNegocio() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Administracion_Oportunidad_Dhasbord_Importe_UnidadDeNegocio", "Oportunidad")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('#GraficaImportesUnidadNegocio').html('');
+                $('#GraficaImportesUnidadNegocio').html('<canvas id="GraficaImportesUnidadNegocioDona" width="100%" height="200"></canvas>');
+
+                PintaGraficaImportesUnidadNegocio(data);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaGraficaImportesUnidadNegocio(data) {
+
+        console.log(data);
+
+        const Nombres = [];
+        const Porcentajes = [];
+        const BackgroundColor = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff', '#ffcd56','#c9cbcf','Brown'];
+        const HoverBackgroundColor = [];
+        var SumTotal = 0;
+        var Tabla = "";
+        for (var b = 0; b < data.length; b++) {
+            SumTotal += data[b].OportunidadImporte.Valor;
+
+        }
+
+        for (var b = 0; b < data.length; b++) {
+            var Porcentaje = 0;
+            Nombres.push(data[b].CatUnidadNegocio.Nombre);
+            Porcentaje = ((data[b].OportunidadImporte.Valor * 100) / SumTotal).toFixed(2);
+            Porcentajes.push(Porcentaje).toFixed(2);
+
+            Tabla += " <li class='d-flex mb-2 pb-1'>" +
+                "<div class='avatar flex-shrink-0 me-3'>" +
+                "<span class='avatar-initial rounded bg-label-primary'>" +
+                "<i class='bx bx-bulb'></i>" +
+                "</span>" +
+                "</div>" +
+                "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                "<div class='me-2'>" +
+                "<h6 class='mb-0'>" + data[b].CatUnidadNegocio.Nombre + "</h6>" +
+                "<small class='text-muted'>" + Porcentaje +" % </small>" +
+                "</div>" +
+                "<div class='user-progress'>" +
+                "<small class='fw-semibold'>$" + data[b].OportunidadImporte.Valor.toLocaleString('en') + "</small>" +
+                "</div>" +
+                "</div>" +
+                "</li>";
+        }
+
+        $('#Label_Total_OportunidadesUnidadNegocio').html("$" + SumTotal.toLocaleString('en'));
+        $('#TablaOportunidadesUnidadNegocio').html(Tabla);
+
+
+
+        var densityCanvas = document.getElementById("GraficaImportesUnidadNegocioDona");
+
+        Chart.defaults.global.defaultFontFamily = "Arial, sans-serifapple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+        Chart.defaults.global.defaultFontSize = 14;
+
+        var densityData = {
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            },
+
+            data: Porcentajes,
+            backgroundColor: BackgroundColor,
+            borderWidth: 1,
+            hoverBorderWidth: 0,
+            /*hoverBackgroundColor: HoverBackgroundColor,*/
+        };
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: false // Hide legend
+            },
+            scales: {
+                y: {
+                    display: false // Hide Y axis labels
+                },
+                x: {
+                    display: false // Hide X axis labels
+                }
+            }
+        };
+
+        var barChart = new Chart(densityCanvas, {
+            type: 'bar',
+            data: {
+                   labels: Nombres,
+                datasets: [densityData],
+            },
+            options: chartOptions
+        });
+    }
+</script>
+
+
+<script>
+    $('#Nv1Dashboard2').addClass("active open");
+</script>
+

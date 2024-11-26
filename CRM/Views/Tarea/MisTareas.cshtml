@@ -1,0 +1,188 @@
+﻿
+@{
+    ViewBag.Title = "MisTareas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+</style>
+
+<div class="col-xl-12">
+    <div class="nav-align-top mb-4">
+        <ul class="nav nav-tabs nav-fill" role="tablist">
+            <li class="nav-item">
+                <button type="button"
+                        class="nav-link active"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#navs-justified-home"
+                        aria-controls="navs-justified-home"
+                        aria-selected="true">
+                    <i class="tf-icons bx bxs-book-add text-primary"></i> Mis Tareas
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover table-striped" id="TableListaTareas">
+                        <thead>
+                            <tr>
+                                <th>Titulo </th>
+                                <th>Fecha vencimiento </th>
+                                <th>Entidad</th>
+                                <th>Tipo tarea </th>
+                                <th>Prioridad </th>
+                                <th>Estatus  </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @{
+                                if (ViewBag.Tareas != null)
+                                {
+                                    foreach (var item1 in ViewBag.Tareas)
+                                    {
+                                        <tr class=" @switch (item1.Tarea.CatEstatusTarea.Nombre)
+                                            {
+                                            case "COMPLETADA" :
+                                            @Html.Raw("table-success") ;
+                                            break;
+                                            case "CANCELADA" :
+                                            @Html.Raw("table-danger") ;
+                                            break;
+                                            default:
+                                            @Html.Raw("") ;
+                                            break;
+                                            }
+                                            ">
+                                            <td onclick="MostrarTarea(@item1.TareaEntidad.CatEntidad.Id , @item1.TareaEntidad.IdValorEntidad)"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong style="cursor: pointer;">@item1.Tarea.Titulo</strong></td>
+                                            <td>@Convert.ToDateTime(@item1.Tarea.FechaVencimiento).ToString("dd-MM-yyyy")</td>
+                                            <td>@item1.TareaEntidad.CatEntidad.Nombre</td>
+                                            <td>@item1.TareaPersona.CatTipoTarea.Nombre</td>
+                                            <td>@item1.TareaPersona.CatPrioridad.Nombre</td>
+                                            <td><span class="badge bg-label-primary me-1">@item1.Tarea.CatEstatusTarea.Nombre</span></td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+    $('#TableListaTareas').DataTable({
+                                columnDefs: [
+                                    {
+                                        //"orderable": false,
+                                        //"targets": [0, 8],
+                                        //"width": "0px"
+                                    }
+        ],
+        "language": {
+                                        "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        "pageLength": 10,
+    });
+</script>
+<script>
+    function MostrarTarea(num1, num2) {
+        var obj = {};
+
+        obj['UrlVaible'] = num2;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (num1 == 1) {
+                    window.location.href = '@Url.Action("Contacto", "Contacto")?cont=' + result.Url;
+                } else if (num1 == 2) {
+                    window.location.href = '@Url.Action("Empresa", "Empresa")?cont=' + result.Url;
+                } else if (num1 == 3) {
+                    window.location.href = '@Url.Action("Oportunidad", "Oportunidad")?cont=' + result.Url;
+                }
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+</script>
+
+<script>
+        $('#Nv1Tareas').addClass("active open");
+        $('#Nv1TareaMisTareas').addClass("active");
+</script>

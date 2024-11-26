@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="row ">
+            <div class="col-md-8">
+                <h5> Marketing - Correo electrónico</h5>
+            </div>
+            <div class="col-md-4 text-right top-right">
+                <div class="demo-inline-spacing">
+                    <button type="button" class="btn btn-primary col-md-12" onclick="window.location.href='@Url.Action("Crear", "Correo")';">
+                        <span class="tf-icons bx bx-envelope"></span>&nbsp; Crear correo electrónico
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketingCorreo').addClass("active");
+</script>
+

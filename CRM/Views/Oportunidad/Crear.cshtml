@@ -1,0 +1,2820 @@
+﻿
+@{
+    ViewBag.Title = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+<div class="card mb-4">
+    <h5 class="card-header">Oportunidad </h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold">Completa los campos marcados *</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre oportunidad</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Oportunidad_Nombre" placeholder="Oportunidad" aria-label="" aria-describedby="Oportunidad_Nombre" onkeyup="Mayus(this);" onchange="ValidaInput('Oportunidad_Nombre')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                    <div class="input-group">
+                        <select id='Oportunidad_UnidadNegocio' class="form-select" aria-label="Oportunidad_UnidadNegocio" onchange="ValidaSelect('Oportunidad_UnidadNegocio')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.UnidadNegocio)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Tipo </label>
+                    <div class="input-group">
+                        <select id='Oportunidad_TipoOportunidad' class="form-select" aria-label="Oportunidad_TipoOportunidad" onchange="ValidaSelect('Oportunidad_TipoOportunidad')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.TipoOportunidades)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTipoOportunidad" aria-controls="offcanvasTipoOportunidad">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Estatus </label>
+                    <div class="input-group">
+                        <select id='Oportunidad_EstatusOpurtunidad' class="form-select" aria-label="Oportunidad_EstatusOpurtunidad" onchange="ValidaSelect('Oportunidad_EstatusOpurtunidad')" disabled>
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.EstatusOpurtunidad)
+                            {
+                                if (1 == item.Id)
+                                {
+                                    <option value="@item.Id" selected>@item.Nombre.ToUpper()</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                }
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEstatusOpurtunidad" aria-controls="offcanvasEstatusOpurtunidad">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Prioridad </label>
+
+                    <select id='Oportunidad_Prioridad' class="form-select" aria-label="Oportunidad_Prioridad" onchange="ValidaSelect('Oportunidad_Prioridad')">
+                        <option value="0" selected>SELECCIONAR</option>
+                        @foreach (var item in ViewBag.Prioridad)
+                        {
+                            <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Fecha cierre  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control" id="Oportunidad_FechaCierre" placeholder="Nombre" aria-label="" aria-describedby="basic-icon-default-fullname2" onkeyup="Mayus(this);" onchange="ValidaInput('Oportunidad_FechaCierre')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Propietario del registro oportunidad  </label>
+                    <select id='Oportunidad_Propietario' class="form-select" aria-label="Oportunidad_Propietario" onchange="ValidaSelect('Oportunidad_Propietario')" disabled>
+                        <option value="0" selected>SELECCIONAR</option>
+                        @foreach (var item in ViewBag.Usuarios)
+                        {
+                            if (((CRM.Models.Usuario)System.Web.HttpContext.Current.Session["Sesion"]).Id == item.Id)
+                            {
+                                <option value="@item.Id" selected>@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                <textarea class="form-control" id="Oportunidad_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+            </div>
+            <div class="col-md-12">
+                <small class="text-light fw-semibold">Asociar oportunidad con: </small>
+                <div class="demo-inline-spacing">
+                    <input type="checkbox" id="checkbox_Contacto" value="0" style="display:none">
+                    <input type="checkbox" id="checkbox_Empresa" value="0" style="display:none">
+                    <input type="checkbox" id="checkbox_Producto" value="0" style="display:none">
+                    <input type="checkbox" id="checkbox_Importe" value="0" style="display:none">
+                    <button type="button" class="btn btn-outline-secondary" id="BtnContacto" onclick="FormularioContacto()">
+                        <span class="tf-icons bx bx-user"></span>&nbsp; Contacto
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="BtnEmpresa" onclick="FormularioEmpresa()">
+                        <span class="tf-icons bx bx-building"></span>&nbsp; Empresa
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="BtnProducto" onclick="FormularioProducto()">
+                        <span class="tf-icons bx bx-basket"></span>&nbsp; Producto
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="BtnImporte" onclick="FormularioImporte()">
+                        <span class="tf-icons bx bx-money"></span>&nbsp; Importe
+                    </button>
+                </div>
+                <br />
+            </div>
+            <div id="FormContacto" style="display:none">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <small class="text-light fw-semibold">Asociar oportunidad con contacto </small>
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Contacto </label>
+
+                            <select id='Oportunidad_Contacto' class="form-select" aria-label="Oportunidad_Contacto" onchange="ValidaSelect('Oportunidad_Contacto')">
+                                <option value="0" selected>SELECCIONAR</option>
+                                @if (ViewBag.Contactos != null)
+                                {
+                                    foreach (var item in ViewBag.Contactos)
+                                    {
+                                    <option value="@item.Persona.Id">
+                                        @item.Persona.Nombre.ToUpper()
+                                        @{if (item.Persona.ApellidoPaterno != null)
+                                            { @item.Persona.ApellidoPaterno.ToUpper()} }
+                                        @{if (item.Persona.ApellidoMaterno != null)
+                                            { @item.Persona.ApellidoMaterno.ToUpper()} }
+                                        (@item.Persona.Email.email)
+                                    </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1" checked />
+                            <label class="form-check-label" for="flexSwitchCheckDefault1">Agregar actividad de la cronología de este contacto </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <br />
+                            <label class="form-label" for="basic-icon-default-fullname">* Rol dentro de oportunidad </label>
+                            <div class="input-group">
+                                <select id='Oportunidad_Rol' class="form-select" aria-label="Oportunidad_Rol" onchange="ValidaSelect('Oportunidad_Rol')">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                    @foreach (var item in ViewBag.PersonaOportunidad)
+                                    {
+                                        <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                    }
+                                </select>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRolPersonaOpurtunidad" aria-controls="offcanvasRolPersonaOpurtunidad">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="FormeEmpresa" style="display:none">
+                <div class="col-lg-8">
+                    <small class="text-light fw-semibold">Asociar oportunidad con empresa </small>
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-icon-default-fullname">* Empresa </label>
+
+                        <select id='Oportunidad_Empresa' class="form-select" aria-label="Oportunidad_Empresa" onchange="ValidaSelect('Oportunidad_Empresa')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @if (ViewBag.Empresas != null)
+                            {
+                                foreach (var item in ViewBag.Empresas)
+                                {
+                                <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" checked />
+                        <label class="form-check-label" for="flexSwitchCheckDefault2">Agregar actividad de la cronología de este negocio  </label>
+                    </div>
+                </div>
+            </div>
+            <div id="FormeProducto" style="display:none">
+                <div class="row">
+                    <small class="text-light fw-semibold">Asociar oportunidad con producto:<br /> Puedes agregar varios productos a la oportunidad  </small>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Producto </label>
+                            <button class="btn btn-primary" type="button" id="IdBtnModalProductoAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasProducto" aria-controls="offcanvasProducto" style="display:none;">+</button>
+                            <div class="input-group">
+                                <select id='Oportunidad_Producto' class="form-select" aria-label="Oportunidad_Producto" onchange="BuscaProducto()">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                    @{
+                                        if (ViewBag.Productos != null)
+                                        {
+                                            foreach (var item in ViewBag.Productos)
+                                            {
+                                                <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalProducto" onclick="AbrirProducto()">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Cantidad </label>
+                            <div class="input-group input-group-merge">
+                                <span id="basic-icon-default-fullname2" class="input-group-text">
+                                    <i class="bx bx-cart"></i>
+                                </span>
+                                <input type="number" class="form-control" id="Oportunidad_Cantidad" placeholder="Cantidad" aria-label="" aria-describedby="Oportunidad_Cantidad" onchange="ValidaInput('Oportunidad_Cantidad')" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Categoría   </label>
+                            <div class="input-group">
+                                <select id='Oportunidad_Categoria' class="form-select" aria-label="Oportunidad_Categoria" onchange="CargaSubCategorias()">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                    @if (ViewBag.CategoriasProducto != null)
+                                    {
+                                        foreach (var item in ViewBag.CategoriasProducto)
+                                        {
+                                            <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                        }
+                                    }
+                                </select>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategoria" aria-controls="offcanvasCategoria">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Sub Categoría  </label>
+                            <div class="input-group">
+                                <select id='Oportunidad_SubCategoria' class="form-select" aria-label="Oportunidad_SubCategoria" onchange="CargaClasificaciones()">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                </select>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalSebCategoria" onclick="AbrirSubCategoria()">+</button>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalSebCategoriaAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSubCategoria" aria-controls="offcanvasSubCategoria" style="display:none;">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Clasificación  </label>
+                            <div class="input-group">
+                                <select id='Oportunidad_Clasificacion' class="form-select" aria-label="Oportunidad_Clasificacion" onchange="CargaProductos()">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                </select>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalClasificacion" onclick="AbrirClasificacion()">+</button>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalClasificacionAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasClasificacion" aria-controls="offcanvasClasificacion" style="display:none;">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Importe</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control numberPositivo" id="Oportunidad_Producto_Importe" placeholder="Importe" aria-label="" aria-describedby="Oportunidad_Producto_Importe" onchange="ValidaInput('Oportunidad_Producto_Importe')" />
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Moneda </label>
+                            <select id='Oportunidad_Producto_Moneda' class="form-select" aria-label="Oportunidad_Producto_Moneda" onchange="ValidaSelect('Oportunidad_Producto_Moneda')">
+                                <option value="0" selected>SELECCIONAR</option>
+                                @foreach (var item in ViewBag.Moneda)
+                                {
+                                    <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Tipo de cambio</label>
+                            <div class="input-group input-group-merge">
+                                <span id="basic-icon-default-fullname2" class="input-group-text">
+                                    <i class="bx bx-dollar"></i>
+                                </span>
+                                <input type="text" class="form-control numberPositivo" id="Oportunidad_Producto_TipoCambio" placeholder="Tipo de cambio" aria-label="" aria-describedby="Oportunidad_Producto_TipoCambio" onchange="ValidaInput('Oportunidad_Producto_TipoCambio')" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="demo-inline-spacing">
+                            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="AgregarProductoOportunidad()">
+                                <span class="tf-icons bx bx-cart"></span>&nbsp; Agregar producto
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col-lg-12" id="DivTableContenidoProductos">
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div id="FormeImporte" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <small class="text-light fw-semibold">Asociar oportunidad con importe </small>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Importe</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control numberPositivo" id="Oportunidad_Importe" placeholder="Importe" aria-label="" aria-describedby="Oportunidad_Importe" onchange="ValidaInput('Oportunidad_Importe')" />
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Moneda </label>
+                            <select id='Oportunidad_Moneda' class="form-select" aria-label="Oportunidad_Moneda" onchange="ValidaSelect('Oportunidad_Moneda')">
+                                <option value="0" selected>SELECCIONAR</option>
+                                @foreach (var item in ViewBag.Moneda)
+                                {
+                                    <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Tipo de cambio</label>
+                            <div class="input-group input-group-merge">
+                                <span id="basic-icon-default-fullname2" class="input-group-text">
+                                    <i class="bx bx-dollar"></i>
+                                </span>
+                                <input type="text" class="form-control numberPositivo" id="Oportunidad_TipoCambio" placeholder="Oportunidad" aria-label="" aria-describedby="Oportunidad_TipoCambio" onchange="ValidaInput('Oportunidad_TipoCambio')" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="input-group">
+                            <span class="input-group-text">Observación </span>
+                            <textarea class="form-control" id="Oportunidad_ObsercionImporte" aria-label="With textarea" placeholder="Observación"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="demo-inline-spacing">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="BtnGuardarOportunidad()">
+                        <span class="tf-icons bx bx-save"></span>&nbsp; Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--- FORMULARIO NUEVA UNIDAD DE NEGOCIO -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasUnidadNegocio" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA UNIDAD DE NEGOCIO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre unidad de negocio</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="UnidadNegocio_Nombre" placeholder="Unidad de negocio" aria-label="" aria-describedby="UnidadNegocio_Nombre" onchange="ValidaInput('UnidadNegocio_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarUnidadNegocio()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnUnidadNegocioCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO TIPO OPORTUNIDAD  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasTipoOportunidad" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO TIPO DE OPORTUNIDAD</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre tipo oportunidad</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="TipoOportunidad_Nombre" placeholder="Tipo oportunidad" aria-label="" aria-describedby="TipoOportunidad_Nombre" onchange="ValidaInput('TipoOportunidad_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarTipoOportunidad()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnTipoOportunidadCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO ESTATUS OPORTUNIDAD  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasEstatusOpurtunidad" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO ESTATUS OPORTUNIDAD </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre estatus oportunidad</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="EstatusOportunidad_Nombre" placeholder="Estatus oportunidad" aria-label="" aria-describedby="EstatusOpurtunidad_Nombre" onchange="ValidaInput('EstatusOportunidad_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarEstatusOportunidad()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnEstatusOportunidadCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO ROL CONTACTO OPORTUNIDAD  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRolPersonaOpurtunidad" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO ROL CONTACTO OPORTUNIDAD </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre rol</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="PersonaOportunidad_Nombre" placeholder="Rol contacto oportunidad" aria-label="" aria-describedby="PersonaOportunidad_Nombre" onchange="ValidaInput('PersonaOportunidad_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarPersonaOportunidad()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnPersonaOportunidadCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+
+<!---  FORMULARIO NUEVA CATEGORÍA  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCategoria" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA CATEGORÍA </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre categoría</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Categoria_Nombre" placeholder="Categoría" aria-label="" aria-describedby="Categoria_Nombre" onchange="ValidaInput('Categoria_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarCategoria()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnCategoriaCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVA SUBCATEGORIA  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSubCategoria" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA SUB CATEGORÍA </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre sub categoría</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="SubCategoria_Nombre" placeholder="Sub categoría" aria-label="" aria-describedby="SubCategoria_Nombre" onchange="ValidaInput('SubCategoria_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarSubCategoria()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnSubCategoriaCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVA CLASIFICACIÓN  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasClasificacion" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA CLASIFICACIÓN </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre clasificación</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Clasificacion_Nombre" placeholder="clasificación" aria-label="" aria-describedby="Clasificacion_Nombre" onchange="ValidaInput('Clasificacion_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarClasificacion()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnClasificacionCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO PRODUCTO  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasProducto" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO PRODUCTO </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre producto</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Producto_Nombre" placeholder="Nombre producto" aria-label="" aria-describedby="Producto_Nombre" onchange="ValidaInput('Producto_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* SKU</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Producto_SKU" placeholder="SKU" aria-label="" aria-describedby="Producto_SKU" onchange="ValidaInput('Producto_SKU')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                <textarea class="form-control" id="Producto_Descripcion" rows="2" onkeyup="Mayus(this);"></textarea>
+                <br />
+            </div>
+            <div class="col-lg-12 text-center">
+                <div id="ImgEmpleado" style="width:50%"></div>
+                <input id="fileInput4" type="file" style="visibility:hidden">
+                <progress id="fileProgres" style="width: 100%; display: none;"></progress>
+            </div>
+            <div class="col-lg-6">
+                <button class="btn btn-danger" type="button" id="BtnEliminarImagen" style="display:none;" onclick="EliminarImagen()">Eliminar Imagen</button>
+            </div>
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-dark mb-2 d-grid w-100" id="BtnNuvaImagenFotografica">Subir Imagen </button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarProducto()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnProductoCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+
+<script>
+    function BtnGuardarOportunidad() {
+        if (ValidaOportunidad()) {
+
+            var CatPrioridad = new Object();
+            CatPrioridad.Id = $("#Oportunidad_Prioridad option:selected").val();
+
+            var CatTipoOportunidad = new Object();
+            CatTipoOportunidad.Id = $("#Oportunidad_TipoOportunidad option:selected").val();
+
+            var CatEstatusOpurtunidad = new Object();
+            CatEstatusOpurtunidad.Id = $("#Oportunidad_EstatusOpurtunidad option:selected").val();
+
+            var Usuario = new Object();
+            Usuario.Id = $("#Oportunidad_Propietario option:selected").val();
+
+            var CatUnidadNegocio = new Object();
+            CatUnidadNegocio.Id = $("#Oportunidad_UnidadNegocio option:selected").val();
+
+            var OportunidadFechaCierre = new Object();
+            OportunidadFechaCierre.Fecha = $('#Oportunidad_FechaCierre').val();
+
+            var Oportunidad = new Object();
+            Oportunidad.CatPrioridad = CatPrioridad;
+            Oportunidad.CatTipoOportunidad = CatTipoOportunidad;
+            Oportunidad.CatEstatusOpurtunidad = CatEstatusOpurtunidad;
+            Oportunidad.Usuario = Usuario;
+            Oportunidad.CatUnidadNegocio = CatUnidadNegocio;
+            Oportunidad.Nombre = $('#Oportunidad_Nombre').val();
+            Oportunidad.Descripcion = $('#Oportunidad_Descripcion').val();
+            Oportunidad.OportunidadFechaCierre = OportunidadFechaCierre;
+
+            if ($("#checkbox_Contacto").is(':checked')) {
+                var Persona = new Object();
+                Persona.Id = $("#Oportunidad_Contacto option:selected").val();
+
+                var CatPersonaOportunidad = new Object();
+                CatPersonaOportunidad.Id = $("#Oportunidad_Rol option:selected").val();
+
+                var OportunidadPersona = new Object();
+                OportunidadPersona.Persona = Persona;
+                OportunidadPersona.CatPersonaOportunidad = CatPersonaOportunidad;
+
+                Oportunidad.OportunidadPersona = OportunidadPersona;
+            }
+
+            if ($("#checkbox_Empresa").is(':checked')) {
+                var Empresa = new Object();
+                Empresa.Id = $("#Oportunidad_Empresa option:selected").val();
+
+                var OportunidadEmpresa = new Object();
+                OportunidadEmpresa.Empresa = Empresa;
+
+                Oportunidad.OportunidadEmpresa = OportunidadEmpresa;
+            }
+
+            //if ($("#checkbox_Producto").is(':checked')) {
+
+            //    var CatProducto = new Object();
+            //    CatProducto.Id = $("#Oportunidad_Producto option:selected").val();
+
+            //    var OportunidadProducto = new Object();
+            //    OportunidadProducto.Item = $('#Oportunidad_Cantidad').val();
+            //    OportunidadProducto.CatProducto = CatProducto;
+
+            //    Oportunidad.OportunidadProducto = OportunidadProducto;
+            //}
+
+            if ($("#checkbox_Importe").is(':checked')) {
+                var CatMoneda = new Object();
+                CatMoneda.Id = $("#Oportunidad_Moneda option:selected").val();
+
+                var OportunidadImporte = new Object();
+                OportunidadImporte.Valor = $('#Oportunidad_Importe').val().replace(/,/g, '');
+                OportunidadImporte.TipoCambio = $('#Oportunidad_TipoCambio').val().replace(/,/g, '');
+                OportunidadImporte.Observacion = $('#Oportunidad_ObsercionImporte').val();
+                OportunidadImporte.CatMoneda = CatMoneda;
+
+                Oportunidad.OportunidadImporte = OportunidadImporte;
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Oportunidad_Agregar", "Oportunidad")",
+                async: false,
+                data: JSON.stringify(Oportunidad),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La oportnidad ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Oportnidad no registrada.");
+                    } else if (result.Id > 0) {
+                        swal({
+                            title: "Nueva oportunidad registrada. !",
+                            icon: "success",
+                            buttons: {
+                                cancelar: {
+                                    text: "Oportunidades registradas", className: 'sweet-mostrar'
+                                },
+                                agregar: {
+                                    text: "Mostrar oportunidad", className: 'sweet-continuar'
+                                },
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+
+                                case "cancelar":
+
+                                    window.location.href = '@Url.Action("Index", "Oportunidad")';
+                                    break;
+
+                                case "agregar":
+                                        MostrarOportunidad(result.Id);
+                                    break;
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Oportunidad no agregada.");
+                }
+            });
+
+
+        } else {
+            AlertIncompleto();
+            if ($("#checkbox_Producto").is(':checked')) {
+                if (!VaidaOportunidadProducto()) {
+                    AlertDanger("Formulairo incompleto ", "Agrega un producto a la lista.");
+                } 
+            }
+        }
+    }
+
+    function ValidaOportunidad() {
+        var result = false;
+        var Oportunidad = false;
+        var Contacto = false;
+        var Empresa = false;
+        var Producto = false;
+        var Importe = false;
+
+        $('#Oportunidad_Nombre').css("border", "1px solid #f44336");
+        $('#Oportunidad_Nombre').css("border-left", "none");
+
+        $('#select2-Oportunidad_UnidadNegocio-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_TipoOportunidad-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_EstatusOpurtunidad-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_Prioridad-container').css("border", "1px solid #f44336");
+
+        $('#Oportunidad_FechaCierre').css("border", "1px solid #f44336");
+        $('#Oportunidad_FechaCierre').css("border-left", "none");
+
+
+        if ($('#Oportunidad_Nombre').val().length > 0) {
+            $('#Oportunidad_Nombre').css("border", "1px solid #d9dee3");
+            $('#Oportunidad_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Oportunidad_FechaCierre').val().length > 0) {
+            $('#Oportunidad_FechaCierre').css("border", "1px solid #d9dee3");
+            $('#Oportunidad_FechaCierre').css("border-left", "none");
+        }
+
+        if ($("#Oportunidad_UnidadNegocio option:selected").val() > 0) {
+            $('#select2-Oportunidad_UnidadNegocio-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_TipoOportunidad option:selected").val() > 0) {
+            $('#select2-Oportunidad_TipoOportunidad-container').css("border", "0px solid #d9dee3");
+        }
+        if ($("#Oportunidad_EstatusOpurtunidad option:selected").val() > 0) {
+            $('#select2-Oportunidad_EstatusOpurtunidad-container').css("border", "0px solid #d9dee3");
+        }
+        if ($("#Oportunidad_Prioridad option:selected").val() > 0) {
+            $('#select2-Oportunidad_Prioridad-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#checkbox_Contacto").is(':checked')) {
+            $('#select2-Oportunidad_Contacto-container').css("border", "1px solid #f44336");
+            $('#Oportunidad_Rol').css("border", "1px solid #f44336");
+
+            if ($("#Oportunidad_Contacto option:selected").val() > 0) {
+                $('#select2-Oportunidad_Contacto-container').css("border", "0px solid #d9dee3");
+            }
+
+            if ($("#Oportunidad_Rol option:selected").val() > 0) {
+                $('#Oportunidad_Rol').css("border", "0px solid #d9dee3");
+            }
+        }
+
+        if ($("#checkbox_Empresa").is(':checked')) {
+            $('#select2-Oportunidad_Empresa-container').css("border", "1px solid #f44336");
+            if ($("#Oportunidad_Empresa option:selected").val() > 0) {
+                $('#select2-Oportunidad_Empresa-container').css("border", "0px solid #d9dee3");
+            }
+        }
+
+        if ($("#checkbox_Producto").is(':checked')) {
+            //$('#select2-Oportunidad_Producto-container').css("border", "1px solid #f44336");
+            //$('#Oportunidad_Cantidad').css("border", "1px solid #f44336");
+            //$('#Oportunidad_Cantidad').css("border-left", "none");
+            //$('#select2-Oportunidad_Categoria-container').css("border", "1px solid #f44336");
+            //$('#select2-Oportunidad_SubCategoria-container').css("border", "1px solid #f44336");
+            //$('#select2-Oportunidad_Clasificacion-container').css("border", "1px solid #f44336");
+
+            //if ($("#Oportunidad_Producto option:selected").val() > 0) {
+            //    $('#select2-Oportunidad_Producto-container').css("border", "0px solid #d9dee3");
+            //}
+
+            //if ($('#Oportunidad_Cantidad').val().length > 0) {
+            //    $('#Oportunidad_Cantidad').css("border", "1px solid #d9dee3");
+            //    $('#Oportunidad_Cantidad').css("border-left", "none");
+            //}
+
+            //if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            //    $('#select2-Oportunidad_Categoria-container').css("border", "0px solid #d9dee3");
+            //}
+
+            //if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+            //    $('#select2-Oportunidad_SubCategoria-container').css("border", "0px solid #d9dee3");
+            //}
+
+            //if ($("#Oportunidad_Clasificacion option:selected").val() > 0) {
+            //    $('#select2-Oportunidad_Clasificacion-container').css("border", "0px solid #d9dee3");
+            //}
+        }
+
+        if ($("#checkbox_Importe").is(':checked')) {
+
+            $('#Oportunidad_Importe').css("border", "1px solid #f44336");
+            $('#Oportunidad_Importe').css("border-left", "none");
+
+            $('#Oportunidad_Moneda').css("border", "1px solid #f44336");
+
+            $('#Oportunidad_TipoCambio').css("border", "1px solid #f44336");
+            $('#Oportunidad_TipoCambio').css("border-left", "none");
+
+            if ($('#Oportunidad_Importe').val().length > 0) {
+                $('#Oportunidad_Importe').css("border", "1px solid #d9dee3");
+                $('#Oportunidad_Importe').css("border-left", "none");
+            }
+
+            if ($("#Oportunidad_Moneda option:selected").val() > 0) {
+                $('#Oportunidad_Moneda').css("border", "0px solid #d9dee3");
+            }
+
+            if ($('#Oportunidad_TipoCambio').val().length > 0) {
+                $('#Oportunidad_TipoCambio').css("border", "1px solid #d9dee3");
+                $('#Oportunidad_TipoCambio').css("border-left", "none");
+            }
+        }
+
+        if ($('#Oportunidad_Nombre').val().length > 0) {
+            if ($("#Oportunidad_UnidadNegocio option:selected").val() > 0) {
+                if ($("#Oportunidad_TipoOportunidad option:selected").val() > 0) {
+                    if ($("#Oportunidad_EstatusOpurtunidad option:selected").val() > 0) {
+                        if ($("#Oportunidad_Prioridad option:selected").val() > 0) {
+                            if ($('#Oportunidad_FechaCierre').val().length > 0) {
+                                Oportunidad = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($("#checkbox_Contacto").is(':checked')) {
+            if ($("#Oportunidad_Contacto option:selected").val() > 0) {
+                if ($("#Oportunidad_Rol option:selected").val() > 0) {
+                    Contacto = true;
+                }
+            }
+        } else {
+            Contacto = true;
+        }
+
+        if ($("#checkbox_Empresa").is(':checked')) {
+            if ($("#Oportunidad_Empresa option:selected").val() > 0) {
+                Empresa = true;
+            }
+        } else {
+            Empresa = true;
+        }
+
+        if ($("#checkbox_Producto").is(':checked')) {
+            //if ($("#Oportunidad_Producto option:selected").val() > 0) {
+            //    if ($('#Oportunidad_Cantidad').val().length > 0) {
+            //        if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            //            if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+            //                if ($("#Oportunidad_Clasificacion option:selected").val() > 0) {
+            //                    Producto = true;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            
+            Producto = VaidaOportunidadProducto();
+        } else {
+            Producto = true;
+        }
+
+        if ($("#checkbox_Importe").is(':checked')) {
+            if ($('#Oportunidad_Importe').val().length > 0) {
+                if ($("#Oportunidad_Moneda option:selected").val() > 0) {
+                    if ($('#Oportunidad_TipoCambio').val().length > 0) {
+                     /*   if ($('#Oportunidad_ObsercionImporte').val().length > 0) {*/
+                            Importe = true;
+                    /*    }*/
+                    }
+                }
+            }
+        } else {
+            Importe = true;
+        }
+
+        if (Oportunidad) {
+            if (Contacto) {
+                if (Empresa) {
+                    if (Producto) {
+                        if (Importe) {
+                            result = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    function VaidaOportunidadProducto() {
+        var result = false;
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("OportunidadProducto_Consultar", "OportunidadProducto")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+                    result = true;
+                }
+            },
+            error: function () {
+
+            }
+        });
+
+        return result;
+    }
+
+    function MostrarOportunidad(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Oportunidad", "Oportunidad")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+</script>
+<script>
+    function AgregarProductoOportunidad() {
+        if (ValidaProductoOportunidad()) {
+
+            var CatMoneda = new Object();
+            CatMoneda.Id = $("#Oportunidad_Producto_Moneda option:selected").val();
+
+            var CatProducto = new Object();
+            CatProducto.Id = $("#Oportunidad_Producto option:selected").val();
+
+            var OportunidadProducto = new Object();
+            OportunidadProducto.CatMoneda = CatMoneda;
+            OportunidadProducto.CatProducto = CatProducto;
+            OportunidadProducto.Item = $('#Oportunidad_Cantidad').val();
+            OportunidadProducto.Valor = $('#Oportunidad_Producto_Importe').val().replace(/,/g, '');
+            OportunidadProducto.TipoCambio = $('#Oportunidad_Producto_TipoCambio').val().replace(/,/g, '');
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("OportunidadProducto_Sesion_Agregar", "OportunidadProducto")",
+                async: false,
+                data: JSON.stringify(OportunidadProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    PintaTablaProductos(result);
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Producto no agregado.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function PintaTablaProductos(data) {
+
+        $("#DivTableContenidoProductos").empty();
+
+        var Table =
+                "<table class='table table-sm table-striped table-hover text-left'>" +
+                    "<thead>" +
+                        "<tr class='table-primary'>" +
+                            "<th>Producto </th>" +
+                            "<th>Imagen </th>" +
+                            "<th>Cantidad </th>" +
+                            "<th>Acciones </th>" +
+                        "</tr>" +
+                    "</thead>" +
+                    "<tbody class='table-border-bottom-0'>";
+
+            for (var b = 0; b < data.length; b++) {
+                var src = 'http://' + data[b].CatProducto.ProductoImagen.ImagenURL;
+                Table +=
+                    "<tr>" +
+                        "<td><i class='fab fa-angular fa-lg text-danger me-3'></i> <strong>" + data[b].CatProducto.Nombre + "</strong></td>" +
+                        "<td>" +
+                            "<ul class='list-unstyled users-list m-0 avatar-group d-flex align-items-center'>" +
+                                "<li data-bs-toggle='tooltip' data-popup='tooltip-custom'  data-bs-placement='top' class='avatar avatar-xl pull-up' title='" + data[b].CatProducto.Nombre + "' >" +
+                                    "<img src='" + src +"' alt='Avatar' class='rounded-circle' />" +
+                                "</li>" +
+                            "</ul>" +
+                        "</td > " +
+                        "<td>" + data[b].Item + "</td>" +
+                        "<td>" +
+                            "<div class='dropdown'>" +
+                                "<button type='button' class='btn p-0 dropdown-toggle hide-arrow' data-bs-toggle='dropdown'>" +
+                                    "<i class='bx bx-dots-vertical-rounded'></i>" +
+                                "</button>" +
+                                "<div class='dropdown-menu'>" +
+                                    "<a class='dropdown-item' onclick='BtnEliminarProducto(" + data[b].CatProducto.Id + ")'><i class='bx bx-trash me-1'></i> Eliminar </a>" +
+                                "</div>" +
+                            "</div>" +
+                        "</td>" +
+                    "</tr>";
+                }
+
+                Table +=
+                    "</tbody>" +
+            "</table>";
+
+        $("#DivTableContenidoProductos").html(Table);
+    }
+
+    function BtnEliminarProducto(Id) {
+        var obj = {};
+        obj['Id'] = Id;
+
+        var jsonObject = {
+            "CatProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("OportunidadProducto_Eliminar", "OportunidadProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                PintaTablaProductos(result);
+            },
+            error: function () {
+                AlertDanger("Problemas al eliminar ", "Producto no eliminado.");
+            }
+        });
+    }
+
+    function ValidaProductoOportunidad() {
+        var result = false;
+        $('#select2-Oportunidad_Categoria-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_SubCategoria-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_Clasificacion-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_Producto-container').css("border", "1px solid #f44336");
+        $('#Oportunidad_Producto_Moneda').css("border", "1px solid #f44336");
+
+        $('#Oportunidad_Cantidad').css("border", "1px solid #f44336");
+        $('#Oportunidad_Cantidad').css("border-left", "none");
+
+        $('#Oportunidad_Producto_Importe').css("border", "1px solid #f44336");
+        $('#Oportunidad_Producto_Importe').css("border-left", "none");
+
+        $('#Oportunidad_Producto_TipoCambio').css("border", "1px solid #f44336");
+        $('#Oportunidad_Producto_TipoCambio').css("border-left", "none");
+
+
+        if ($("#Oportunidad_Producto_Moneda option:selected").val() > 0) {
+            $('#Oportunidad_Producto_Moneda').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_Producto option:selected").val() > 0) {
+            $('#select2-Oportunidad_Producto-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_Categoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_SubCategoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_Clasificacion option:selected").val() > 0) {
+            $('#select2-Oportunidad_Clasificacion-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($('#Oportunidad_Cantidad').val().length > 0) {
+            $('#Oportunidad_Cantidad').css("border", "1px solid #d9dee3");
+            $('#Oportunidad_Cantidad').css("border-left", "none");
+        }
+
+        if ($('#Oportunidad_Producto_Importe').val().length > 0) {
+            $('#Oportunidad_Producto_Importe').css("border", "1px solid #d9dee3");
+            $('#Oportunidad_Producto_Importe').css("border-left", "none");
+        }
+
+        if ($('#Oportunidad_Producto_TipoCambio').val().length > 0) {
+            $('#Oportunidad_Producto_TipoCambio').css("border", "1px solid #d9dee3");
+            $('#Oportunidad_Producto_TipoCambio').css("border-left", "none");
+        }
+
+        if ($("#Oportunidad_Producto option:selected").val() > 0) {
+            if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+                if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+                    if ($("#Oportunidad_Clasificacion option:selected").val() > 0) {
+                        if ($('#Oportunidad_Cantidad').val().length > 0) {
+                            if ($('#Oportunidad_Producto_Importe').val().length > 0) {
+                                if ($('#Oportunidad_Producto_TipoCambio').val().length > 0) {
+                                    if ($("#Oportunidad_Producto_Moneda option:selected").val() > 0) {
+                                        result = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+</script>
+<script>
+    function BtnRegistrarProducto() {
+        if (ValidaProducto()) {
+            var CatClasificacionProducto = new Object();
+            CatClasificacionProducto.Id = $("#Oportunidad_Clasificacion option:selected").val();
+
+            var CatProducto = new Object();
+            CatProducto.CatClasificacionProducto = CatClasificacionProducto;
+            CatProducto.Nombre = $('#Producto_Nombre').val();
+            CatProducto.SKU = $('#Producto_SKU').val();
+            CatProducto.Descripcion = $('#Producto_Descripcion').val();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Producto_Agregar", "Producto")",
+                async: false,
+                data: JSON.stringify(CatProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -2) {
+                        AlertWarning("Problemas al registrar ", "El SKU ya se encuentra asociado a otro producto.");
+                    } else if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El nombre del producto que intentas agregar ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Producto no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaProductoList(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Producto no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaProductoList(Id) {
+
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Clasificacion option:selected").val();
+
+        var jsonObject = {
+            "CatClasificacionProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_Listar_Clasificacion", "Producto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Producto").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Producto").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Producto").append(option);
+                    });
+                }
+                $('#Oportunidad_Producto option[value="' + Id + '"]').attr("selected", true);
+
+                $('#Producto_Nombre').val('');
+                $('#Producto_SKU').val('');
+                $('#Producto_Descripcion').val('');
+                $('#ImgEmpleado').html('');
+                $("#BtnEliminarImagen").css("display", "none");
+
+                $("#BtnProductoCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo producto registrado.');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaProducto() {
+        var result = false;
+        $('#Producto_Nombre').css("border", "1px solid #f44336");
+        $('#Producto_Nombre').css("border-left", "none");
+
+        $('#Producto_SKU').css("border", "1px solid #f44336");
+        $('#Producto_SKU').css("border-left", "none");
+
+        if ($('#Producto_Nombre').val().length > 0) {
+            $('#Producto_Nombre').css("border", "1px solid #d9dee3");
+            $('#Producto_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Producto_SKU').val().length > 0) {
+            $('#Producto_SKU').css("border", "1px solid #d9dee3");
+            $('#Producto_SKU').css("border-left", "none");
+        }
+
+        if ($('#Producto_Nombre').val().length > 0) {
+            if ($('#Producto_SKU').val().length > 0) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+</script>
+<script>
+    function EliminarImagen() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_EliminarImagen", "Producto")",
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (respuesta) {
+                $('#ImgEmpleado').html('');
+                $("#BtnEliminarImagen").css("display", "none");
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+                $("#BtnEliminarImagen").css("display", "none");
+            }
+        });
+    }
+
+    $('#BtnNuvaImagenFotografica').click(function () {
+        $("#fileInput4").click();
+    });
+
+    $('#fileInput4').change(function () {
+        var fileInput = document.getElementById('fileInput4');
+
+        if (fileInput.files.length > 0) {
+            for (i = 0; i < fileInput.files.length; i++) {
+                var ext = fileInput.files[i].name.split('.').pop();
+                Extencion = fileInput.files[i].name.split('.').pop();
+
+                // Convertimos en minúscula porque
+                // la extensión del archivo puede estar en mayúscula
+                ext = ext.toLowerCase();
+
+                if (ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
+                    Carga = true;
+                } else {
+                    Carga = false;
+                    Formato = ext;
+                    break;
+                }
+            }
+
+            for (i = 0; i < fileInput.files.length; i++) {
+                var filesize = ((fileInput.files[i].size / 1024) / 1024).toFixed(4);
+
+                if (filesize < 10) {
+                    CargaTam = true;
+                } else {
+                    CargaTam = false;
+                    Tam = filesize;
+                    break;
+                }
+            }
+
+            if (Carga) {
+                if (CargaTam) {
+
+                    $("#BtnNuvaImagenFotografica").prop('disabled', true);
+                    var formData = new FormData();
+
+                    for (i = 0; i < fileInput.files.length; i++) {
+                        formData.append(fileInput.files[i].name, fileInput.files[i]);
+                    }
+
+                    $("#fileProgres").show();
+
+                    $.ajax({
+                        url: '/api/FileAPI/UploadFilesImagen',
+                        type: 'POST',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (documento) {
+                            CargaImagen(documento);
+                        },
+                        xhr: function () {
+                            var fileXhr = $.ajaxSettings.xhr();
+                            if (fileXhr.upload) {
+                                $("progress").show();
+                                fileXhr.upload.addEventListener("progress", function (e) {
+                                    if (e.lengthComputable) {
+                                        $("#fileProgres").attr({
+                                            value: e.loaded,
+                                            max: e.total
+                                        });
+                                    }
+                                }, false);
+                            }
+                            return fileXhr;
+                        },
+                        error: function () {
+                            AlertWarning("Problema ocurrido", "Problemas para leer el archivo");
+                            $("#BtnNuvaImagenFotografica").prop('disabled', false);
+                            CerrarProgres();
+                        }
+                    }).done(function (results) {
+                        setTimeout(CerrarProgres, 1000);
+                    });
+
+                } else {
+                    AlertPrimary("Formulario incompleto ", "Intentas cargar una imagen muy pesada: " + Tam + " MG" + " Límite permitido 10 MG");
+                }
+            } else {
+                AlertPrimary("Formulario incompleto ", "Intentas cargar un formato no permitido: " + Formato + " Formato de archivo permitido: .png, .jpg, jpeg ");
+            }
+        } else {
+            $("#BtnNuvaImagenFotografica").prop('disabled', false);
+            AlertPrimary("Formulario incompleto ","Selecciona un archivo.");
+        }
+    });
+
+    function CerrarProgres() {
+        $("#fileProgres").css("display", "none");
+    }
+
+    function CargaImagen(Imagen) {
+        $("#BtnNuvaImagenFotografica").prop('disabled', false);
+
+        var ProductoImagen = new Object();
+        ProductoImagen.NmArchivo = Imagen.NmArchivo;
+        ProductoImagen.NmOriginal = Imagen.NmOriginal;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_AgregarImagen", "Producto")",
+            data: JSON.stringify(ProductoImagen),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (respuesta) {
+                console.log(respuesta);
+                $('#ImgEmpleado').html('');
+
+                var image = new Image();
+
+                var src = 'http://' + respuesta;
+                image.src = src;
+                image.style.width = '100%';
+
+                $('#ImgEmpleado').append(image);
+                $("#BtnEliminarImagen").show();
+
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+                $("#BtnEliminarImagen").css("display", "none");
+            }
+        });
+    }
+
+    function AbrirProducto() {
+        var abrir = false;
+        $('#select2-Oportunidad_Categoria-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_SubCategoria-container').css("border", "1px solid #f44336");
+        $('#select2-Oportunidad_Clasificacion-container').css("border", "1px solid #f44336");
+
+        if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_Categoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_SubCategoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_Clasificacion option:selected").val() > 0) {
+            $('#select2-Oportunidad_Clasificacion-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+                if ($("#Oportunidad_Clasificacion option:selected").val() > 0) {
+                    abrir = true;
+                }
+            }
+        }
+
+        if (abrir) {
+            $("#IdBtnModalProductoAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Completa los campos marcados.");
+        }
+
+    }
+</script>
+
+<script>
+    function BuscaProducto() {
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Producto option:selected").val();
+
+        var jsonObject = {
+            "CatProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_Seleccionar_IdProducto", "Producto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $('#Oportunidad_Categoria').val(result.CatClasificacionProducto.CatSubcategoriaProducto.CatCategoriasProducto.Id).trigger('change.select2');
+                $('#Oportunidad_SubCategoria').val(result.CatClasificacionProducto.CatSubcategoriaProducto.Id).trigger('change.select2');
+
+                var obj = {};
+                obj['Id'] = $("#Oportunidad_SubCategoria option:selected").val();
+
+                var jsonObject = {
+                    "CatSubcategoriaProducto": obj
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ClasificacionProducto_Listar", "ClasificacionProducto")",
+                    async: false,
+                    data: JSON.stringify(jsonObject),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.length > 0) {
+
+                            $("#Oportunidad_Clasificacion").empty();
+
+                            var option = $(document.createElement('option'));
+                            option.text("SELECCIONAR");
+                            option.val(0);
+
+                            $("#Oportunidad_Clasificacion").append(option);
+
+                            $(data).each(function () {
+                                var option = $(document.createElement('option'));
+
+                                option.text(this.Nombre.toUpperCase());
+                                option.val(this.Id);
+
+                                $("#Oportunidad_Clasificacion").append(option);
+                            });
+
+                            $('#Oportunidad_Clasificacion option[value="' + result.CatClasificacionProducto.Id + '"]').attr("selected", true);
+
+                        }
+                    },
+                    error: function () {
+                        $("#Oportunidad_Clasificacion").empty();
+
+                        var option = $(document.createElement('option'));
+                        option.text("SELECCIONAR");
+                        option.val(0);
+
+                        $("#Oportunidad_Clasificacion").append(option);
+                    }
+                });
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function CargaProductos() {
+
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Clasificacion option:selected").val();
+
+        var jsonObject = {
+            "CatClasificacionProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_Listar_Clasificacion", "Producto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Producto").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Producto").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Producto").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Oportunidad_Producto").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                $("#Oportunidad_Producto").append(option);
+            }
+        });
+    }
+
+    function CargaClasificaciones() {
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_SubCategoria option:selected").val();
+
+        var jsonObject = {
+            "CatSubcategoriaProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ClasificacionProducto_Listar", "ClasificacionProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Clasificacion").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Clasificacion").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Oportunidad_Clasificacion").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                $("#Oportunidad_Clasificacion").append(option);
+            }
+        });
+    }
+
+    function CargaSubCategorias() {
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Categoria option:selected").val();
+
+        var jsonObject = {
+            "CatCategoriasProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SubcategoriaProducto_Listar", "SubcategoriaProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_SubCategoria").empty();
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+
+                    $("#Oportunidad_SubCategoria").append(option);
+                    $("#Oportunidad_Clasificacion").append(option2);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_SubCategoria").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Oportunidad_SubCategoria").empty();
+                $("#Oportunidad_Clasificacion").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                var option2 = $(document.createElement('option'));
+                option2.text("SELECCIONAR");
+                option2.val(0);
+
+
+                $("#Oportunidad_SubCategoria").append(option);
+                $("#Oportunidad_Clasificacion").append(option2);
+            }
+        });
+    }
+</script>
+
+<script>
+    function BtnRegistrarClasificacion() {
+        if (ValidaClasificacion()) {
+            var CatSubcategoriaProducto = new Object();
+            CatSubcategoriaProducto.Id = $("#Oportunidad_SubCategoria option:selected").val();
+
+            var CatClasificacionProducto = new Object();
+            CatClasificacionProducto.Nombre = $('#Clasificacion_Nombre').val();
+            CatClasificacionProducto.CatSubcategoriaProducto = CatSubcategoriaProducto;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ClasificacionProducto_Agregar", "ClasificacionProducto")",
+                async: false,
+                data: JSON.stringify(CatClasificacionProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La clasificación ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Clasificación no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaClasificacion(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Clasificación no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaClasificacion(Id) {
+
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_SubCategoria option:selected").val();
+
+        var jsonObject = {
+            "CatSubcategoriaProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ClasificacionProducto_Listar", "ClasificacionProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Clasificacion").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Clasificacion").append(option);
+                    });
+                }
+                $('#Oportunidad_Clasificacion option[value="' + Id + '"]').attr("selected", true);
+                $('#Clasificacion_Nombre').val('');
+                $("#BtnClasificacionCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva clasificación registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+
+    function ValidaClasificacion() {
+        var result = false;
+
+        $('#Clasificacion_Nombre').css("border", "1px solid #f44336");
+        $('#Clasificacion_Nombre').css("border-left", "none");
+
+        if ($('#Clasificacion_Nombre').val().length > 0) {
+            $('#Clasificacion_Nombre').css("border", "1px solid #d9dee3");
+            $('#Clasificacion_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Clasificacion_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    function AbrirClasificacion() {
+        $('#select2-Oportunidad_SubCategoria-container').css("border", "1px solid #f44336");
+
+        if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_SubCategoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        var Categoria = $("#Oportunidad_SubCategoria option:selected").val();
+
+        if (Categoria > 0) {
+            $("#IdBtnModalClasificacionAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una subcategoría para crear una clasificación nueva.");
+        }
+    }
+</script>
+
+<script>
+    function BtnRegistrarSubCategoria() {
+        if (ValidaSubCategoria()) {
+
+            var CatCategoriasProducto = new Object();
+            CatCategoriasProducto.Id = $("#Oportunidad_Categoria option:selected").val();
+
+            var CatSubcategoriaProducto = new Object();
+            CatSubcategoriaProducto.Nombre = $('#SubCategoria_Nombre').val();
+            CatSubcategoriaProducto.CatCategoriasProducto = CatCategoriasProducto;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SubcategoriaProducto_Agregar", "SubcategoriaProducto")",
+                async: false,
+                data: JSON.stringify(CatSubcategoriaProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La Sub categoría ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Sub categoría no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaSubcategoria(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Sub categoría no registrada.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaSubcategoria(Id) {
+
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Categoria option:selected").val();
+
+        var jsonObject = {
+            "CatCategoriasProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SubcategoriaProducto_Listar", "SubcategoriaProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_SubCategoria").empty();
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+                    $("#Oportunidad_SubCategoria").append(option);
+                    $("#Oportunidad_Clasificacion").append(option2);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_SubCategoria").append(option);
+                    });
+                }
+                $('#Oportunidad_SubCategoria option[value="' + Id + '"]').attr("selected", true);
+                $('#SubCategoria_Nombre').val('');
+                $("#BtnSubCategoriaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva sub categoría registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaSubCategoria() {
+        var result = false;
+
+        $('#SubCategoria_Nombre').css("border", "1px solid #f44336");
+        $('#SubCategoria_Nombre').css("border-left", "none");
+
+        if ($('#SubCategoria_Nombre').val().length > 0) {
+            $('#SubCategoria_Nombre').css("border", "1px solid #d9dee3");
+            $('#SubCategoria_Nombre').css("border-left", "none");
+        }
+
+        if ($('#SubCategoria_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    function AbrirSubCategoria() {
+        $('#select2-Oportunidad_Categoria-container').css("border", "1px solid #f44336");
+
+        if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_Categoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        var Categoria = $("#Oportunidad_Categoria option:selected").val();
+
+        if (Categoria > 0) {
+            $("#IdBtnModalSebCategoriaAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una categoría para crear una subcategoría nueva.");
+        }
+    }
+</script>
+
+<script>
+    function BtnRegistrarCategoria() {
+        if (ValidaCategoria()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#Categoria_Nombre').val();
+
+            var jsonObject = {
+                "CatCategoriasProducto": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CategoriasProducto_Agregar", "CategoriasProducto")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La Categoría ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Categoría no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaCategoria(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Categoría no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaCategoria(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CategoriasProducto_Listar", "CategoriasProducto")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Categoria").empty();
+                    $("#Oportunidad_SubCategoria").empty();
+                    $("#Oportunidad_Clasificacion").empty();
+
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+                    var option3 = $(document.createElement('option'));
+                    option3.text("SELECCIONAR");
+                    option3.val(0);
+
+                    $("#Oportunidad_Categoria").append(option);
+                    $("#Oportunidad_SubCategoria").append(option2);
+                    $("#Oportunidad_Clasificacion").append(option3);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Categoria").append(option);
+                    });
+                }
+                $('#Oportunidad_Categoria option[value="' + Id + '"]').attr("selected", true);
+                $('#Categoria_Nombre').val('');
+                $("#BtnCategoriaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva categoría registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaCategoria() {
+        var result = false;
+
+        $('#Categoria_Nombre').css("border", "1px solid #f44336");
+        $('#Categoria_Nombre').css("border-left", "none");
+
+        if ($('#Categoria_Nombre').val().length > 0) {
+            $('#Categoria_Nombre').css("border", "1px solid #d9dee3");
+            $('#Categoria_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Categoria_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+
+<script>
+    function BtnRegistrarPersonaOportunidad() {
+        if (ValidaPersonaOportunidad()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#PersonaOportunidad_Nombre').val();
+
+            var jsonObject = {
+                "CatPersonaOportunidad": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("PersonaOportunidad_Agregar", "PersonaOportunidad")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El rol ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Rol no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaPersonaOportunidad(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Rol no registrado.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaPersonaOportunidad(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("PersonaOportunidad_Listar", "PersonaOportunidad")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Rol").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Rol").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Rol").append(option);
+                    });
+                }
+                $('#Oportunidad_Rol option[value="' + Id + '"]').attr("selected", true);
+                $('#PersonaOportunidad_Nombre').val('');
+                $("#BtnPersonaOportunidadCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo rol registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaPersonaOportunidad() {
+        var result = false;
+
+        $('#PersonaOportunidad_Nombre').css("border", "1px solid #f44336");
+        $('#PersonaOportunidad_Nombre').css("border-left", "none");
+
+        if ($('#PersonaOportunidad_Nombre').val().length > 0) {
+            $('#PersonaOportunidad_Nombre').css("border", "1px solid #d9dee3");
+            $('#PersonaOportunidad_Nombre').css("border-left", "none");
+        }
+
+        if ($('#PersonaOportunidad_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+
+<script>
+    function BtnRegistrarEstatusOportunidad() {
+        if (ValidaEstatusOportunidad()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#EstatusOportunidad_Nombre').val();
+
+            var jsonObject = {
+                "CatEstatusOpurtunidad": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EstatusOpurtunidad_Agregar", "EstatusOpurtunidad")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El estatus ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Estatus no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaEstatusOportunidad(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Estatus no registrado.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaEstatusOportunidad(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EstatusOpurtunidad_Listar", "EstatusOpurtunidad")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_EstatusOpurtunidad").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_EstatusOpurtunidad").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_EstatusOpurtunidad").append(option);
+                    });
+                }
+                $('#Oportunidad_EstatusOpurtunidad option[value="' + Id + '"]').attr("selected", true);
+                $('#EstatusOportunidad_Nombre').val('');
+                $("#BtnEstatusOportunidadCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo estatus registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaEstatusOportunidad() {
+        var result = false;
+
+        $('#EstatusOportunidad_Nombre').css("border", "1px solid #f44336");
+        $('#EstatusOportunidad_Nombre').css("border-left", "none");
+
+        if ($('#EstatusOportunidad_Nombre').val().length > 0) {
+            $('#EstatusOportunidad_Nombre').css("border", "1px solid #d9dee3");
+            $('#EstatusOportunidad_Nombre').css("border-left", "none");
+        }
+
+        if ($('#EstatusOportunidad_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function BtnRegistrarTipoOportunidad() {
+        if (ValidaTipoOportunidad()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#TipoOportunidad_Nombre').val();
+
+            var jsonObject = {
+                "CatTipoOportunidad": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("TipoOportunidad_Agregar", "TipoOportunidad")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El tipo de oportunidad ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Tipo de oportunidad no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaTipoOportunidad(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Tipo de oportunidad no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaTipoOportunidad(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("TipoOportunidad_Listar", "TipoOportunidad")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_TipoOportunidad").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_TipoOportunidad").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_TipoOportunidad").append(option);
+                    });
+                }
+                $('#Oportunidad_TipoOportunidad option[value="' + Id + '"]').attr("selected", true);
+                $('#TipoOportunidad_Nombre').val('');
+                $("#BtnTipoOportunidadCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo tipo de oportunidad registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaTipoOportunidad() {
+        var result = false;
+
+        $('#TipoOportunidad_Nombre').css("border", "1px solid #f44336");
+        $('#TipoOportunidad_Nombre').css("border-left", "none");
+
+        if ($('#TipoOportunidad_Nombre').val().length > 0) {
+            $('#TipoOportunidad_Nombre').css("border", "1px solid #d9dee3");
+            $('#TipoOportunidad_Nombre').css("border-left", "none");
+        }
+
+        if ($('#TipoOportunidad_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function BtnRegistrarUnidadNegocio() {
+        if (ValidaUnidadNegocio()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#UnidadNegocio_Nombre').val();
+
+            var jsonObject = {
+                "CatUnidadNegocio": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UnidadNegocio_Agregar", "UnidadNegocio")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La unidad de negocio ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Unidad de negocio no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaUnidadNegocio(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Unidad de negocio no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaUnidadNegocio(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UnidadNegocio_Listar", "UnidadNegocio")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_UnidadNegocio").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_UnidadNegocio").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_UnidadNegocio").append(option);
+                    });
+                }
+                $('#Oportunidad_UnidadNegocio option[value="' + Id + '"]').attr("selected", true);
+                $('#UnidadNegocio_Nombre').val('');
+                $("#BtnUnidadNegocioCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva unidad de negocio registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaUnidadNegocio() {
+        var result = false;
+
+        $('#UnidadNegocio_Nombre').css("border", "1px solid #f44336");
+        $('#UnidadNegocio_Nombre').css("border-left", "none");
+
+        if ($('#UnidadNegocio_Nombre').val().length > 0) {
+            $('#UnidadNegocio_Nombre').css("border", "1px solid #d9dee3");
+            $('#UnidadNegocio_Nombre').css("border-left", "none");
+        }
+
+        if ($('#UnidadNegocio_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function FormularioProducto() {
+        if ($('#checkbox_Producto').prop('checked')) {
+
+            $("#checkbox_Producto").prop("checked", false);
+            $("#BtnProducto").removeClass("btn-primary");
+            $("#BtnProducto").addClass("btn-outline-secondary");
+            $("#FormeProducto").css("display", "none");
+        } else {
+            $("#checkbox_Producto").prop("checked", true);
+            $("#BtnProducto").removeClass("btn-outline-secondary");
+            $("#BtnProducto").addClass("btn-primary");
+
+            $("#FormeProducto").show();
+            $("#Oportunidad_Producto").select2();
+            $("#Oportunidad_Categoria").select2();
+            $("#Oportunidad_SubCategoria").select2();
+            $("#Oportunidad_Clasificacion").select2();
+
+
+
+            var posicion = $("#FormeProducto").offset().top;
+            $("html, body").animate({
+                scrollTop: posicion - 100
+            }, 500);
+        }
+    }
+
+    function FormularioImporte() {
+        if ($('#checkbox_Importe').prop('checked')) {
+
+            $("#checkbox_Importe").prop("checked", false);
+            $("#BtnImporte").removeClass("btn-primary");
+            $("#BtnImporte").addClass("btn-outline-secondary");
+            $("#FormeImporte").css("display", "none");
+        } else {
+            $("#checkbox_Importe").prop("checked", true);
+            $("#BtnImporte").removeClass("btn-outline-secondary");
+            $("#BtnImporte").addClass("btn-primary");
+
+            $("#FormeImporte").show();
+            var posicion = $("#FormeImporte").offset().top;
+            $("html, body").animate({
+                scrollTop: posicion - 100
+            }, 500);
+        }
+    }
+
+    function FormularioEmpresa() {
+        if ($('#checkbox_Empresa').prop('checked')) {
+
+            $("#checkbox_Empresa").prop("checked", false);
+            $("#BtnEmpresa").removeClass("btn-primary");
+            $("#BtnEmpresa").addClass("btn-outline-secondary");
+            $("#FormeEmpresa").css("display", "none");
+        } else {
+            $("#checkbox_Empresa").prop("checked", true);
+            $("#BtnEmpresa").removeClass("btn-outline-secondary");
+            $("#BtnEmpresa").addClass("btn-primary");
+
+            $("#FormeEmpresa").show();
+            $("#Oportunidad_Empresa").select2();
+
+            var posicion = $("#FormeEmpresa").offset().top;
+            $("html, body").animate({
+                scrollTop: posicion - 100
+            }, 500);
+        }
+    }
+
+    function FormularioContacto() {
+        if ($('#checkbox_Contacto').prop('checked')) {
+
+            $("#checkbox_Contacto").prop("checked", false);
+            $("#BtnContacto").removeClass("btn-primary");
+            $("#BtnContacto").addClass("btn-outline-secondary");
+            $("#FormContacto").css("display", "none");
+        } else {
+            $("#checkbox_Contacto").prop("checked", true);
+            $("#BtnContacto").removeClass("btn-outline-secondary");
+            $("#BtnContacto").addClass("btn-primary");
+
+            $("#FormContacto").show();
+            $("#Oportunidad_Contacto").select2();
+
+            var posicion = $("#FormContacto").offset().top;
+            $("html, body").animate({
+                scrollTop: posicion - 100
+            }, 500);
+        }
+    }
+</script>
+
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $("#Oportunidad_UnidadNegocio").select2();
+        $("#Oportunidad_TipoOportunidad").select2();
+        $("#Oportunidad_Prioridad").select2();
+        $("#Oportunidad_Propietario").select2();
+        $("#Oportunidad_EstatusOpurtunidad").select2();
+
+    });
+
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Letras(e) {
+
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz ";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Numeros(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = "1234567890";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+
+    const MILLARES = ",";
+    const DECIMALES = ".";
+    const DTFLOCAL = new Intl.NumberFormat('en-US');
+
+    // Formatear solamente numeros decimales positivos
+    function numberFormatPositivo(e) {
+        if (this.value === "") {
+            return;
+        }
+        // Obtenemos un array con el numero y los decimales si hay
+        let contenido = "";
+        if (MILLARES === ",") {
+            contenido = this.value.replace(/[^0-9\.]/g, "").split(".");
+        } else {
+            contenido = this.value.replace(/[^0-9\,]/g, "").split(",");
+        }
+        // añadimos los separadores de miles al primer numero del array
+        contenido[0] = contenido[0].length ? DTFLOCAL.format(parseInt(contenido[0])) : "0";
+        // Juntamos el numero con los decimales si hay decimales
+        this.value = contenido.length > 1 ? contenido.slice(0, 2).join(".") : contenido[0];
+    }
+
+    window.onload = function () {
+        //SE EJECUTA DESPUES CARGAR EL CODIGO CSS y HTML
+        // Creamos el evento keyup
+        document.querySelectorAll(".numberPositivo").forEach(el => el.addEventListener("keyup", numberFormatPositivo));
+    };
+
+</script>
+<script>
+    $('#Nv1Oportunidad').addClass("active open");
+    $('#Nv1OportunidadCrear').addClass("active");
+</script>

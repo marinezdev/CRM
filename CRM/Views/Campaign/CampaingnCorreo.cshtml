@@ -1,0 +1,418 @@
+﻿
+@{
+    ViewBag.Title = "CampaingnCorreo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .campaign-card {
+        margin-bottom: 20px;
+    }
+
+        .campaign-card .card-header i {
+            margin-right: 10px;
+        }
+
+    .card-header.active {
+        background-color: #28a745; /* Verde para activa */
+        color: white;
+    }
+
+    .card-header.inactive {
+        background-color: #dc3545; /* Rojo para inactiva */
+        color: white;
+    }
+
+    .card-header {
+        padding: 1rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+        background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+        background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+        background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+        background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+
+    .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-container input {
+        padding-left: 2.5rem; /* Adjust the padding to fit the icon */
+    }
+
+    .search-container .bx-search-alt {
+        position: absolute;
+        left: 0.75rem; /* Adjust the position to fit within the input field */
+        font-size: 1.2rem;
+        color: #aaa; /* Adjust the color if needed */
+    }
+
+    .offcanvas-end {
+        top: 0;
+        right: 0;
+        width: 497px;
+        border-left: 0px solid rgba(67, 89, 113, 0.2);
+        transform: translateX(100%);
+    }
+
+
+    .toggle {
+        background: #eee;
+        width: 80px; /* Adjusted width */
+        height: 40px; /* Adjusted height */
+        padding: 4px; /* Adjusted padding */
+        border-radius: 40px; /* Adjusted border-radius */
+        position: relative;
+    }
+
+    label {
+        width: 32px; /* Adjusted width */
+        height: 32px; /* Adjusted height */
+        background: #ccc;
+        display: flex;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.25s ease 0s;
+    }
+
+    input {
+        display: none;
+    }
+
+    input:checked + label {
+        margin-left: 40px; /* Adjusted margin-left */
+        background: #47c;
+    }
+
+    .toggle:before, .toggle:after {
+        content: "ON";
+        position: absolute;
+        font-size: 12px; /* Adjusted font-size */
+        width: 32px; /* Adjusted width */
+        height: 32px; /* Adjusted height */
+        text-align: center;
+        padding: 8px 0; /* Adjusted padding */
+        z-index: 0;
+        color: #47c;
+    }
+
+    .toggle:after {
+        content: "OFF";
+        top: 4px; /* Adjusted position */
+        left: 44px; /* Adjusted position */
+        color: #666;
+    }
+
+    label {
+        position: relative;
+        z-index: 1;
+    }
+
+
+
+</style>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+
+<div class="card mb-4">
+    <h5 class="card-header">
+        Gestión de Campañas
+    </h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col mb-3">
+                <small class="text-light fw-semibold">Visualice las campañas activas en el sistema. Use la barra de búsqueda para localizar campañas específicas rápidamente. Haga clic en "Ver Información" para más detalles.</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="form-group mb-4">
+                    <div class="search-container">
+                        <i class='bx bx-search-alt'></i>
+                        <input type="text" id="searchBox" class="form-control" placeholder="Buscar campaña...">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1" style="font-size: 14px; margin-top: 0.5%;">
+                <span>Mis Campañas</span>
+            </div>
+            <div class="col-md-2">
+                <div class="toggle-container">
+                    <div class="toggle">
+                        <input type="checkbox" id="btn">
+                        <label for="btn"></label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="campaignsContainer" class="row">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<button class="btn btn-primary" type="button" id="BtnModalCorreo" data-bs-toggle="offcanvas" data-bs-target="#ModalCorreo" style="display:none;">+</button>
+<!---  FORMULARIO agregar a Lista -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="ModalCorreo" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title mt-2">Correos relacionados a campaña</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Visualice y edite los correos relacionados a esta campaña:</p>
+                <div class="row">
+                    <div class="input-group">
+                        <div class="col-sm-12 table-responsive">
+                            <table id="TlistCorreo" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Clave</th>
+                                        <th>Nombre</th>
+                                        <th style="text-align:center">Editar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="Contenido">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketinPlantillas').addClass("active");
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("Campaign_Seleccionar", "Campaign")",
+            success: function (campaigns) {
+                window.allCampaigns = campaigns;
+                renderCampaigns(campaigns);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        $('#searchBox').on('input', function () {
+            var searchTerm = $(this).val().toLowerCase();
+            var filteredCampaigns = window.allCampaigns.filter(function (campaign) {
+                var nameMatch = campaign.Nombre && campaign.Nombre.toLowerCase().includes(searchTerm);
+                var keyMatch = campaign.Clave && campaign.Clave.toLowerCase().includes(searchTerm);
+                var createdByMatch = campaign.Usuario.Persona.Nombre && campaign.Usuario.Persona.Nombre.toLowerCase().includes(searchTerm);
+                var status = campaign.CatEstatusMarketing.Nombre && campaign.CatEstatusMarketing.Nombre.toLowerCase().includes(searchTerm);
+
+
+                return nameMatch || keyMatch || createdByMatch || status;
+            });
+            renderCampaigns(filteredCampaigns);
+        });
+
+
+        $('#btn').change(function () {
+            var Idusuario = @ViewBag.usuario;
+            if ($(this).is(':checked')) {
+                var filteredCampaigns = window.allCampaigns.filter(function (campaign) {
+
+                   return campaign.Usuario.Id === Idusuario;
+
+
+                });
+                renderCampaigns(filteredCampaigns);
+            } else {
+                renderCampaigns(window.allCampaigns);
+            }
+        });
+
+        $('#TlistCorreo').DataTable({
+            searching: false,
+            lengthChange: false,
+            pageLength: 10,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        });
+    });
+
+
+
+    function convertDate(dateString) {
+        var date = new Date(parseInt(dateString.replace('/Date(', '').replace(')/', ''), 10));
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        return day + "/" + month + "/" + year;
+    }
+    function getStatusColor(statusId) {
+        switch (statusId) {
+            case 1:
+                return 'background-image: linear-gradient(114deg, #d84444 30%, #aa4040 99%);';//Cancelada
+            case 2:
+                return 'background-image: linear-gradient(114deg, #d8c344 30%, #aaa840 99%);';//Proceso
+            case 3:
+                return 'background-image: linear-gradient(114deg, #449fd8 30%, #405baa 99%);';//Inicializada
+            case 4:
+                return 'background-image: linear-gradient(114deg, #a744d8 30%, #5a40aa 99%);';//Terminada
+            default:
+                return 'background-image: linear-gradient(114deg, #449fd8 30%, #405baa 99%);';
+        }
+    }
+    function renderCampaigns(campaigns) {
+        var container = $('#campaignsContainer');
+        container.empty();
+        campaigns.forEach(function (campaign) {
+        var statusStyle = getStatusColor(campaign.CatEstatusMarketing.Id);
+        var fechaInicio = convertDate(campaign.FechaInicio);
+        var fechaFin = convertDate(campaign.FechaFin);
+
+            var cardHtml = `<div class="col-md-4 campaign-card">
+                <div class="card" style="box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.35);">
+                    <div class="card-header active" style="${statusStyle}">
+                        <i class='bx bxs-bell-ring'></i>${campaign.Clave} - ${campaign.Nombre}
+                    </div>
+                    <div class="card-body mt-2">
+                        <h5 class="card-title">${campaign.Nombre}</h5>
+                        <p class="card-text" style="margin-bottom: 7px;">
+                            Fecha Inicio: <span class="badge bg-label-primary me-1">${fechaInicio}</span>
+                            Fecha fin: <span class="badge bg-label-primary me-1">${fechaFin}</span>
+                        </p>
+                        <p class="card-text" style="margin-bottom: 7px;">
+                            Creada por: <b>${campaign.Usuario.Persona.Nombre}</b>
+                        </p>
+                        <p class="card-text" style="margin-bottom: 7px;">
+                            Status: <b>${campaign.CatEstatusMarketing.Nombre}</b>
+                        </p>
+                        <div class="d-flex justify-content-end">
+                            <a href="#" onclick="Infocamping(${campaign.Id})" class="btn btn-primary">Ver Información</a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        container.append(cardHtml);
+        });
+    }
+    function Infocamping(Id) {
+        window.location.href = "/Campaign/CampaingnInfo?config=" + Id;
+    }
+
+
+    @*function Correos(Id) {
+        const model = {
+            Id: Id
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CampaignCorreoElectronico_listCorreo", "Campaign")",
+            async: false,
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                tabla(result);
+                $("#BtnModalCorreo").trigger("click");
+            },
+            error: function () {
+                AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+            }
+        });
+
+
+    }
+    function tabla(datos) {
+        var table = $('#TlistCorreo').DataTable();
+        table.destroy();
+        Contenido.innerHTML = "";
+
+        for (let valor of datos) {
+            Contenido.innerHTML += `
+            <tr>
+                <td>${valor.Clave}</td>
+                <td style="width: 50%;">${valor.Nombre}</td>
+                <td style="width: 20%; text-align: center;">
+                    <i disable onclick="EditarCorreo(${valor.Id})" class="bx bx-message-square-edit" style="cursor: pointer;"></i>
+                </td>
+            </tr>
+            `;
+        }
+
+
+        $('#TlistCorreo').DataTable({
+            searching: false,
+            lengthChange: false,
+            pageLength: 10,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        });
+    }
+    function EditarCorreo(Id) {
+        window.location.href = "/Correo/Plantilla?config=" + Id;
+    }*@
+</script>

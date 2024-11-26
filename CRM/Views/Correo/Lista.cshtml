@@ -1,0 +1,1393 @@
+﻿
+@{
+    ViewBag.Title = "Lista";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/fSelect.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+
+<style>
+    .Selecionado {
+        background-color: #d7d7d7;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+        background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+        background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+        background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+        background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+
+    .offcanvas-body {
+        height: 100%;
+    }
+</style>
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-7">
+        <div class="card mb-4" id="DivMylistContend">
+            <h5 id="TitleCamping1" class="card-header">Destinatarios </h5>
+            <h5 id="TitleCamping2" class="card-header">Mis Listas de contactos </h5>
+
+            <!-- Basic Pagination -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <small class="text-light fw-semibold">Selecciona una lista para obetener su información.</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Enviar a   </label>
+                            <div class="input-group">
+                                <select id='Select_Lista' class="form-select" onchange="CargaUsuarios()">
+                                    <option value="0">SELECCIONAR</option>
+                                    @if (ViewBag.Lista != null)
+                                    {
+                                        foreach (var item in ViewBag.Lista)
+                                        {
+                                            <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 table-responsive">
+                        <p>Contactos en lista</p>
+                        <table id="TUsuario" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th style="text-align:center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="Contenido">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row justify-content-end" id="ButtonNext">
+                        <div class="col-md-4">
+                            <div class="demo-inline-spacing">
+                                <button type="button" class="btn btn-primary" style="width: 100%;" onclick="Siguiente()">
+                                    Siguiente &nbsp;<span class="tf-icons bx bxs-right-arrow-circle"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="DivOptionListContend" class="card mb-4" style="display:none">
+            <h5 class="card-header">Opciones Lista </h5>
+            <!-- Basic Pagination -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <small class="text-light fw-semibold">Coloca el nuevo nombre de tu lista.</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" id="NewNameList" placeholder="Nombre Lista" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="demo-inline-spacing">
+                                            <button id="BtnchangenameList" type="button" class="btn btn-primary" style="width: 100%;">
+                                                Actualizar
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="demo-inline-spacing">
+                                            <button id="BtnDeleteList" type="button" class="btn btn-primary" style="width: 100%;" onclick="Eliminar()">
+                                                Eliminar
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div id="DivImporContend" class="card mb-4" style="display:none">
+            <h5 class="card-header">Importar Lista </h5>
+            <!-- Basic Pagination -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <p>Consulta y Importa Listas de Contacto</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <div class="col-sm-12 table-responsive">
+                                    <table id="TListImport" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Usuario</th>
+                                                <th>UDN</th>
+                                                <th>Contactos</th>
+                                                <th style="text-align:center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ContenidoImport">
+                                            @if (ViewBag.ListaAll != null)
+                                            {
+                                                foreach (var item1 in ViewBag.ListaAll)
+                                                {
+                                                    <tr>
+                                                        <td><strong>@item1.Nombre</strong></td>
+                                                        <td><strong>@item1.Usuario.Persona.Nombre</strong></td>
+                                                        <td><span class="badge bg-label-primary me-1">@item1.CatUnidadNegocio.Nombre</span></td>
+                                                        <td class="text-center"><span class="badge bg-label-primary me-1">@item1.NumContacto</span></td>
+                                                        <td class="text-center">
+                                                            <button type='button' class='btn rounded-pill btn-icon btn-outline-primary' onclick='Import(@item1.Id)'>
+                                                                <span class='tf-icons bx bx-import'></span>
+                                                            </button>
+                                                            <button type='button' class='btn rounded-pill btn-icon btn-outline-primary' onclick='ShowList(@item1.Id)'>
+                                                                <span class='tf-icons bx bxs-show'></span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div class="card" id="CardMenuConfiguracion">
+            <div class="card-header">
+                <h5 class="card-header-text"> <i class="ti-settings"></i> Operaciones </h5>
+            </div>
+            <div class="card">
+                <div class="">
+                    <a id="DivMylist" class="list-group-item list-group-item-action flex-column align-items-start Selecionado" onclick="navegacion(0)">
+                        <p class="mb-1">
+                            <strong>
+                                <i class='bx bx-list-ul' style='font-size: 20px; color: #1d2db0;'></i>&nbsp;
+                                <i class="ti-filter"></i>
+                                Mis Listas
+                            </strong> <br />
+                            Obten Información de las listas creadas por ti.
+                        </p>
+                    </a>
+                    <a id="DivNewList" class="list-group-item list-group-item-action flex-column align-items-start" onclick="navegacion(1)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTipo" aria-controls="offcanvasTipo">
+                        <p class="mb-1">
+                            <strong>
+                                <i class='bx bx-list-plus' style='font-size: 20px; color: #1d2db0;'></i>&nbsp;
+                                <i class="ti-filter"></i>
+                                Crear Lista
+                            </strong> <br />
+                            Crea una nueva lista para administrar los Contactos.
+                        </p>
+                    </a>
+                    <button class="btn btn-primary" type="button" id="IdBtnModalAddUserAbrir" data-bs-toggle="offcanvas" data-bs-target="#AddUser" style="display:none;">+</button>
+                    <a id="DivAddContact" class="list-group-item list-group-item-action flex-column align-items-start" onclick="navegacion(2),ConsultaFselect(),ressetSelect()">
+                        <p class="mb-1">
+                            <strong>
+                                <i class='bx bx-user-plus' style='font-size: 20px; color: #1d2db0;'></i>&nbsp;
+                                <i class="ti-timer"></i>
+                                Agregar usuarios a lista
+                            </strong><br />
+                            administra los Contactos que pertenecen a la lista.
+                        </p>
+                    </a>
+                    <a id="DivOptionList" class="list-group-item list-group-item-action flex-column align-items-start" onclick="navegacion(3),OptionList()">
+                        <p class="mb-1">
+                            <strong>
+                                <i class='bx bx-cog' style='font-size: 20px; color: #1d2db0;'></i>&nbsp;
+                                <i class="ti-brush-alt"></i>
+                                Opciones
+                            </strong> <br />
+                            configura las opciones de tu lista.
+                        </p>
+                    </a>
+                    <a id="DivImport" class="list-group-item list-group-item-action flex-column align-items-start" onclick="navegacion(4)">
+                        <p class="mb-1">
+                            <strong>
+                                <i class='bx bx-import' style='font-size: 20px; color: #1d2db0;'></i>&nbsp;
+                                <i class="ti-brush-alt"></i>
+                                Importar lista.
+                            </strong> <br />
+                            Explora y añade listas creadas por otros usuarios.
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---  FORMULARIO NUEVA Lista -->
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasTipo" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA LISTA</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre de la Lista</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-list-plus"></i>
+                        </span>
+                        <input type="text" class="form-control" id="NameList" placeholder="Nombre Lista" aria-label="" aria-describedby="TipoEmpresa_Nombre" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                    <div class="input-group">
+                        <select id='Correo_UnidadNegocio' class="form-select" aria-label="Correo_UnidadNegocio">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.UnidadNegocio)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        @*<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="NewList()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnlistaCerrar">  Cancelar  </button>
+    </div>
+</div>
+<!---  FORMULARIO agregar a Lista -->
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="AddUser" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO USUARIO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Seleccione cómo agregar Contactos:</p>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <input type="checkbox" id="opcion1" value="0" style="display:none" name="opcion">
+
+                        <button type="button" class="btn btn-outline-secondary btn-block btnopc" id="btnopcion1" onclick="FormularioM(this)">
+                            <span class="tf-icons bx bx-user"></span>&nbsp; Contacto
+                        </button>
+                    </div>
+
+                    <div class="col-md-4">
+                        <input type="checkbox" id="opcion2" value="0" style="display: none" name="opcion">
+
+                        <button type="button" class="btn btn-outline-secondary btn-block btnopc" id="btnopcion2" onclick="FormularioM(this)">
+                            <span class="tf-icons bx bx-building"></span>&nbsp; Empresa
+                        </button>
+                    </div>
+
+                    <div class="col-md-4">
+                        <input type="checkbox" id="opcion3" value="0" style="display: none" name="opcion">
+
+                        <button type="button" class="btn btn-outline-secondary btn-block btnopc" id="btnopcion3" onclick="FormularioM(this)">
+                            <span class="bx bx-extension"></span>&nbsp; U.D.N
+                        </button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="mb-3 formulario" id="formularioopcion1" style="display: none">
+                    <label class="form-label" for="basic-icon-default-fullname">* Selecciona el/los Contactos para agregar a la lista</label>
+                    <div class="input-group">
+                        <select id='Select_AddUsers' class="form-select" multiple>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3 formulario" id="formularioopcion2" style="display: none">
+                    <label class="form-label" for="basic-icon-default-fullname">* Empresa</label>
+                    <div class="input-group">
+                        <select id='Select_Empresa' class="form-select" onchange="CargarUserEmpresa()">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @if (ViewBag.Empresas != null)
+                            {
+                                foreach (var item1 in ViewBag.Empresas)
+                                {
+                                    <option value="@item1.Id">@item1.Nombre.ToUpper()</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <label class="form-label" for="basic-icon-default-fullname">* Selecciona el/los Contactos para agregar a la lista</label>
+
+                    <div class="input-group">
+                        <select id='Select_AddUsersEmpresa' class="form-select" multiple>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3 formulario" id="formularioopcion3" style="display: none">
+                    <label class="form-label" for="basic-icon-default-fullname">* UDN</label>
+                    <div class="input-group">
+                        <select id='Select_UDN' class="form-select" onchange="CargarUserUdn()">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.UnidadNegocio)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <label class="form-label" for="basic-icon-default-fullname">* Selecciona el/los Contactos para agregar a la lista</label>
+
+                    <div class="input-group">
+                        <select id='Select_AddUsersUDN' class="form-select" multiple>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="SaveUsers()">Agregar Contactos</button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnSUCerrar">  Cancelar  </button>
+    </div>
+</div>
+<!-- MODAL NUEVO RESPONSABLE  -->
+<div class="modal fade" id="ModalViewContact" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="backDropModalTitle">
+                    Contactos en la lista
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 table-responsive">
+                        <table id="TUserImport" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th style="text-align:center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ContenidoUserImport">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+                @*<button type="button" class="btn btn-primary" id="BtnGuardarOportunidadEstatus" onclick="BtnRegistrarResponsable()">Registrar </button>*@
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/assets/js/fSelect.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    const val2 = search('camping');
+    const val = search('config');
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketinLista').addClass("active");
+
+    $(document).ready(function () {
+        if (val !== null) {
+            $('#TitleCamping2').css('display', 'none')
+        } else {
+            $('#TitleCamping1').css('display', 'none');
+            $('#ButtonNext').css('display', 'none');
+        }
+        
+        $("#Select_Lista").select2();
+        $("#Select_UDN").fSelect({ placeholder: 'Selecciona una unidad de negocio', numDisplayed: 2, overflowText: '{n} seleccionados', noResultsText: 'Nada por aquí', searchText: 'Buscar', showSearch: true });
+        $("#Select_Empresa").fSelect({ placeholder: 'Selecciona una empresa', numDisplayed: 2, overflowText: '{n} seleccionados', noResultsText: 'Nada por aquí', searchText: 'Buscar', showSearch: true });
+        $('#Select_AddUsers').fSelect({ placeholder: 'Selecciona usuarios', numDisplayed: 2, overflowText: '{n} seleccionados', noResultsText: 'Nada por aquí', searchText: 'Buscar', showSearch: true });
+        $('#Select_AddUsersUDN').fSelect({ placeholder: 'Selecciona usuarios', numDisplayed: 2, overflowText: '{n} seleccionados', noResultsText: 'Nada por aquí', searchText: 'Buscar', showSearch: true });
+        $('#Select_AddUsersEmpresa').fSelect({ placeholder: 'Selecciona usuarios', numDisplayed: 2, overflowText: '{n} seleccionados', noResultsText: 'Nada por aquí', searchText: 'Buscar', showSearch: true });
+        $('#TUsuario').DataTable({
+            pageLength: 10,
+            lengthMenu: [[10, 20, -1], [10, 20, 'Todas']],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        }).on('init.dt', function () {
+            $('.dataTables_filter input').attr('placeholder', 'Usuarios');
+        });
+        $('#TListImport').DataTable({
+            pageLength: 10,
+            lengthMenu: [[10, 20, -1], [10, 20, 'Todas']],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        }).on('init.dt', function () {
+            $('.dataTables_filter input').attr('placeholder', 'Listas');
+        });
+        $('#TUserImport').DataTable({
+            pageLength: 10,
+            lengthMenu: [[10, 20, -1], [10, 20, 'Todas']],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        }).on('init.dt', function () {
+            $('.dataTables_filter input').attr('placeholder', 'Contacto');
+        });
+    });
+
+    function navegacion(id) {
+        if (id == 0) {
+            $("#DivMylist").addClass("Selecionado");
+            $("#DivNewList").removeClass("Selecionado");
+            $("#DivAddContact").removeClass("Selecionado");
+            $("#DivOptionList").removeClass("Selecionado");
+            $("#DivImport").removeClass("Selecionado");
+
+            $("#DivMylistContend").show();
+            $("#DivOptionListContend").hide();
+            $("#DivImporContend").hide();
+        } else if (id == 1) {
+            $("#DivMylist").removeClass("Selecionado");
+            $("#DivNewList").addClass("Selecionado");
+            $("#DivAddContact").removeClass("Selecionado");
+            $("#DivOptionList").removeClass("Selecionado");
+            $("#DivImport").removeClass("Selecionado");
+
+            $("#DivMylistContend").show();
+            $("#DivOptionListContend").hide();
+            $("#DivImporContend").hide();
+        } else if (id == 2) {
+            $("#DivMylist").removeClass("Selecionado");
+            $("#DivNewList").removeClass("Selecionado");
+            $("#DivAddContact").addClass("Selecionado");
+            $("#DivOptionList").removeClass("Selecionado");
+            $("#DivImport").removeClass("Selecionado");
+
+            $("#DivMylistContend").show();
+            $("#DivOptionListContend").hide();
+            $("#DivImporContend").hide();
+        } else if (id == 3) {
+            $("#DivMylist").removeClass("Selecionado");
+            $("#DivNewList").removeClass("Selecionado");
+            $("#DivAddContact").removeClass("Selecionado");
+            $("#DivOptionList").addClass("Selecionado");
+            $("#DivImport").removeClass("Selecionado");
+
+            $("#DivMylistContend").hide();
+            $("#DivOptionListContend").show();
+            $("#DivImporContend").hide();
+        } else if (id == 4) {
+            $("#DivMylist").removeClass("Selecionado");
+            $("#DivNewList").removeClass("Selecionado");
+            $("#DivAddContact").removeClass("Selecionado");
+            $("#DivOptionList").removeClass("Selecionado");
+            $("#DivImport").addClass("Selecionado");
+
+            $("#DivMylistContend").hide();
+            $("#DivOptionListContend").hide();
+            $("#DivImporContend").show();
+        }
+
+    }
+    function CargaUsuarios() {
+        const Lista = {
+            Id: $("#Select_Lista option:selected").val()
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Lista_Read_User", "Lista")",
+            async: false,
+            data: JSON.stringify(Lista),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                tabla(result);
+            },
+            error: function () {
+                var table = $('#TUsuario').DataTable();
+                table.destroy();
+                Contenido.innerHTML = "";
+            }
+        });
+    }
+    function tabla(datos) {
+        var table = $('#TUsuario').DataTable();
+        table.destroy();
+        Contenido.innerHTML = "";
+        for (let valor of datos) {
+            var fila = `
+       <tr ${valor.Restringido === 1 ? 'style="background-color: #ffffa3;" title="Contacto restringido no recibirá el correo"' : ''}>
+            <td>
+                ${valor.Restringido === 1 ? `<i style="color: #FF0000;" class='bx bxs-error-alt'></i>` : ''}
+                ${valor.Persona.Nombre}
+            </td>
+            <td>${valor.Persona.Email.email}</td>
+            <td class="text-center">
+                <i onclick="eliminarContacto(${valor.Persona.Id})" class="bx bx-user-minus" style="cursor: pointer;"></i>
+            </td>
+        </tr>
+
+        `;
+            Contenido.innerHTML += fila;
+        }
+        $('#TUsuario').DataTable({
+            pageLength: 10,
+            lengthMenu: [[10, 20, -1], [10, 20, 'Todas']],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        }).on('init.dt', function () {
+            $('.dataTables_filter input').attr('placeholder', 'Usuarios');
+        });
+    }
+
+
+    //Formato correo Nueva Vista
+    function Siguiente() {
+        if (ValidaLista()) {
+            const lista = {
+                Id: $("#Select_Lista option:selected").val()
+            }
+            const Campaign = {
+                Id: val2
+            }
+            const CampaignCorreoElectronico = {
+                Id: val,
+                lista: lista,
+                Campaign: Campaign
+            }
+             $.ajax({
+                type: "POST",
+                url: "@Url.Action("CampaignCorreoElectronico_ListaInsert", "Campaign")",
+                async: false,
+                 data: JSON.stringify(CampaignCorreoElectronico),
+                 contentType: "application/json; charset=utf-8",
+                 dataType: "json",
+                 success: function (result) {
+                     if (result.Id == -1) {
+                         AlertWarning("Problemas al registrar ", "funcion no disponible.");
+                     } else if (result.Id == 0) {
+                         AlertDanger("Problemas al registrar ", "funcion no disponible.");
+                     } else if (result.Id > 0) {
+                        window.location.href = "/Correo/Plantilla?camping=" + val2 + "&config=" + val;
+                     }
+                 }
+            });
+        } else {
+            AlertIncompleto("Formulario incompleto ! ", "Selecciona una lista para continuar.");
+        }
+    }
+    function ValidaLista() {
+        var result = false;
+        $('#select2-Select_Lista-container').css("border", "1px solid #ff0049");
+        if ($("#Select_Lista option:selected").val() > 0) { $('#select2-Select_Lista-container').css("border", "1px solid #cccccc"); }
+        result = (
+            $("#Select_Lista option:selected").val() > 0
+        );
+        return result;
+    }
+    function NewList() {
+        if (ValidaListaName()) {
+            const CatUnidadNegocio = {
+                Id: $("#Correo_UnidadNegocio option:selected").val()
+            }
+            const Lista = {
+                Nombre: $("#NameList").val(),
+                CatUnidadNegocio: CatUnidadNegocio
+            }
+             $.ajax({
+                type: "POST",
+                url: "@Url.Action("Lista_Insert", "Lista")",
+                async: false,
+                data: JSON.stringify(Lista),
+                contentType: "application/json; charset=utf-8",
+                 dataType: "json",
+                 success: function (result) {
+                     if (result.Id == -1) {
+                         AlertWarning("Problemas al registrar ", "El nombre de esta lista ya existe.");
+                     } else if (result.Id == 0) {
+                         AlertDanger("Problemas al registrar ", "lista no registrada.");
+                     } else if (result.Id > 0) {
+                         CargaListas(result.Id);
+                     }
+                 }
+            });
+        }
+    }
+    function CargaListas(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Lista_Read_IdUser", "Lista")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $('#Select_Lista').empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Select_Lista").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Select_Lista").append(option);
+                    });
+                }
+
+                $('#Select_Lista option[value="' + Id + '"]').attr("selected", true);
+                $('#Correo_UnidadNegocio').val("0");
+                $('#NameList').val('');
+                $("#BtnlistaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !', 'Nueva lista registrada');
+                CargaUsuarios();
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+    //Rellenar EL SELECT DE PERSONAS
+    function ConsultaFselect() {
+        if (ValidaLista()) {
+            $("#IdBtnModalAddUserAbrir").trigger("click");
+
+            $('#Select_AddUsers').empty();
+
+            const Lista = {
+                Id: $("#Select_Lista option:selected").val()
+            }
+
+            $.ajax({
+            url: "@Url.Action("Lista_Read_IdList", "Lista")",
+            type: "POST",
+            data: JSON.stringify(Lista),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+                error: function (resultado) {
+                    var option = $(document.createElement('option'));
+                    option.text("Seleccionar");
+                    option.val(0);
+
+                    $("#Select_AddUsers").append(option);
+                },
+                success: function (resultado) {
+                    var option = $(document.createElement('option'));
+
+                    $("#Select_AddUsers").append(option);
+
+                    $(resultado).each(function () {
+                        var option = $(document.createElement('option'));
+                        var nombreEmail = this.Persona.Nombre + ' - '+'( '+ this.Persona.Email.email +' )';
+                        option.text(nombreEmail);
+                        option.val(this.Persona.Id);
+
+
+                        $("#Select_AddUsers").append(option);
+
+                    });
+
+                    $('#Select_AddUsers').fSelect('reload');
+                }
+          });
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una lista para agregar una persona.");
+        }
+    }
+    function CargarUserEmpresa() {
+        $('#Select_AddUsersEmpresa').empty();
+
+        const Lista = {
+            Id: $("#Select_Lista option:selected").val()
+        }
+        const Empresa = {
+            Id: $('#Select_Empresa').val(),
+            Lista: Lista
+        }
+
+        $.ajax({
+        url: "@Url.Action("Contacto_Seleccionar_IdEmpresa", "Contacto")",
+        type: "POST",
+        data: JSON.stringify(Empresa),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+            error: function (resultado) {
+                var option = $(document.createElement('option'));
+                option.text("Seleccionar");
+                option.val(0);
+
+                $("#Select_AddUsersEmpresa").append(option);
+            },
+            success: function (resultado) {
+                var option = $(document.createElement('option'));
+
+                $("#Select_AddUsersEmpresa").append(option);
+
+                $(resultado).each(function () {
+                    var option = $(document.createElement('option'));
+                    var nombreEmail = this.Persona.Nombre + ' - '+'( '+ this.Persona.Email.email +' )';
+                    option.text(nombreEmail);
+                    option.val(this.Persona.Id);
+
+
+                    $("#Select_AddUsersEmpresa").append(option);
+
+                });
+
+                $('#Select_AddUsersEmpresa').fSelect('reload');
+            }
+        });
+
+    }
+    function CargarUserUdn() {
+        $('#Select_AddUsersUDN').empty();
+        const Lista = {
+            Id: $("#Select_Lista option:selected").val()
+        }
+        const UDN = {
+            Id: $('#Select_UDN').val(),
+            Lista: Lista
+        }
+
+        $.ajax({
+        url: "@Url.Action("Contacto_Seleccionar_IdUnidadNegocio", "Contacto")",
+        type: "POST",
+        data: JSON.stringify(UDN),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+            error: function (resultado) {
+                var option = $(document.createElement('option'));
+                option.text("Seleccionar");
+                option.val(0);
+
+                $("#Select_AddUsersEmpresa").append(option);
+            },
+            success: function (resultado) {
+                var option = $(document.createElement('option'));
+
+                $("#Select_AddUsersUDN").append(option);
+
+                $(resultado).each(function () {
+                    var option = $(document.createElement('option'));
+                    var nombreEmail = this.Persona.Nombre + ' - '+'( '+ this.Persona.Email.email +' )';
+                    option.text(nombreEmail);
+                    option.val(this.Persona.Id);
+
+
+                    $("#Select_AddUsersUDN").append(option);
+
+                });
+
+                $('#Select_AddUsersUDN').fSelect('reload');
+            }
+        });
+
+    }
+    function SaveUsers() {
+    let lista;
+
+        if ($('#opcion1').is(':checked')) {
+            lista = $("#Select_AddUsers").val();
+        } else if ($('#opcion2').is(':checked')) {
+            lista = $("#Select_AddUsersEmpresa").val();
+        } else if ($('#opcion3').is(':checked')) {
+            lista = $("#Select_AddUsersUDN").val();
+        } else {
+            lista = null;
+        }
+
+        if (!lista || lista.length === 0) {
+            swal({
+                title: "Error",
+                text: "No se ha seleccionado ningún usuario",
+                icon: "error",
+                button: "Aceptar",
+            });
+            return;
+        }
+
+    const Contacto = {
+        IdContacto: lista
+    }
+
+    const model = {
+        Id: $("#Select_Lista option:selected").val(),
+        Contacto: Contacto
+    }
+
+
+    $.ajax({
+        url: "@Url.Action("Lista_Insert_User", "Lista")",
+        data: JSON.stringify(model),
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            swal({
+                title: "Usuario(s) Agregados !",
+                text: " ",
+                icon: "success",
+                button: "Aceptar",
+            }).then((value) => {
+                CargaUsuarios();
+                $("#BtnSUCerrar").trigger("click");
+            });
+        },
+        error: function (resultado) {
+            alert("Error funcion ");
+        }
+    });
+}
+    function eliminarContacto(id) {
+        swal({
+            title: "Eliminar usuario",
+            text: "¿Deseas eliminar a este usuario?",
+            icon: "error",
+            buttons: {
+                Si: {
+                    text: "Sí, eliminar",
+                    value: "si"
+
+                },
+                cancel: "Cancelar"
+            },
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+
+                switch (willDelete) {
+
+                    case "si":
+                        eliminarConfirmado(id);
+                        break;
+                }
+            });
+    }
+    function eliminarConfirmado(Id) {
+        const Contacto = {
+            Id: Id
+        }
+        const Lista = {
+            Id: $("#Select_Lista option:selected").val(),
+            Contacto: Contacto
+        }
+
+         $.ajax({
+            url: "@Url.Action("ListaContacto_Eliminar_IdContacto", "Lista")",
+            data: JSON.stringify(Lista),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+
+                    swal({
+                        title: "Persona Eliminada !",
+                        text: " ",
+                        icon: "success",
+                        button: "Aceptar",
+                    }).then((value) => {
+                        CargaUsuarios();
+                    });
+            },
+            error: function (resultado) {
+                alert("Error funcion ");
+            }
+        });
+
+    }
+    function Import(Id) {
+       swal({
+            title: "Importar Lista",
+            text: "¿Deseas Importar esta lista?",
+           icon: "info",
+            buttons: {
+                Si: {
+                    text: "Sí, Importar",
+                    value: "si"
+
+                },
+                cancel: "Cancelar"
+            },
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+
+                switch (willDelete) {
+
+                    case "si":
+                        ImportConfirm(Id);
+                        break;
+                }
+            });
+
+    }
+    function ImportConfirm(Id) {
+        const Lista = {
+            Id: Id,
+        }
+
+         $.ajax({
+            url: "@Url.Action("Lista_Import", "Lista")",
+            data: JSON.stringify(Lista),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+             success: function (result) {
+                if (result.Id == -1) {
+                    AlertWarning("Problemas al registrar ", "El nombre de esta lista ya existe.");
+                } else if (result.Id == 0) {
+                    AlertDanger("Problemas al registrar ", "lista no registrada.");
+                } else if (result.Id > 0) {
+                    CargaListas(result.Id);
+                    $('#DivMylist').trigger('click');
+                    AlertSuccess("Lista importada con exito.", "La lista se ha importado y ya es posible editarla");
+                }
+            },
+            error: function (resultado) {
+                alert("Error funcion ");
+            }
+        });
+
+    }
+
+    function ShowList(Id) {
+        CargaUsuariosImport(Id);
+        $("#ModalViewContact").modal("show");
+    }
+    function CargaUsuariosImport(Id) {
+        const Lista = {
+            Id: Id
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Lista_Read_User", "Lista")",
+            async: false,
+            data: JSON.stringify(Lista),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                tablaUsuariosImport(result);
+            },
+            error: function () {
+                var table = $('#TUserImport').DataTable();
+                table.destroy();
+                Contenido.innerHTML = "";
+            }
+        });
+    }
+    function tablaUsuariosImport(datos) {
+        var table = $('#TUserImport').DataTable();
+        table.destroy();
+        ContenidoUserImport.innerHTML = "";
+        for (let valor of datos) {
+            ContenidoUserImport.innerHTML += `
+            <tr>
+                <td>${valor.Persona.Nombre}</td>
+                <td>${valor.Persona.Email.email}</td>
+                 <td class="text-center">
+                    <i disable onclick="eliminarContactoImport(${valor.Persona.Id})" class="bx bx-user-minus" style="cursor: pointer;"></i>
+                </td>
+            </tr>
+        `;
+        }
+        $('#TUserImport').DataTable({
+            pageLength: 10,
+            lengthMenu: [[10, 20, -1], [10, 20, 'Todas']],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        }).on('init.dt', function () {
+            $('.dataTables_filter input').attr('placeholder', 'Contactos');
+        });
+    }
+    function eliminarContactoImport() {
+        swal({
+            title: "No autorizado!",
+            text: "No puedes alterar una lista que no gestiones",
+            icon: "warning",
+            button: "Aceptar",
+        }).then((value) => {
+        });
+    }
+
+    function OptionList() {
+        if (ValidaLista()) {
+            var nombre = $("#Select_Lista option:selected").text();
+            const Id = $("#Select_Lista option:selected").val();
+            $("#NewNameList").val(nombre);
+            $("#BtnDeleteList").off("click").on("click", function () {
+                DeleteList(Id);
+            });
+            $("#BtnchangenameList").off("click").on("click", function () {
+                UpdateList(Id);
+            });
+        } else {
+            $("#DivMylist").trigger("click");
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una lista para ver sus opciones.");
+        }
+    }
+
+
+    function DeleteList(Id) {
+        swal({
+            title: "Eliminar Lista",
+            text: "¿Deseas eliminar esta Lista?",
+            icon: "error",
+            buttons: {
+                Si: {
+                    text: "Sí, eliminar",
+                    value: "si"
+
+                },
+                cancel: "Cancelar"
+            },
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+
+                switch (willDelete) {
+
+                    case "si":
+                        Deleteconfirm(Id);
+                        break;
+                }
+            });
+    }
+    function Deleteconfirm(Id) {
+        const Lista = {
+            Id: Id
+        }
+
+         $.ajax({
+            url: "@Url.Action("Lista_Delete", "Lista")",
+            data: JSON.stringify(Lista),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+
+                    swal({
+                        title: "Lista Eliminada !",
+                        text: " ",
+                        icon: "success",
+                        button: "Aceptar",
+                    }).then((value) => {
+                        window.location.reload();
+                    });
+            },
+            error: function (resultado) {
+                alert("Error funcion ");
+            }
+        });
+
+    }
+
+    function UpdateList(Id) {
+        const Lista = {
+            Id: Id,
+            Nombre: $("#NewNameList").val()
+        }
+
+        $.ajax({
+            url: "@Url.Action("Lista_Update", "Lista")",
+            data: JSON.stringify(Lista),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+
+                    swal({
+                        title: "Lista Actualizada!",
+                        text: " ",
+                        icon: "success",
+                        button: "Aceptar",
+                    }).then((value) => {
+                        CargaListas(Id);
+                    });
+
+                $("#DivMylist").trigger("click");
+                AlertSuccess('Exito !', 'Lista reenombrada');
+            },
+            error: function (resultado) {
+                alert("Error funcion ");
+            }
+        });
+
+    }
+    //ContenidoUserImport
+    function ressetSelect() {
+        $('#Select_AddUsersEmpresa').empty();
+        $('#Select_AddUsersUDN').empty();
+        $('#Select_Empresa').val('0');
+        $('#Select_UDN').val('0');
+        $('#Select_AddUsersEmpresa').fSelect('reload');
+        $('#Select_AddUsersUDN').fSelect('reload');
+        $('#Select_Empresa').fSelect('reload');
+        $('#Select_UDN').fSelect('reload');
+    }
+    ///PARA HACER VALIDACIONES Y OCULTAR LAS LISTAS
+    function FormularioM(btn) {
+        // Obtener el ID del botón y la casilla de verificación correspondiente
+        var btnId = $(btn).attr('id');
+        var chkId = btnId.replace('btn', '');
+        var formularioId = "#formulario" + chkId;
+
+
+        // Desmarcar todas las casillas de verificación
+        $("input[name='opcion']").prop('checked', false);
+
+        // Marcar la casilla de verificación correspondiente
+        $("#" + chkId).prop('checked', true);
+
+        // Desactivar todos los botones
+        $(".btnopc").removeClass("btn-primary");
+        $(".btnopc").addClass("btn-outline-secondary");
+
+        // Activar el botón que se hizo clic
+        $("#" + btnId).removeClass("btn-outline-secondary");
+        $("#" + btnId).addClass("btn-primary");
+
+        $(".formulario").hide();
+        $(formularioId).show();
+    }
+    function ValidaListaName() {
+        var result = false;
+        $('#NameList').css("border", "1px solid #ff0049");
+        $('#Correo_UnidadNegocio').css("border", "1px solid #ff0049");
+
+        if ($("#NameList").val().length > 0) { $('#NameList').css("border", "1px solid #cccccc"); }
+        if ($("#Correo_UnidadNegocio option:selected").val() > 0) { $('#Correo_UnidadNegocio').css("border", "1px solid #cccccc"); }
+
+
+        result = (
+            $("#NameList").val().length > 0 &&
+            $("#Correo_UnidadNegocio option:selected").val() > 0
+        );
+        return result;
+    }
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function search(variable) {
+        return new URLSearchParams(window.location.search).get(variable);
+    }
+</script>

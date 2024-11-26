@@ -1,0 +1,652 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+
+    .chartBox {
+        width: 100%;
+        height: 250px;
+        border-radius: 20px;
+        /* border: solid 3px rgba(54, 162, 235, 1); */
+        background: white;
+        text-align:center;
+        align-content:center;
+    }
+</style>
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-6">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 ">
+                        <i class='bx bx-dollar-circle me-1'></i> Facturado acumulado
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                        <span id="NombreResponsable">
+                            Responsable:  @if (ViewBag.LisObjetivoAcumulado != null)
+                            {<span><strong>@ViewBag.LisObjetivoAcumulado[0].Usuario.Persona.Nombre @ViewBag.LisObjetivoAcumulado[0].Usuario.Persona.ApellidoPaterno @ViewBag.LisObjetivoAcumulado[0].Usuario.Persona.ApellidoMaterno </strong></span>}
+                        </span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 ">
+                        <span id="NombreResponsable">
+                            Meta por cumplir :  @if (ViewBag.LisObjetivoAcumulado != null)
+                            {<span><strong>@ViewBag.LisObjetivoAcumulado[0].MontoText</strong></span>}
+                        </span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 ">
+                        <span id="">
+                            Acumulado :
+                            <span><strong id="Acumulado">0.00</strong></span>
+                        </span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 ">
+                        <span id="">
+                            Faltante :
+                            <span><strong id="Faltante">0.00</strong></span>
+                        </span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <div class="demo-inline-spacing">
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='@Url.Action("Ventas", "Administracion")';">
+                                <span class="tf-icons bx bx-undo"></span>&nbsp; Volver
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-6">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 text-center">
+                    </div>
+                    <div class="col-lg-6 col-md-6 text-center">
+                        <span id="">
+                            <span><strong>Porcentaje cumplido  </strong></span>
+                        </span>
+                        <div class="chartBox text-center">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold"> Creación y administración de etapas de venta </small>
+                <br /><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover table-striped" id="TableListaAcumulado">
+                    <thead>
+                        <tr>
+                            <th>Mes </th>
+                            <th>Monto </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Mes </th>
+                            <th>Monto </th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                    <tbody class="table-border-bottom-0">
+                        @if (ViewBag.LisObjetivoAcumulado != null)
+                        {
+                            var mes = 1;
+                            foreach (var item1 in ViewBag.LisObjetivoAcumulado)
+                            {
+                                if (item1.Id == -1)
+                                {
+                                    <tr>
+                                        <td><strong>@item1.NombreMes</strong></td>
+                                        <td>
+                                            <div class="mb-3">
+                                                <label for="defaultInput" class="form-label"></label>
+                                                <input id="NuevoMonto_@mes" class="form-control numberPositivo" type="text" placeholder="0.00" value="">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="demo-inline-spacing">
+                                                <button type="button" class="btn btn-outline-primary" onclick="BtnNuevoMonto(@mes, @item1.ObjetivosResponsables.Id)">
+                                                    <span class="tf-icons bx bx-save"></span>&nbsp; Agregar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td><strong>@item1.NombreMes</strong></td>
+                                        <td>
+                                            <div class="mb-3">
+                                                <label for="defaultInput" class="form-label"></label>
+                                                <input id="NuevoMonto_@mes" class="form-control numberPositivo" type="text" placeholder="0.00" value="@item1.MontoMesText">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="demo-inline-spacing">
+                                                <button type="button" class="btn btn-outline-primary" onclick="BtnNuevoMonto(@mes, @item1.ObjetivosResponsables.Id)">
+                                                    <span class="tf-icons bx bx-save"></span>&nbsp; Actualizar
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="BtnEliminarMonto(@mes, @item1.ObjetivosResponsables.Id)">
+                                                    <span class="tf-icons bx bx-trash"></span>&nbsp; Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                mes += 1;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+
+<script>
+    var cc = @Html.Raw(Json.Encode(ViewBag.LisObjetivoAcumulado));
+    var SumTotal = 0;
+    var Faltante = 0;
+    var porcentaje = 0;
+    for (var b = 0; b < cc.length; b++) {
+        if (cc[b].Id > 0) {
+            SumTotal += cc[b].Monto;
+        }
+    }
+    
+    Faltante = cc[0].ObjetivosResponsables.Acumulado - SumTotal;
+    if (Faltante < 0){
+        Faltante = 0;
+    }
+    $('#Faltante').html("$ " + Faltante.toLocaleString('en'));
+    $('#Acumulado').html("$ " + SumTotal.toLocaleString('en'));
+
+    porcentaje = (SumTotal * 100 / cc[0].ObjetivosResponsables.Acumulado);
+
+
+    // setup
+    const data = {
+        labels: ['', '', ''],
+        datasets: [{
+            label: 'Weekly Sales',
+            data: [50, 35, 15],
+            backgroundColor: [
+                'rgba(255, 26, 104, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+            ],
+            needleValue: porcentaje.toFixed(2),
+            borderColor: 'white',
+            borderWidth: 2,
+            cutout: '70%',
+            circumference: 180,
+            rotation: 270,
+            borderRadius: 2,
+        }]
+    };
+
+    // gaugeNeedle blok
+    const gaugeNeedle = {
+        id: 'gaugeNeedle',
+        afterDatasetDraw(chart, args, options) {
+            const { ctx, config, data, chartArea: { top, bottom, left, right, width,
+                height } } = chart;
+
+            ctx.save();
+            //console.log(data);
+            const needleValue = data.datasets[0].needleValue;
+            const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
+            const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
+            //console.log(needleValue);
+
+            const cx = width / 2;
+            const cy = chart._metasets[0].data[0].y;
+
+            // needle
+            ctx.translate(cx, cy);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, -2);
+            ctx.lineTo(height - (ctx.canvas.offsetTop + 20), 0);
+            ctx.lineTo(0, 2);
+            ctx.fillStyle = '#444';
+            ctx.fill();
+            ctx.restore();
+
+            // needle dot
+            ctx.beginPath();
+            ctx.arc(cx, cy, 5, 0, 10);
+            ctx.fill();
+            ctx.restore();
+
+            ctx.font = '30px Helvetica';
+            ctx.fillStyle = '#444';
+            ctx.fillText(needleValue + '%', cx, cy + 50);
+            ctx.textAlign = 'center';
+            ctx.restore();
+        }
+    };
+
+    // config
+    const config = {
+        type: 'doughnut',
+        data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    yAlign: 'bottom',
+                    displayColors: false,
+                    callbacks: {
+                        label: function (tooltipItem, data, value) {
+                            const tracker = tooltipItem.dataset.needleValue;
+                            return `Porcentaje cumplido : ${tracker} %`;
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [gaugeNeedle]
+    };
+
+    // render init block
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+
+    // Instantly assign Chart.js version
+    const chartVersion = document.getElementById('chartVersion');
+/*    chartVersion.innerText = Chart.version;*/
+</script>
+<script>
+    function BtnNuevoMonto(Id, IdObjetivo) {
+        if (ValidarImporte(Id)) {
+
+            var ObjetivosResponsables = new Object();
+            ObjetivosResponsables.Id = IdObjetivo;
+
+            var ObjetivoFacturaAcumulado = new Object();
+            ObjetivoFacturaAcumulado.ObjetivosResponsables = ObjetivosResponsables;
+            ObjetivoFacturaAcumulado.Mes = Id;
+            ObjetivoFacturaAcumulado.Monto = $('#NuevoMonto_' + Id).val().replace(/,/g, '');;
+
+            $.ajax({
+            type: "POST",
+            url: "@Url.Action("ObjetivoFacturaAcumulado_Agregar_Mes", "ObjetivoFacturaAcumulado")",
+            async: false,
+            data: JSON.stringify(ObjetivoFacturaAcumulado),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+                if (result.Id > 0) {
+                    swal({
+                        title: "Nuevo monto registrado !",
+                        icon: "success",
+                        buttons: {
+                            agregar: {
+                                text: "Aceptar", className: 'sweet-continuar'
+                            },
+                        },
+                    }).then((value) => {
+                        switch (value) {
+                            case "agregar":
+                                location.reload();
+                            break;
+                        }
+                    });
+
+                } else if (result.Id == 0) {
+                    AlertWarning("Problemas al registrar ", "Importe no resgistrado.");
+                }
+            },
+            error: function () {
+                AlertDanger("Problemas al registrar ", "Importe no registrado.");
+            }
+        });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function BtnEliminarMonto(Id, IdObjetivo) {
+        var ObjetivosResponsables = new Object();
+        ObjetivosResponsables.Id = IdObjetivo;
+
+        var ObjetivoFacturaAcumulado = new Object();
+        ObjetivoFacturaAcumulado.ObjetivosResponsables = ObjetivosResponsables;
+        ObjetivoFacturaAcumulado.Mes = Id;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ObjetivoFacturaAcumulado_Eliminar_Mes", "ObjetivoFacturaAcumulado")",
+            async: false,
+            data: JSON.stringify(ObjetivoFacturaAcumulado),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+                if (result.Id > 0) {
+                    swal({
+                        title: "Monto eliminado!",
+                        icon: "success",
+                        buttons: {
+                            agregar: {
+                                text: "Aceptar", className: 'sweet-continuar'
+                            },
+                        },
+                    }).then((value) => {
+                        switch (value) {
+                            case "agregar":
+                                location.reload();
+                            break;
+                        }
+                    });
+
+                } else if (result.Id == 0) {
+                    AlertWarning("Problemas al registrar ", "Importe no elimindado.");
+                }
+            },
+            error: function () {
+                AlertDanger("Problemas al registrar ", "Importe no elimindado.");
+            }
+        });
+    }
+
+    function ValidarImporte(Id) {
+        var result = false;
+
+        $('#NuevoMonto_' + Id).css("border", "1px solid #f44336");
+
+        if ($('#NuevoMonto_' + Id).val().length > 0) {
+            $('#NuevoMonto_' + Id).css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#NuevoMonto_' + Id).val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+
+    const MILLARES = ",";
+    const DECIMALES = ".";
+    const DTFLOCAL = new Intl.NumberFormat('en-US');
+
+    // Formatear solamente numeros decimales positivos
+    function numberFormatPositivo(e) {
+        if (this.value === "") {
+            return;
+        }
+        // Obtenemos un array con el numero y los decimales si hay
+        let contenido = "";
+        if (MILLARES === ",") {
+            contenido = this.value.replace(/[^0-9\.]/g, "").split(".");
+        } else {
+            contenido = this.value.replace(/[^0-9\,]/g, "").split(",");
+        }
+        // añadimos los separadores de miles al primer numero del array
+        contenido[0] = contenido[0].length ? DTFLOCAL.format(parseInt(contenido[0])) : "0";
+        // Juntamos el numero con los decimales si hay decimales
+        this.value = contenido.length > 1 ? contenido.slice(0, 2).join(".") : contenido[0];
+    }
+
+    window.onload = function () {
+        //SE EJECUTA DESPUES CARGAR EL CODIGO CSS y HTML
+        // Creamos el evento keyup
+        document.querySelectorAll(".numberPositivo").forEach(el => el.addEventListener("keyup", numberFormatPositivo));
+    };
+    $('#Nv1Ventas').addClass("active open");
+</script>

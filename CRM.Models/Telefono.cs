@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CRM.Models
+{
+    public class Telefono
+    {
+        public int Id { get; set; }
+        public CatTipoTelefono CatTipoTelefono { get; set; }
+        public string telefono { get; set; }
+        public string Extension { get; set; }
+    }
+}

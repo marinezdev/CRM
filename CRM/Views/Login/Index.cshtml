@@ -1,0 +1,248 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CRM - Asae</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/assets/img/icons/ico.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="~/assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core CSS -->
+    <link href="~/assets/vendor/fonts/boxicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="~/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="~/assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="~/assets/vendor/css/pages/page-auth.css" />
+    <!-- Helpers -->
+    <script src="~/assets/vendor/js/helpers.js"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="~/assets/js/config.js"></script>
+
+</head>
+<body>
+
+    <!-- Content -->
+
+    <div class="container-xxl">
+        <div class="authentication-wrapper authentication-basic container-p-y">
+            <div class="authentication-inner">
+                <!-- Register -->
+                <div class="card">
+                    <div class="card-body">
+
+
+
+
+                        <!-- Logo -->
+                        <div class="app-brand justify-content-center">
+                            <a href="index.html" class="app-brand-link gap-2">
+                                <span class="demo">
+                                    <img src="~/assets/img/icons/AsaeLogo_Colores_ra.png" width="50%" />
+                                </span>
+                            </a>
+                        </div>
+                        <!-- /Logo -->
+                        <h4 class="mb-2">
+                            ¡Bienvenido a CRM! 👋
+                        </h4>
+                        <p class="mb-4">Inicia sesión en tu cuenta y comienza la aventura.</p>
+
+                        <form id="loginForm" class="mb-3">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="email" name="email-username" placeholder="Introduce tu correo electrónico" autofocus />
+                            </div>
+                            <div class="mb-3 form-password-toggle">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label" for="password">Password</label>
+                                    <a href="#">
+                                        <small>
+                                            ¿Olvidaste tu contraseña?
+                                        </small>
+                                    </a>
+                                </div>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                           aria-describedby="password" />
+                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <button class="btn btn-primary d-grid w-100" type="submit" id="IniciarSesion">Iniciar sesión </button>
+                            </div>
+                        </form>
+
+                        <div class="bs-toast toast fade bg-danger"
+                             role="alert"
+                             aria-live="assertive"
+                             aria-atomic="true">
+                            <div class="toast-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body" id="Mensaje">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /Register -->
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="~/assets/vendor/libs/popper/popper.js"></script>
+    <script src="~/assets/vendor/js/bootstrap.js"></script>
+    <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/Scripts/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/Scripts/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+    <!-- Vendors JS -->
+    <!-- Main JS -->
+    <script src="~/assets/js/main.js"></script>
+    <script>
+        $(document).ready(function() {
+        // Asociar evento 'submit' al formulario con el id "loginForm"
+        $("#loginForm").on("submit", function (event) {
+
+            $('#IniciarSesion').prop('disabled', true);
+
+            event.preventDefault(); // Prevenir el envío del formulario por defecto
+
+            if (validateFrom()) {
+
+
+                var obj = {};
+
+                obj['usuario'] = $('#email').val();
+                obj['Password'] = $('#password').val();
+
+                var jsonObject = {
+                    "Usuario": obj
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("IniciarSesion", "Login")",
+                    data: JSON.stringify(jsonObject),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    error: function (response) {
+                        $('.toast').toast('show');
+                        $('#Mensaje').html("Ha ocurrido un problema, inténtalo mas tarde");
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        switch (response.Rol.Id) {
+                            case -1:
+                                $('#IniciarSesion').prop('disabled', false);
+                            case 0:
+                                $('#IniciarSesion').prop('disabled', false);
+                                swal({
+                                    title: "Algo ocurrió !",
+                                    text: response.Mensaje,
+                                    icon: "warning",
+                                    button: "Aceptar",
+                                });
+                                break;
+                            case 1:
+                                swal({
+                                    title: "Bienvenido. !",
+                                    text: response.Persona.Nombre + " " + response.Persona.ApellidoPaterno + " " + response.Persona.ApellidoMaterno,
+                                    icon: "success",
+                                    button: "Aceptar",
+                                }).then((value) => {
+                                   window.location.href = '' + response.Rol.RutaAcceso + '';
+                                });
+                                break;
+                            default:
+                                $('#IniciarSesion').prop('disabled', false);
+                            // code block
+                        }
+                    }
+                });
+
+            } else {
+                $('#IniciarSesion').prop('disabled', false);
+                $('.toast').toast('show');
+            }
+        });
+
+        function validateFrom() {
+            var result = false;
+
+            $('#email').css("border", "1px solid #d9dee3");
+            $('#password').css("border", "1px solid #d9dee3");
+
+            // Obtener los valores del correo electrónico y contraseña
+            var email = $("#email").val();
+            var password = $("#password").val();
+
+            // Validar el formulario
+            if (!validateEmail(email)) {
+                $('#email').css("border", "2px solid #ff0049");
+                $('#Mensaje').html("Por favor, ingresa un correo electrónico válido.");
+            }
+
+            if (password.length < 8) {
+                $('#password').css("border", "2px solid #ff0049");
+                $('#Mensaje').html("Coloca tu contraseña");
+            }
+
+            if (validateEmail(email)) {
+                if (password.length >= 8) {
+                    result = true;
+                }
+            }
+            return result;
+        }
+
+        // Función para validar el formato del correo electrónico utilizando una expresión regular
+        function validateEmail(email) {
+          var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+          return emailRegex.test(email);
+        }
+    });
+
+
+
+       
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,598 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+</style>
+
+<style>
+
+
+
+    .b-skills {
+        border-top: 1px solid #f9f9f9;
+        padding-top: 10px;
+        text-align: center;
+    }
+
+    .b-skills:last-child {
+        margin-bottom: -30px;
+    }
+
+    .b-skills h2 {
+        margin-bottom: 50px;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .skill-item {
+        position: relative;
+        max-width: 90px;
+        width: 100%;
+        color: #555;
+        margin-left: 25px;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-top: 100%;
+        margin-bottom: 5px;
+
+    }
+
+    .skill-item .chart,
+    .skill-item .chart canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .skill-item .chart:before {
+        content: "";
+        width: 0;
+        height: 100%;
+    }
+
+    .skill-item .chart:before,
+    .skill-item .percent {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .skill-item .percent {
+        position: relative;
+        line-height: 1;
+        font-size: 20px;
+        font-weight: 900;
+        z-index: 2;
+    }
+
+    .skill-item .percent:after {
+        content: attr(data-after);
+        font-size: 20px;
+    }
+
+    p {
+        font-weight: 500;
+        FONT-SIZE: 10px;
+    }
+
+    /*@@media (min-width: 992px){
+        .col-lg-2 {
+            flex: 0 0 auto;
+            width: 13.666667%;
+        }
+    }*/
+   
+
+</style>
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="d-flex align-items-end row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="card-body">
+                                    <div class="b-skills">
+                                        <div class="row" id="ContenidoGrafica">
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br /><br />
+<div class="col-xl-12">
+    <div class="nav-align-top mb-4">
+        <ul class="nav nav-tabs nav-fill" role="tablist">
+            <li class="nav-item">
+                <button type="button"
+                        class="nav-link active"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#navs-justified-home"
+                        aria-controls="navs-justified-home"
+                        aria-selected="true">
+                    <i class="tf-icons bx bxs-group text-primary"></i> Mis contactos
+                </button>
+            </li>
+            <li class="nav-item">
+                <button type="button"
+                        class="nav-link"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#navs-justified-bajas"
+                        aria-controls="navs-justified-bajas"
+                        aria-selected="false">
+                    <i class="tf-icons bx bxs-group text-primary"></i> Contactos bajas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button type="button"
+                        class="nav-link"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#navs-justified-profile"
+                        aria-controls="navs-justified-profile"
+                        aria-selected="false">
+                    <i class="tf-icons bx bxs-group text-primary"></i> Contactos
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover table-striped" id="TableListaMisContactos" style="width:100%" width="100%">
+                        <thead width="100%">
+                            <tr width="100%">
+                                <th>Nombre  </th>
+                                <th>Email  </th>
+                                <th>Teléfono   </th>
+                                <th>Celular    </th>
+                                <th>Cargo </th>
+                                <th>Empresa </th>
+                                <th>Unidad de negocio </th>
+                                <th>Tipo contacto </th>
+                                <th>Fecha creación </th>
+                                <th>Fecha última actividad</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tfoot width="100%">
+                            <tr width="100%">
+                                <th>Nombre  </th>
+                                <th>Email  </th>
+                                <th>Teléfono   </th>
+                                <th>Celular    </th>
+                                <th>Cargo </th>
+                                <th>Empresa </th>
+                                <th>Unidad de negocio </th>
+                                <th>Tipo contacto </th>
+                                <th>Fecha creación </th>
+                                <th>Fecha última actividad</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </tfoot>
+                        <tbody class="table-border-bottom-0">
+                            @if (ViewBag.ContactosUsuario != null)
+                            {
+                                foreach (var item1 in ViewBag.ContactosUsuario)
+                                {
+                                    <tr>
+                                        <td onclick="MostrarContacto(@item1.Contacto.Persona.Id)"> <strong style="cursor: pointer;">@item1.Contacto.Persona.Nombre @item1.Contacto.Persona.ApellidoPaterno @item1.Contacto.Persona.ApellidoMaterno</strong></td>
+                                        <td>@item1.Contacto.Persona.Email.email</td>
+                                        <td>@item1.Telefono</td>
+                                        <td>@item1.Celular</td>
+                                        <td>@item1.Contacto.CatCargo.Nombre</td>
+                                        <td>@item1.Empresa</td>
+                                        <td>@item1.Contacto.Persona.CatUnidadNegocio.Nombre</td>
+                                        <td>@item1.Contacto.Persona.CatTipoPersona.Nombre</td>
+                                        <td>@Convert.ToDateTime(@item1.Contacto.FechaRegistro).ToString("yyyy-MM-dd")</td>
+                                        <td>-</td>
+                                        <td><span class="badge bg-label-@item1.Contacto.Persona.CatEstatusPersona.Color me-1">@item1.Contacto.Persona.CatEstatusPersona.Nombre</span></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="navs-justified-bajas" role="tabpanel">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover table-striped" id="TableListaBajas" style="width:100%" width="100%">
+                        <thead width="100%">
+                            <tr width="100%">
+                                <th>Nombre  </th>
+                                <th>Email  </th>
+                                <th>Teléfono   </th>
+                                <th>Celular    </th>
+                                <th>Cargo </th>
+                                <th>Empresa </th>
+                                <th>Unidad de negocio </th>
+                                <th>Tipo contacto </th>
+                                <th>Fecha creación </th>
+                                <th>Fecha última actividad</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tfoot width="100%">
+                            <tr width="100%">
+                                <th>Nombre  </th>
+                                <th>Email  </th>
+                                <th>Teléfono   </th>
+                                <th>Celular    </th>
+                                <th>Cargo </th>
+                                <th>Empresa </th>
+                                <th>Unidad de negocio </th>
+                                <th>Tipo contacto </th>
+                                <th>Fecha creación </th>
+                                <th>Fecha última actividad</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </tfoot>
+                        <tbody class="table-border-bottom-0">
+                            @if (ViewBag.ContactosBajas != null)
+                            {
+                                foreach (var item1 in ViewBag.ContactosBajas)
+                                {
+                                    <tr>
+                                        <td onclick="MostrarContacto(@item1.Contacto.Persona.Id)"> <strong style="cursor: pointer;">@item1.Contacto.Persona.Nombre @item1.Contacto.Persona.ApellidoPaterno @item1.Contacto.Persona.ApellidoMaterno</strong></td>
+                                        <td>@item1.Contacto.Persona.Email.email</td>
+                                        <td>@item1.Telefono</td>
+                                        <td>@item1.Celular</td>
+                                        <td>@item1.Contacto.CatCargo.Nombre</td>
+                                        <td>@item1.Empresa</td>
+                                        <td>@item1.Contacto.Persona.CatUnidadNegocio.Nombre</td>
+                                        <td>@item1.Contacto.Persona.CatTipoPersona.Nombre</td>
+                                        <td>@Convert.ToDateTime(@item1.Contacto.FechaRegistro).ToString("yyyy-MM-dd")</td>
+                                        <td>-</td>
+                                        <td><span class="badge bg-label-@item1.Contacto.Persona.CatEstatusPersona.Color me-1">@item1.Contacto.Persona.CatEstatusPersona.Nombre</span></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="navs-justified-profile" role="tabpanel">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover table-striped" id="TableListaContactos">
+                        <thead>
+                            <tr>
+                                <th style="width: 200px !Important;">Nombre  </th>
+                                <th>Email  </th>
+                                <th>Teléfono   </th>
+                                <th>Celular    </th>
+                                <th>Cargo </th>
+                                <th>Empresa </th>
+                                <th>Propietario del registro</th>
+                                <th>Unidad de negocio </th>
+                                <th>Tipo contacto </th>
+                                <th>Fecha creación </th>
+                                <th>Fecha última actividad</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th style="width: 200px !Important;">Nombre  </th>
+                                <th>Email  </th>
+                                <th>Teléfono   </th>
+                                <th>Celular    </th>
+                                <th>Cargo </th>
+                                <th>Empresa </th>
+                                <th>Propietario del registro</th>
+                                <th>Unidad de negocio </th>
+                                <th>Tipo contacto </th>
+                                <th>Fecha creación </th>
+                                <th>Fecha última actividad</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </tfoot>
+                        <tbody class="table-border-bottom-0">
+                            @if (ViewBag.Contactos != null)
+                            {
+                                foreach (var item1 in ViewBag.Contactos)
+                                {
+                                    <tr>
+                                        <td onclick="MostrarContacto(@item1.Contacto.Persona.Id)"> <strong style="cursor: pointer; ">@item1.Contacto.Persona.Nombre @item1.Contacto.Persona.ApellidoPaterno @item1.Contacto.Persona.ApellidoMaterno</strong></td>
+                                        <td>@item1.Contacto.Persona.Email.email</td>
+                                        <td>@item1.Telefono</td>
+                                        <td>@item1.Celular</td>
+                                        <td>@item1.Contacto.CatCargo.Nombre</td>
+                                        <td>@item1.Empresa</td>
+                                        <td>@item1.Contacto.Propietario</td>
+                                        <td>@item1.Contacto.Persona.CatUnidadNegocio.Nombre</td>
+                                        <td>@item1.Contacto.Persona.CatTipoPersona.Nombre</td>
+                                        <td>@Convert.ToDateTime(@item1.Contacto.FechaRegistro).ToString("yyyy-MM-dd")</td>
+                                        <td>-</td>
+                                        <td><span class="badge bg-label-@item1.Contacto.Persona.CatEstatusPersona.Color me-1">@item1.Contacto.Persona.CatEstatusPersona.Nombre</span></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/PieChart/jquery.appear.min.js"></script>
+<script src="~/Scripts/PieChart/jquery.easypiechart.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        CargaContactos();
+    });
+
+    function CargaContactos() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Contacto_Contar_UnidadNegocio", "Contacto")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                PintaGraficas(data);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaGraficas(data) {
+        console.log(data);
+        var HTML = "";
+        var sum = 0;
+        var colores = ["#03c382", "#fd7f00", "#ed0245", "#ff9844", "#38505b", "#c2a3ff", "#e0e0e0", "#23afe3",]
+        for (var b = 0; b < data.length; b++) {
+            sum += data[b].Total;
+        }
+
+        for (var b = 0; b < data.length; b++) {
+            var porcentaje = ((data[b].Total * 100) / sum);
+            console.log(porcentaje);
+            HTML += "<div class='col-lg-2' onclick='ConsultaUnidadNegocio(" + data[b].CatUnidadNegocio.Id + ")'>" +
+                        "<div class='skill-item center-block'>" +
+                            "<div class='chart-container'>" +
+                                "<div class='chart ' data-percent='"+porcentaje.toFixed(0)+"' data-bar-color='"+ colores[b] +"'>" +
+                                    "<span class='percent' data-after='%'>" + porcentaje.toFixed(0) + "</span>" +
+                                "</div>" +
+                            "</div>" +
+                            "<p>" + data[b].CatUnidadNegocio.Nombre + " <strong>("+ data[b].Total +")</strong></p>" +
+                        "</div>" +
+                    "</div>";
+        }
+        $('#ContenidoGrafica').html(HTML);
+    }
+
+    function ConsultaUnidadNegocio(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("UnidadNegocio", "Contacto")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+</script>
+
+<script>
+    'use strict';
+
+    var $window = $(window);
+
+    function run() {
+        var fName = arguments[0],
+            aArgs = Array.prototype.slice.call(arguments, 1);
+        try {
+            fName.apply(window, aArgs);
+        } catch (err) {
+
+        }
+    };
+
+    /* chart
+    ================================================== */
+    function _chart() {
+        $('.b-skills').appear(function () {
+            setTimeout(function () {
+                $('.chart').easyPieChart({
+                    easing: 'easeOutElastic',
+                    delay: 3000,
+                    barColor: '#369670',
+                    trackColor: '#fff',
+                    scaleColor: false,
+                    lineWidth: 15,
+                    trackWidth: 15,
+                    size: 250,
+                    lineCap: 'round',
+                    onStep: function (from, to, percent) {
+                        this.el.children[0].innerHTML = Math.round(percent);
+                    }
+                });
+            }, 150);
+        });
+    };
+
+
+    $(document).ready(function () {
+
+        run(_chart);
+
+
+    });
+
+</script>
+
+
+<script>
+    $('#TableListaBajas').DataTable({
+     /*   scrollY: 420,*/
+        scrollX: true,
+        columnDefs: [
+            {
+                //"orderable": false,
+                //"targets": [0, 8],
+                //"width": "0px"
+            }
+        ],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        "pageLength": 10,
+    });
+
+    $('#TableListaMisContactos').DataTable({
+     /*   scrollY: 420,*/
+        scrollX: true,
+        columnDefs: [
+            {
+                //"orderable": false,
+                //"targets": [0, 8],
+                //"width": "0px"
+            }
+        ],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        "pageLength": 10,
+    });
+
+    $('#TableListaContactos').DataTable({
+ /*       scrollY: 420,*/
+        scrollX: true,
+        columnDefs: [
+            {
+                /* "orderable": false,*/
+                //"targets": [0, 8],
+                //"width": "0px"
+            }
+        ],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        "pageLength": 10,
+    });
+
+    function MostrarContacto(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Contacto", "Contacto")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+</script>
+
+<script>
+    $('#Nv1Contacto').addClass("active open");
+    $('#Nv2ContactoLista').addClass("active");
+</script>

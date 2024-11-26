@@ -1,0 +1,1053 @@
+﻿
+@{
+    ViewBag.Title = "VentasUnidadNegocio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+<style>
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+
+    .chartBox {
+        width: 100%;
+        height: 250px;
+        border-radius: 20px;
+        /* border: solid 3px rgba(54, 162, 235, 1); */
+        background: white;
+        text-align: center;
+        align-content: center;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">
+                                INFORMACIÓN UNIDAD DE NEGOCIO
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                                :
+                                @if (ViewBag.Oportunidad != null)
+                                {
+                                    @ViewBag.Oportunidad[0].CatUnidadNegocio.Nombre;
+                                }
+                            </h5>
+                        </div>
+                        <div class="dropdown">
+                            <div class="demo-inline-spacing">
+                                <button type="button" class="btn btn-primary" onclick="window.location.href='@Url.Action("Ventas", "Administracion")';">
+                                    <span class="tf-icons bx bx-undo"></span>&nbsp; Volver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">
+                                <br />
+                            </h5>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-4 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2 text-center">
+                                Objetivo
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </h5>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <br />
+                        <ul class="p-0 m-0" id="">
+                            <li class="d-flex mb-2 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2 ">
+                                        <h6 class="mb-0">Meta por cumplir :</h6>
+                                        <small class="fw-semibold text-center" id="MetaPorCumplir" style="font-size: 25px; color: #474747; text-align: right;">$0.00</small>
+                                        <div class="text-right">
+                                            <small class="text-muted" id="TextFacturacionRecurrente">Facturación recurrente:  </small>
+                                            <br />
+                                            <small class="text-muted" id="TextProyectosNuevos">Proyectos nuevos: </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-2 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">Facturación acumulada : </h6>
+                                        <small class="fw-semibold" id="Acumulado" style="font-size: 25px; color: #474747; text-align: right;">$0.00</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-2 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">Faltante meta : </h6>
+                                        <small class="fw-semibold" id="Faltante" style="font-size: 25px; color: #474747; text-align: right;">$0.00</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-2 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0" id="FaltanteFacturacionText" >Faltante facturación : </h6>
+                                        <small class="fw-semibold" id="FaltanteFacturacion" style="font-size: 25px; color: #474747; text-align: right;">$0.00</small>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-4 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2 text-center">
+                                Medidor de objetivo
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </h5>
+
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class=" text-center">
+                            <canvas id="myChartAcelerometro" style="height: 150px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-4 mb-1">
+                <div class="card h-100 border border-success mb-3">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2 text-center">
+                                Oportunidades cerradas ganadas
+                            </h5>
+                            <span class="badge bg-label-success p-2"><i class="bx bxs-trophy text-success"></i></span>
+                            <small class="text-muted">
+                                Año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </small>
+                        </div>
+                        
+                    </div>
+                    <div class="card-body">
+                         <div class="row">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-8">
+                                <canvas id="myChartAcelerometro2" style="height: 150px"></canvas>
+                            </div>
+                        </div>
+                         <div class="d-flex align-items-end row">
+                             <div class="col-sm-5 text-center text-sm-left">
+                                 <img src="~/assets/img/illustrations/win-award-trophy-cup-icon-sign-flat-style-vector-illustration-isolated-white-background_503038-367.jpg" height="100" alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png" data-app-light-img="illustrations/man-with-laptop-light.png" />
+                             </div>
+                             <div class="col-sm-7">
+                                 <br />
+                                 <h2 class="mb-2" style="font-size:13px;"> Objetivo Nuevos proyectos</h2>
+                                 <h2 class="mb-2" style="font-size:13px; text-align:right;"> <strong id="Label_NuevosProyectos"></strong></h2>
+                                 <h2 class="mb-2" style="font-size:13px;"> Oportunidades cerradas ganadas </h2>
+                                 <h2 class="mb-2" style="font-size:13px; text-align:right;"> <strong id="Label_OportunidadesCerradasGanadas"></strong></h2>
+                                 <h2 class="mb-2" style="font-size:13px;"> Monto faltante </h2>
+                                 <h2 class="mb-2" style="font-size:13px; text-align: right;"> <strong id="Label_Faltante"></strong></h2>
+                                 <h2 class="mb-2" style="font-size:13px;"> Total, de oportunidades </h2>
+                                 <h2 class="mb-2" style="font-size:13px; text-align: center;"> <strong id="Label_TotalNumero_Oportunidades"></strong></h2>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-7 col-md-12 col-7 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">
+                                Funnel de ventas del año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </h5>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-md-12 col-5 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">
+                                Oportunidades por etapa
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </h5>
+
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="p-0 m-0" id="TablaEtapasOportunidades">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <h5 class="card-header">
+                        <i class='bx bx-box me-1'></i> OPORTUNIDADES POR UNIDAD DE NEGOCIO:
+                        @if (ViewBag.Oportunidad != null)
+                        {
+                            @ViewBag.Oportunidad[0].CatUnidadNegocio.Nombre;
+                        }
+                        <br />
+                        <i class='bx bx-dollar me-1'></i> MONTO TOTAL: <strong><span id="totalSuma"> $ 0.00</span></strong>
+                    </h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table table-hover table-striped" id="TableListaOportunidades">
+                                        <thead>
+                                            <tr>
+                                                <th>Oportunidad </th>
+                                                <th>Importe </th>
+                                                <th>Empresa </th>
+                                                <th>Estatus</th>
+                                                <th>Progreso</th>
+                                                <th>Fecha cierre </th>
+                                                <th>Fecha creación </th>
+                                                <th>Tipo </th>
+                                                <th>Prioridad </th>
+                                                <th>Propietario </th>
+                                                <th>Unidad de negocio </th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Oportunidad </th>
+                                                <th>Importe </th>
+                                                <th>Empresa </th>
+                                                <th>Estatus</th>
+                                                <th>Progreso</th>
+                                                <th>Fecha cierre </th>
+                                                <th>Fecha creación </th>
+                                                <th>Tipo </th>
+                                                <th>Prioridad </th>
+                                                <th>Propietario </th>
+                                                <th>Unidad de negocio </th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody class="table-border-bottom-0">
+                                            @{
+                                                if (ViewBag.Oportunidad != null)
+                                                {
+                                                    foreach (var item1 in ViewBag.Oportunidad)
+                                                    {
+                                                        <tr>
+                                                            <td onclick="MostrarOportunidad(@item1.Id)"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong style="cursor: pointer;">@item1.Nombre</strong></td>
+                                                            <td class="valor" style="text-align:right">@item1.Importe</td>
+                                                            <td>@item1.Empresa</td>
+                                                            <td><span class="badge bg-label-primary me-1">@item1.CatEstatusOpurtunidad.Nombre</span></td>
+                                                            <td class="text-center">
+                                                                @if (item1.Progreso != null)
+                                                                {
+                                                                    <span class="badge bg-label-primary me-1">@item1.Progreso %</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge bg-label-primary me-1">0%</span>
+                                                                }
+                                                            </td>
+                                                            <td>@Convert.ToDateTime(@item1.FechaCierre).ToString("yyyy-MM-dd")</td>
+                                                            <td>@Convert.ToDateTime(@item1.FechaRegistro).ToString("yyyy-MM-dd")</td>
+                                                            <td>@item1.CatTipoOportunidad.Nombre</td>
+                                                            <td>@item1.CatPrioridad.Nombre</td>
+                                                            <td>@item1.Propietario</td>
+                                                            <td>@item1.CatUnidadNegocio.Nombre</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        CargaFunnelVentas();
+        PintaAcelerometro();
+/*        OportunidadesGanadas();*/
+    });
+
+    $(document).ready(function () {
+        var tabla = $('#TableListaOportunidades').DataTable({
+            scrollY: 420,
+            scrollX: true,
+            columnDefs: [
+                {
+                    //"orderable": false,
+                    //"targets": [0, 8],
+                    //"width": "0px"
+                }
+            ],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+        });
+
+        var total = 0;
+
+        function calcularSuma() {
+            total = 0;
+            tabla.rows({ search: 'applied' }).nodes().to$().find('.valor').each(function () {
+                var valorTexto = $(this).text().replace('$', '').replace(/,/g, '');
+                total += parseFloat(valorTexto);
+            });
+            if (formatProdPrice(total.toFixed(2)) == '$NaN') {
+                $('#totalSuma').text('$ 0.00');
+            } else {
+                $('#totalSuma').text('' + formatProdPrice(total.toFixed(2)));
+            }
+            
+        }
+
+        tabla.on('draw.dt', calcularSuma);
+        calcularSuma(); // Calcular la suma inicial al cargar la página
+
+        $('#TableListaOportunidades_filter input').on('keyup', function () {
+            calcularSuma();
+        });
+    });
+
+
+    function CargaFunnelVentas() {
+        var CatUnidadNegocio = new Object();
+        CatUnidadNegocio.Id = @ViewBag.Id;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Funnel_Ventas_UnidadNegocio", "OportunidadEtapa")",
+            async: false,
+            data: JSON.stringify(CatUnidadNegocio),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                PintaGraficaFunnel(data);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaGraficaFunnel(dbData) {
+        const Nombres = [];
+        const Porcentajes = [];
+        var SumTotal = 0;
+        var Tabla = "";
+        var met = [];
+
+        for (var b = 0; b < dbData.length; b++) {
+            SumTotal += dbData[b].Total;
+        }
+
+        for (var b = 0; b < dbData.length; b++) {
+            var Porcentaje = 0;
+            var gPorcentaje = 0;
+            var gv1 = 0;
+            var gv2 = 0;
+            var uno = [];
+
+            Nombres.push(dbData[b].CatEtapaOportunidad.Nombre);
+            Porcentaje = ((dbData[b].Total * 100) / SumTotal).toFixed(2);
+            gPorcentaje = ((dbData[b].Total * 100) / SumTotal).toFixed(0);
+            Porcentajes.push(Porcentaje).toFixed(2);
+
+            if (gPorcentaje > 0) {
+                gv2 = (gPorcentaje / 2) + 50;
+                gv1 = ((gv2 - 100) * -1);
+            } else {
+                gv2 = 50.5;
+                gv1 = 49.5;
+            }
+
+            uno.push(gv1, gv2);
+            met.push(uno);
+
+            Tabla += "<li class='d-flex mb-2 pb-1' onclick='MostrarEtapaUnidadNegocio(" + dbData[b].CatEtapaOportunidad.Id + ")'>" +
+                            "<div class='avatar flex-shrink-0 me-3'>" +
+                                "<span class='avatar-initial rounded bg-label-primary'>" +
+                                "<i class='bx bx-bulb'></i>" +
+                                "</span>" +
+                            "</div>" +
+                            "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                                "<div class='me-2'>" +
+                                    "<h6 class='mb-0'>" + dbData[b].CatEtapaOportunidad.Nombre + "</h6>" +
+                                    "<small class='text-muted'>" + Porcentaje + " % </small>" +
+                                "</div>" +
+                                "<div class='user-progress'>" +
+                                    "<small class='fw-semibold'>" + formatProdPrice(dbData[b].Suma.toFixed(2)) + "</small>" +
+                                "</div>" +
+                            "</div>" +
+                        "</li>";
+        }
+
+        $('#Label_Total_EtapasOportunidades').html(formatProdPrice(SumTotal.toFixed(2)));
+        $('#TablaEtapasOportunidades').html(Tabla);
+
+
+        // setup
+        const data = {
+            labels: Nombres,
+            datasets: [{
+                label: 'Weekly Sales',
+                data: met,
+                backgroundColor: [
+                    'rgba(223, 16, 86, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                ],
+                borderColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+        // funnelChart plugin block
+        const funnelChart = {
+            id: 'funnelChart',
+            beforeDatasetsDraw(chart, args, pluginOptions) {
+                const { ctx, data, chartArea: { top, left, bottom, right, width, height }, scales: { x, y }
+                } = chart;
+
+                ctx.save();
+
+                for (let i = 0; i < chart.getDatasetMeta(0).data.length - 1; i++) {
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(102,102,102,0.2)';
+                    ctx.strokeStyle = 'rgba(102,102,102,0.2)';
+
+                    ctx.moveTo(chart.getDatasetMeta(0).data[i].base, chart.getDatasetMeta(0).data[i].y + (chart.getDatasetMeta(0).data[i].height / 2));
+                    ctx.lineTo(chart.getDatasetMeta(0).data[i].x, chart.getDatasetMeta(0).data[i].y + (chart.getDatasetMeta(0).data[i].height / 2));
+                    ctx.lineTo(chart.getDatasetMeta(0).data[i + 1].x, chart.getDatasetMeta(0).data[i + 1].y - (chart.getDatasetMeta(0).data[i + 1].height / 2));
+                    ctx.lineTo(chart.getDatasetMeta(0).data[i + 1].base, chart.getDatasetMeta(0).data[i + 1].y - (chart.getDatasetMeta(0).data[i + 1].height / 2));
+                    ctx.closePath();
+
+                    ctx.stroke();
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                for (let j = 0; j < chart.getDatasetMeta(0).data.length; j++) {
+                    var Porcentaje = 0;
+                    Porcentaje = ((dbData[j].Total * 100) / SumTotal).toFixed(2);
+                    //const datapointPercentage = Porcentaje.toFixed(2);
+                    //const quantity = dbData[j].Total;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = 'bold 15px sans-serif';
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    ctx.fillText(` ${dbData[j].Total} (${Porcentaje}%)`, (chart.getDatasetMeta(0).data[0].x - left) / 2 + left, chart.getDatasetMeta(0).data[j].y);
+                }
+            }
+        }
+        // config
+        const config = {
+            type: 'bar',
+            data,
+            options: {
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            display: false,
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            },
+            plugins: [funnelChart]
+        };
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    }
+
+    function PintaAcelerometro() {
+        var cc = @Html.Raw(Json.Encode(ViewBag.ObjetivoFacturaAcumulado));
+        var Monto = cc[0].ObjetivosResponsables.FacturacionRecurrente + cc[0].ObjetivosResponsables.ProyectosNuevos;
+        //alert(1);
+        console.log(cc);
+
+        var SumTotal = 0;
+        var Faltante = 0;
+        var MontoFaltanteFacturacion = 0;
+        var porcentaje = 0;
+        for (var b = 0; b < cc.length; b++) {
+            SumTotal += cc[b].Monto;
+        }
+
+        Faltante = Monto.toFixed(2) - SumTotal.toFixed(2);
+        if (Faltante < 0){
+            Faltante = 0;
+        }
+
+        MontoFaltanteFacturacion = cc[0].ObjetivosResponsables.FacturacionRecurrente - SumTotal;
+
+        $('#Faltante').html(formatProdPrice(Faltante.toFixed(2)));
+        $('#Acumulado').html(formatProdPrice(SumTotal.toFixed(2)));
+        $('#MetaPorCumplir').html(formatProdPrice(Monto.toFixed(2)));
+        $('#TextFacturacionRecurrente').html("Facturación " + (new Date().getFullYear() - 1) + ": " + formatProdPrice(cc[1].ObjetivosResponsables.MontoAcumulado.toFixed(2)));
+        $('#TextProyectosNuevos').html("Meta proyectos nuevos " + (new Date().getFullYear()) + ": " + formatProdPrice(cc[0].ObjetivosResponsables.ProyectosNuevos.toFixed(2)));
+
+        $('#FaltanteFacturacion').html(FunMontoImg(MontoFaltanteFacturacion));
+
+        porcentaje = (SumTotal * 100 / Monto);
+
+        // setup
+        const data = {
+            labels: ['', '', ''],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [50, 35, 15],
+                backgroundColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                needleValue: porcentaje.toFixed(2),
+                borderColor: 'white',
+                borderWidth: 2,
+                cutout: '70%',
+                circumference: 180,
+                rotation: 270,
+                borderRadius: 2,
+            }]
+        };
+
+        // gaugeNeedle blok
+        const gaugeNeedle = {
+            id: 'gaugeNeedle',
+            afterDatasetDraw(chart, args, options) {
+                const { ctx, config, data, chartArea: { top, bottom, left, right, width,
+                    height } } = chart;
+
+                ctx.save();
+                //console.log(data);
+                const needleValue = data.datasets[0].needleValue;
+                const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
+                //console.log(needleValue);
+
+                const cx = width / 2;
+                const cy = chart._metasets[0].data[0].y;
+
+                // needle
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.beginPath();
+                ctx.moveTo(0, -2);
+                ctx.lineTo(height - (ctx.canvas.offsetTop + 20), 0);
+                ctx.lineTo(0, 2);
+                ctx.fillStyle = '#444';
+                ctx.fill();
+                ctx.restore();
+
+                // needle dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, 10);
+                ctx.fill();
+                ctx.restore();
+
+                ctx.font = '30px Helvetica';
+                ctx.fillStyle = '#444';
+                ctx.fillText(needleValue + '%', cx, cy + 50);
+                ctx.textAlign = 'center';
+                ctx.restore();
+            }
+        };
+
+        // config
+        const config = {
+            type: 'doughnut',
+            data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        yAlign: 'bottom',
+                        displayColors: false,
+                        callbacks: {
+                            label: function (tooltipItem, data, value) {
+                                const tracker = tooltipItem.dataset.needleValue;
+                                return `Porcentaje cumplido : ${tracker} %`;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [gaugeNeedle]
+        };
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChartAcelerometro'),
+            config
+        );
+
+        // Instantly assign Chart.js version
+        const chartVersion = document.getElementById('chartVersion');
+    /*    chartVersion.innerText = Chart.version;*/
+
+
+        OportunidadesGanadas(cc[0].ObjetivosResponsables.ProyectosNuevos);
+    }
+
+    function OportunidadesGanadas(ProyectosNuevos) {
+        var dbdata = @Html.Raw(Json.Encode(ViewBag.Oportunidad));
+        /*console.log(dbdata);*/
+        var TotalOportunidad = 0;
+        var Faltante = 0;
+        var Porcentaje = 0;
+
+        for (var b = 0; b < dbdata.length; b++) {
+            if (dbdata[b].CatEstatusOpurtunidad.Nombre == 'CERRADO GANADO') {
+                TotalOportunidad += dbdata[b].Monto;
+            }
+        }
+
+        Faltante = (ProyectosNuevos.toFixed(2) - TotalOportunidad.toFixed(2));
+
+        $('#Label_NuevosProyectos').html(formatProdPrice(ProyectosNuevos.toFixed(2)));
+        $('#Label_OportunidadesCerradasGanadas').html(formatProdPrice(TotalOportunidad.toFixed(2)));
+        $('#Label_Faltante').html(formatProdPrice(convertirNegativoAPositivo(Faltante.toFixed(2))));
+        $('#Label_TotalNumero_Oportunidades').html(dbdata.length);
+
+        porcentaje = ((TotalOportunidad * 100) / ProyectosNuevos);
+
+        // setup
+        const data = {
+            labels: ['', '', ''],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [50, 35, 15],
+                backgroundColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                needleValue: porcentaje.toFixed(2),
+                borderColor: 'white',
+                borderWidth: 2,
+                cutout: '70%',
+                circumference: 180,
+                rotation: 270,
+                borderRadius: 2,
+            }]
+        };
+
+        // gaugeNeedle blok
+        const gaugeNeedle = {
+            id: 'gaugeNeedle2',
+            afterDatasetDraw(chart, args, options) {
+                const { ctx, config, data, chartArea: { top, bottom, left, right, width,
+                    height } } = chart;
+
+                ctx.save();
+                //console.log(data);
+                const needleValue = data.datasets[0].needleValue;
+                const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
+                //console.log(needleValue);
+
+                const cx = width / 2;
+                const cy = chart._metasets[0].data[0].y;
+
+                // needle
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.beginPath();
+                ctx.moveTo(0, -2);
+                ctx.lineTo(height - (ctx.canvas.offsetTop + 20), 0);
+                ctx.lineTo(0, 2);
+                ctx.fillStyle = '#444';
+                ctx.fill();
+                ctx.restore();
+
+                // needle dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, 10);
+                ctx.fill();
+                ctx.restore();
+
+                ctx.font = '30px Helvetica';
+                ctx.fillStyle = '#444';
+                ctx.fillText(needleValue + '%', cx, cy + 50);
+                ctx.textAlign = 'center';
+                ctx.restore();
+            }
+        };
+
+        // config
+        const config = {
+            type: 'doughnut',
+            data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        yAlign: 'bottom',
+                        displayColors: false,
+                        callbacks: {
+                            label: function (tooltipItem, data, value) {
+                                const tracker = tooltipItem.dataset.needleValue;
+                                return `Porcentaje cumplido : ${tracker} %`;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [gaugeNeedle]
+        };
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChartAcelerometro2'),
+            config
+        );
+    }
+
+    
+
+    function MostrarEtapaUnidadNegocio(Etapa) {
+        var IdEtapa = "";
+        var IdUnidadNegocio = "";
+
+        var obj = {};
+
+        obj['UrlVaible'] = Etapa;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+               IdEtapa = result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+
+
+
+        var obj2 = {};
+
+        obj2['UrlVaible'] = @ViewBag.Id;
+
+        var jsonObject2 = {
+            "URL": obj2
+        };
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject2),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                IdUnidadNegocio = result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+
+        window.location.href = '@Url.Action("EtapaUnidadNegocio", "Oportunidad")?cont=' + IdEtapa + '&unid=' + IdUnidadNegocio;
+    }
+
+    function MostrarOportunidad(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Oportunidad", "Oportunidad")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+    function formatProdPrice(value) {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function convertirNegativoAPositivo(numero) {
+        if (numero < 0) {
+            return -numero;
+        } else {
+            return numero;
+        }
+    }
+
+    function FunMontoImg(numero) {
+        var cantidad = "";
+
+        if (numero == 0) {
+            // NO COLOCAR IMAGEN
+            $('#FaltanteFacturacionText').html(" Faltante facturación : ");
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else if (numero < 0) {
+            // COLOCAR IMAGEN VERDER
+            $('#FaltanteFacturacionText').html(" Facturación : ");
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2))) + " <img src='../assets/img/icons/FlechaVerde.png' width='8%' /> ";
+        } else {
+            // COLOCAR IMAGEN ROJA
+            $('#FaltanteFacturacionText').html(" Faltante facturación : ");
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2))) + " <img src='../assets/img/icons/FlechaRoja.png' width='8%' /> ";
+        }
+
+        return cantidad;
+    }
+
+    $('#Nv1Ventas').addClass("active open");
+</script>

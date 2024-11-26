@@ -1,0 +1,557 @@
+﻿
+@{
+    ViewBag.Title = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+<div class="card mb-4">
+    <h5 class="card-header">Nuevo - Correo electrónico </h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold">Completa los campos marcados *</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Clave evento </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-world"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Correo_Clave" placeholder="Clave única de evento " aria-label="" aria-describedby="Correo_Clave" onkeyup="Mayus(this);" onchange="ValidaInput('Correo_Clave')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Campañas  </label>
+                    <select id='Correo_Campaign' class="form-select" aria-label="Correo_Campaign" onchange="ValidaSelect('Correo_Campaign')">
+                        <option value="0" selected>SELECCIONAR</option>
+                        @{
+                            if (ViewBag.Campaign != null)
+                            {
+                                foreach (var item in ViewBag.Campaign)
+                                {
+                                    <option value="@item.Id">(@item.Clave.ToUpper()) @item.Nombre.ToUpper()</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-world"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Correo_Nombre" placeholder="Nombre" aria-label="" aria-describedby="Correo_Nombre" onkeyup="Mayus(this);" onchange="ValidaInput('Correo_Nombre')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname"> Fecha inicio  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control" id="Correo_FechaInicio" placeholder="" aria-label="" aria-describedby="Correo_FechaInicio" onchange="ValidaInput('Correo_FechaInicio')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname"> Fecha termino  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control" id="Correo_FechaTermino" placeholder="" aria-label="" aria-describedby="Correo_FechaTermino" onchange="ValidaInput('Correo_FechaTermino')" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Estatus </label>
+                    <div class="input-group">
+                        <select id='Correo_Estatus' class="form-select" aria-label="Correo_Estatus" onchange="ValidaSelect('Correo_Estatus')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.EstatusMarketing)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                    <div class="input-group">
+                        <select id='Correo_UnidadNegocio' class="form-select" aria-label="Correo_UnidadNegocio" onchange="ValidaSelect('Correo_UnidadNegocio')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.UnidadNegocio)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Propietario del registro  </label>
+                    <select id='Correo_Propietario' class="form-select" aria-label="Correo_Propietario" onchange="ValidaSelect('Correo_Propietario')" disabled>
+                        <option value="0" selected>SELECCIONAR</option>
+                        @foreach (var item in ViewBag.Usuarios)
+                        {
+                            if (((CRM.Models.Usuario)System.Web.HttpContext.Current.Session["Sesion"]).Id == item.Id)
+                            {
+                                <option value="@item.Id" selected>@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="basic-icon-default-fullname">*Fecha y hora de envío:</label>
+                    <input  class="form-control" type="datetime-local" id="fecha-hora" name="fecha-hora">
+                </div>
+            </div>
+            <p></p>
+            <div class="col-lg-12">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                <textarea class="form-control" id="Correo_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+            </div>
+        </div>
+
+       
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="demo-inline-spacing">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="BtnGuardarCorreo()">
+                        <span class="tf-icons bx bx-save"></span>&nbsp; Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const val = search('Id');
+
+    $(document).ready(function () {
+        if (val !== null) {
+            $('#Correo_Campaign option[value="' + val + '"]').attr("selected", true);
+        }
+    });
+    function BtnGuardarCorreo() {
+        if (ValidarForm()) {
+
+            const CatEstatusMarketing ={
+                Id: $("#Correo_Estatus option:selected").val()
+            }
+            const CatUnidadNegocio = {
+                Id: $("#Correo_UnidadNegocio option:selected").val()
+            }
+            const Campaign = {
+                Id: $('#Correo_Campaign option:selected').val()
+            }
+
+            const Model = {
+                Campaign: Campaign,
+                CatEstatusMarketing: CatEstatusMarketing,
+                CatUnidadNegocio: CatUnidadNegocio,
+                Clave: $('#Correo_Clave').val(),
+                Nombre: $('#Correo_Nombre').val(),
+                FechaInicio: $('#Correo_FechaInicio').val(),
+                FechaTermino: $('#Correo_FechaTermino').val(),
+                FechaEnvio: $('#fecha-hora').val(),
+                Descripcion: $('#Correo_Descripcion').val()
+            }
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CampaignCorreoElectronico_Insert", "Campaign")",
+                    async: false,
+                    data: JSON.stringify(Model),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.Id == -1) {
+                            AlertWarning("Problemas al registrar ", "La clave que intentas registrar ya se encuentra registrada.");
+                        } else if (result.Id == 0) {
+                            AlertDanger("Problemas al registrar ", "Correo no registrado.");
+                        } else if (result.Id > 0) {
+                            swal({
+                                title: "Nuevo Correo registrado. !",
+                                icon: "success",
+                                buttons: {
+                                    agregar: {
+                                        text: "Aceptar", className: 'sweet-continuar'
+                                    },
+                                },
+                            })
+                                .then((value) => {
+
+                                     $.ajax({
+                                        type: "POST",
+                                        url: "@Url.Action("EXITSCAMPINGLIST", "Campaign")",
+                                        async: false,
+                                        data: JSON.stringify(Campaign),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                         success: function (result2) {
+                                             if (result2.Id > 0) {
+                                                 window.location.href = "/Correo/Plantilla?camping=" + Campaign.Id + "&config=" + result.Id;
+                                             } else {
+                                                 window.location.href = "/Correo/Lista?camping=" + Campaign.Id + "&config=" + result.Id;
+                                             }
+                                        },
+                                        error: function () {
+                                            AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                                        }
+                                    });
+                                                        //switch (value) {
+                            //    case "agregar":
+                            //        window.location.href = "/Correo/Lista?camping=" + Campaign.Id + "&config=" + result.Id;
+                            //    break;
+                            //}
+                            });
+                        }
+                    },
+                    error: function () {
+                        AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                    }
+                });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+
+
+    function ValidarForm() {
+        var result = false;
+
+        $('#Correo_Clave').css("border", "1px solid #f44336");
+        $('#Correo_Clave').css("border-left", "none");
+
+        $('#Correo_Campaign').css("border", "1px solid #f44336");
+
+        $('#Correo_Nombre').css("border", "1px solid #f44336");
+        $('#Correo_Nombre').css("border-left", "none");
+
+        $('#Correo_FechaInicio').css("border", "1px solid #f44336");
+        $('#Correo_FechaInicio').css("border-left", "none");
+
+        $('#Correo_FechaTermino').css("border", "1px solid #f44336");
+        $('#Correo_FechaTermino').css("border-left", "none");
+
+        $('#fecha-hora').css("border", "1px solid #f44336");
+        $('#fecha-hora').css("border-left", "none");
+
+        
+
+        $('#Correo_Estatus').css("border", "1px solid #f44336");
+        $('#Correo_UnidadNegocio').css("border", "1px solid #f44336");
+        $('#Correo_Propietario').css("border", "1px solid #f44336");
+
+        if ($('#Correo_Clave').val().length > 0) {
+            $('#Correo_Clave').css("border", "1px solid #d9dee3");
+            $('#Correo_Clave').css("border-left", "none");
+        }
+
+        if ($("#Correo_Campaign option:selected").val() > 0) {
+            $('#Correo_Campaign').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Correo_Nombre').val().length > 0) {
+            $('#Correo_Nombre').css("border", "1px solid #d9dee3");
+            $('#Correo_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Correo_FechaInicio').val().length > 0) {
+            $('#Correo_FechaInicio').css("border", "1px solid #d9dee3");
+            $('#Correo_FechaInicio').css("border-left", "none");
+        }
+
+        if ($('#Correo_FechaTermino').val().length > 0) {
+            $('#Correo_FechaTermino').css("border", "1px solid #d9dee3");
+            $('#Correo_FechaTermino').css("border-left", "none");
+        }
+        if ($('#fecha-hora').val().length > 0) {
+            $('#fecha-hora').css("border", "1px solid #d9dee3");
+            $('#fecha-hora').css("border-left", "none");
+        }
+
+        if ($("#Correo_Estatus option:selected").val() > 0) {
+            $('#Correo_Estatus').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Correo_UnidadNegocio option:selected").val() > 0) {
+            $('#Correo_UnidadNegocio').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Correo_Propietario option:selected").val() > 0) {
+            $('#Correo_Propietario').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Correo_Clave').val().length > 0) {
+            if ($("#Correo_Campaign option:selected").val() > 0) {
+                if ($('#Correo_Nombre').val().length > 0) {
+                    if ($('#Correo_FechaInicio').val().length > 0) {
+                        if ($('#Correo_FechaTermino').val().length > 0) {
+                            if ($("#Correo_Estatus option:selected").val() > 0) {
+                                if ($("#Correo_UnidadNegocio option:selected").val() > 0) {
+                                    if ($("#Correo_Propietario option:selected").val() > 0) {
+                                        if ($('#fecha-hora').val().length > 0) {
+                                            result = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    function search(variable) {
+        return new URLSearchParams(window.location.search).get(variable);
+    }
+
+</script>
+<script>
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Letras(e) {
+
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz ";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Numeros(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = "1234567890";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+</script>
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+</script>
+
+<script>
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketingCorreo').addClass("active");
+</script>

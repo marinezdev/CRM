@@ -1,0 +1,2115 @@
+﻿
+@{
+    ViewBag.Title = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+
+<div class="card mb-4">
+    <h5 class="card-header">Contacto </h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold">Completa los campos marcados *</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-email">* Email</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                        <input type="text" id="Contacto_Email" class="form-control" placeholder="" aria-label="" aria-describedby="Contacto_Email" onkeyup="BusquedaContactoEmail(this);" />
+                        <span id="basic-icon-default-email2" class="input-group-text">@@example.com</span>
+                    </div>
+                    <div class="form-text">Puedes usar letras, números y puntos</div>
+                    <button class="btn btn-primary" type="button" id="BtnAbrirBusqueda" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBusquedaEmail" aria-controls="offcanvasBusquedaEmail" style="display:none">
+                        DF
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-check mt-3">
+                    <br />
+                    <input class="form-check-input" type="checkbox" value="" id="CheckContactoRestringido" />
+                    <label class="form-check-label" for="CheckContactoRestringido"> Contacto restringido  </label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-check mt-3">
+                    <br />
+                    <input class="form-check-input" type="checkbox" value="" id="CheckContactoVerificado" />
+                    <label class="form-check-label" for="CheckContactoVerificado"> Email verificado  </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-user"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Contacto_Nombre" placeholder="Nombre" aria-label="" aria-describedby="Contacto_Nombre" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">Apellido paterno </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-user"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Contacto_ApellidoPaterno" placeholder="Apellido paterno" aria-label="" aria-describedby="Contacto_ApellidoPaterno" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">Apellido materno  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-user"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Contacto_ApellidoMaterno" placeholder="Apellido materno" aria-label="" aria-describedby="Contacto_ApellidoMaterno" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">RFC  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-user"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Contacto_RFC" placeholder="RFC" aria-label="" aria-describedby="Contacto_RFC" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname"> Sexo  </label>
+                    <select class="form-select" id="Contacto_Sexo" aria-label="Contacto_Sexo">
+                        <option value="0" selected>SELECCIONAR</option>
+                        <option value="1">MASCULINO</option>
+                        <option value="2">FEMENINO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname"> Fecha nacimiento  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control" id="Contacto_FechaNacimiento" placeholder="Nombre" aria-label="" aria-describedby="Contacto_FechaNacimiento" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Tipo contacto  </label>
+                    <div class="input-group">
+                        <select id='Contacto_TipoPersona' class="form-select" aria-label="Contacto_TipoPersona" onchange="ValidaSelect('Contacto_TipoPersona')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.TipoPersona)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTipoPersona" aria-controls="offcanvasTipoPersona">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Cargo   </label>
+                    <div class="input-group">
+                        <select id='Contacto_Cargo' class="form-select" aria-label="Contacto_Cargo" onchange="ValidaSelect('Contacto_Cargo')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @if (ViewBag.Cargo != null)
+                            {
+                                foreach (var item in ViewBag.Cargo)
+                                {
+                                    <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                }
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCargo" aria-controls="offcanvasCargo">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Estatus   </label>
+                    <div class="input-group">
+                        <select id='Contacto_EstatusPersona' class="form-select" aria-label="Contacto_EstatusPersona" onchange="ValidaSelect('Contacto_EstatusPersona')" disabled>
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.EstatusPersona)
+                            {
+                                if (1 == item.Id)
+                                {
+                                    <option value="@item.Id" selected>@item.Nombre.ToUpper()</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                }
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEstatusPersona" aria-controls="offcanvasEstatusPersona">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                    <div class="input-group">
+                        <select id='Contacto_UnidadNegocio' class="form-select" aria-label="Contacto_UnidadNegocio" onchange="ValidaSelect('Contacto_UnidadNegocio')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.UnidadNegocio)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Fuente de origen</label>
+                    <div class="input-group">
+                        <select id='Contacto_FuenteOrigen' class="form-select" aria-label="Contacto_FuenteOrigen" onchange="ValidaSelect('Contacto_FuenteOrigen')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.FuenteOrigen)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFuenteOrigen" aria-controls="offcanvasFuenteOrigen">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Propietario del registro del contacto  </label>
+                    <select id='Contacto_Propietario' class="form-select" aria-label="Contacto_Propietario" onchange="ValidaSelect('Contacto_Propietario')" disabled>
+                        <option value="0" selected>SELECCIONAR</option>
+                        @foreach (var item in ViewBag.Usuarios)
+                        {
+                            if (((CRM.Models.Usuario)System.Web.HttpContext.Current.Session["Sesion"]).Id == item.Id)
+                            {
+                                <option value="@item.Id" selected>@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="col-lg-12">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                <textarea class="form-control" id="Contacto_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+            </div>
+
+            <div class="col-md-12">
+                <small class="text-light fw-semibold">Asociar contacto con: </small>
+                <div class="demo-inline-spacing">
+                    <input type="checkbox" id="checkbox_Empresa" value="0" style="display:none">
+                    <input type="checkbox" id="checkbox_Telefono" value="0" style="display:none">
+                    <button type="button" class="btn btn-outline-secondary" id="BtnEmpresa" onclick="FormularioEmpresa()">
+                        <span class="tf-icons bx bx-building"></span>&nbsp; Empresa
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="BtnTelefono" onclick="FormularioTelefono()">
+                        <span class="tf-icons bx bx-phone"></span>&nbsp; Teléfono
+                    </button>
+                </div>
+                <br />
+            </div>
+
+            <div id="FormeEmpresa" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <small class="text-light fw-semibold">Asociar contacto con empresa </small>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Empresa   </label>
+                            <select id='Contacto_Empresa' class="form-select" aria-label="Contacto_Empresa" onchange="CargaDepartamento()">
+                                <option value="0" selected>SELECCIONAR</option>
+                                @if (ViewBag.Empresas != null)
+                                {
+                                    foreach (var item in ViewBag.Empresas)
+                                    {
+                                        <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Departamento </label>
+                            <button class="btn btn-primary" type="button" id="IdBtnModalDepartamentoAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDepartamento" aria-controls="offcanvasDepartamento" style="display:none;">+</button>
+                            <div class="input-group">
+                                <select id='Empresa_Departamento' class="form-select" aria-label="Empresa_Departamento" onchange="CargaPuesto()">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                </select>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalDepartamento" onclick="AbrirDepartamento()">+</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Puesto </label>
+                            <button class="btn btn-primary" type="button" id="IdBtnModalPuestoAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPuesto" aria-controls="offcanvasPuesto" style="display:none;">+</button>
+                            <div class="input-group">
+                                <select id='Empresa_Puesto' class="form-select" aria-label="Empresa_Puesto" onchange="ValidaSelect('Empresa_Puesto')">
+                                    <option value="0" selected>SELECCIONAR</option>
+
+                                </select>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalPuesto" onclick="AbrirPuesto()">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="FormTelefono" style="display:none">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-phone">Teléfono </label>
+                            <div class="input-group input-group-merge">
+                                <span id="basic-icon-default-phone2" class="input-group-text">
+                                    <i class="bx bx-phone"></i>
+                                </span>
+                                <input type="text" id="Contacto_Numero" class="form-control phone-mask" maxlength="12" placeholder="658 799 8941" aria-label="658 799 8941" aria-describedby="basic-icon-default-phone2" onchange="ValidaInput('Contacto_Numero')" />
+                            </div>
+                            <p id="error-msg" style="color: red;"></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Tipo teléfono </label>
+                            <div class="input-group">
+                                <select id='Telefono_TipoTelefono' class="form-select" aria-label="Telefono_TipoTelefono" onchange="ValidaSelect('Telefono_TipoTelefono')">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                    @{
+                                        if (ViewBag.CatTipoTelefonos != null)
+                                        {
+                                            foreach (var item in ViewBag.CatTipoTelefonos)
+                                            {
+                                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                                <button class="btn btn-primary" type="button" id="IdBtnModalTipoTelefono" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTipoTelefono" aria-controls="offcanvasTipoTelefono">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="demo-inline-spacing">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="BtnGuardarContacto()">
+                        <span class="tf-icons bx bx-save"></span>&nbsp; Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO TIPO CONTACTO  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasTipoPersona" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO TIPO CONTACTO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre tipo contacto</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="TipoPersona_Nombre" placeholder="Tipo contacto" aria-label="" aria-describedby="TipoPersona_Nombre" onchange="ValidaInput('TipoContacto_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarTipoPersona()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnTipoPersonaCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO CARGO  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCargo" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO CARGO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre cargo</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Cargo_Nombre" placeholder="Cargo" aria-label="" aria-describedby="Cargo_Nombre" onchange="ValidaInput('Cargo_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarCargo()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnCargoCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO ESTATUS PERSONA  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasEstatusPersona" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO ESTATUS CONTACTO </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre estatus contacto</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="EstatusPersona_Nombre" placeholder="Estatus contacto" aria-label="" aria-describedby="EstatusPersona_Nombre" onchange="ValidaInput('EstatusPersona_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarEstatusPersona()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnEstatusPersonaCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!--- FORMULARIO NUEVA UNIDAD DE NEGOCIO -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasUnidadNegocio" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA UNIDAD DE NEGOCIO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre unidad de negocio</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="UnidadNegocio_Nombre" placeholder="Unidad de negocio" aria-label="" aria-describedby="UnidadNegocio_Nombre" onchange="ValidaInput('UnidadNegocio_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarUnidadNegocio()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnUnidadNegocioCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVA FUENTE DE ORIGEN   -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasFuenteOrigen" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA FUENTE DE ORIGEN</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre fuente de origen</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="FuenteOrigen_Nombre" placeholder="Fuente de origen" aria-label="" aria-describedby="FuenteOrigen_Nombre" onchange="ValidaInput('FuenteOrigen_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarFuenteOrigen()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnFuenteOrigenCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---- BUSQUEDA DE EMAIL --->
+<div id="offcanvasBusquedaEmail" class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" aria-labelledby="offcanvasScrollLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasScrollLabel" class="offcanvas-title">SIMILITUD EN EMAIL</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="text-nowrap" id="TablaBusquedaEmail">
+
+            </div>
+        </div>
+
+        <br />
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnBusquedaEmailCerrar">
+            Cerrar
+        </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO TIPO TELÉFONO  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasTipoTelefono" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO TIPO TELÉFONO </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre tipo teléfono </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Tipo_Telefono" placeholder="Tipo teléfono" aria-label="" aria-describedby="Tipo_Telefono" onchange="ValidaInput('Tipo_Telefono')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarTipoTelefono()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnTipoTelefonoCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO DEPARTAMENTO  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasDepartamento" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO DEPARTAMENTO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre departamento</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Departamento_Nombre" placeholder="Nombre departamento" aria-label="" aria-describedby="Departamento_Nombre" onchange="ValidaInput('Departamento_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarDepartamento()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnDepartamentoCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVO PUESTO  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasPuesto" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVO PUESTO</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre puesto</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Puesto_Nombre" placeholder="Nombre puesto" aria-label="" aria-describedby="Puesto_Nombre" onchange="ValidaInput('Puesto_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarPuesto()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnPuestoCerrar">  Cancelar  </button>
+    </div>
+</div>
+<script>
+    function BtnGuardarContacto() {
+        if (ValidForm()) {
+
+            var CatTipoPersona = new Object();
+            CatTipoPersona.Id = $("#Contacto_TipoPersona option:selected").val();
+
+            var CatEstatusPersona = new Object();
+            CatEstatusPersona.Id = $("#Contacto_EstatusPersona option:selected").val();
+
+            var Email = new Object();
+            Email.email = $('#Contacto_Email').val();
+            if ($("#CheckContactoVerificado").is(':checked')) {
+                Email.Verificado = 1
+            }
+
+            var CatUnidadNegocio = new Object();
+            CatUnidadNegocio.Id = $("#Contacto_UnidadNegocio option:selected").val();
+
+            var Puesto = new Object();
+            if ($("#checkbox_Empresa").is(':checked')) {
+                Puesto.Id = $("#Empresa_Puesto option:selected").val();
+            }
+
+            var Telefono = new Object();
+            if ($("#checkbox_Telefono").is(':checked')) {
+
+                var CatTipoTelefono = new Object();
+                CatTipoTelefono.Id = $("#Telefono_TipoTelefono option:selected").val();
+
+                Telefono.CatTipoTelefono = CatTipoTelefono;
+                Telefono.telefono = $('#Contacto_Numero').val();
+            }
+
+            var Persona = new Object();
+            Persona.Nombre = $('#Contacto_Nombre').val();
+            Persona.ApellidoPaterno = $('#Contacto_ApellidoPaterno').val();
+            Persona.ApellidoMaterno = $('#Contacto_ApellidoMaterno').val();
+            Persona.RFC = $('#Contacto_RFC').val();
+            Persona.Sexo = $("#Contacto_Sexo option:selected").val();
+            Persona.FechaNacimiento = $('#Contacto_FechaNacimiento').val();
+            Persona.Descripcion = $('#Contacto_Descripcion').val();
+            Persona.CatTipoPersona = CatTipoPersona;
+            Persona.CatEstatusPersona = CatEstatusPersona;
+
+            Persona.Email = Email;
+            Persona.CatUnidadNegocio = CatUnidadNegocio;
+
+            var CatFuenteOrigen = new Object();
+            CatFuenteOrigen.Id = $("#Contacto_FuenteOrigen option:selected").val();
+
+            var CatCargo = new Object();
+            CatCargo.Id = $("#Contacto_Cargo option:selected").val();
+
+            var Usuario = new Object();
+            Usuario.Id = $("#Contacto_Propietario option:selected").val();
+
+            var Contacto = new Object();
+            Contacto.Persona = Persona;
+            Contacto.CatFuenteOrigen = CatFuenteOrigen;
+            Contacto.CatCargo = CatCargo;
+            Contacto.Usuario = Usuario;
+
+            if ($("#CheckContactoRestringido").is(':checked')) {
+                Contacto.Restringido = 1
+            }
+
+            var NuevoContacto = new Object();
+            NuevoContacto.Contacto = Contacto;
+            NuevoContacto.Telefono = Telefono;
+            NuevoContacto.Puesto = Puesto;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Contacto_Agregar", "Contacto")",
+                data: JSON.stringify(NuevoContacto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (respuesta) {
+                    if (respuesta.Id > 0) {
+
+                        swal({
+                            title: "Nuevo contacto registrado. !",
+                            icon: "success",
+                            buttons: {
+                                cancelar: {
+                                    text: "Contactos Registrados", className: 'sweet-mostrar'
+                                },
+                                agregar: {
+                                    text: "Agregar mas contactos", className: 'sweet-continuar'
+                                },
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+
+                                case "cancelar":
+
+                                    window.location.href = '@Url.Action("Index", "Contacto")';
+                                    break;
+
+                                case "agregar":
+                                    location.reload();
+                                    break;
+                            }
+                        });
+
+
+                    } else if (respuesta.Id == 0) {
+                        AlertWarning("Problemas al registrar ", "Problemas al registrar el contacto.");
+                    } else if (respuesta.Id == -2) {
+                        AlertWarning("Problemas al registrar ", "El email que intentas agregar ya se encuentra registrado.");
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidForm() {
+        var result = false;
+        var Empresa = false;
+        var Telefono = false;
+
+        $('#Contacto_Email').css("border", "1px solid #f44336");
+        $('#Contacto_Email').css("border-left", "none");
+        $('#Contacto_Nombre').css("border", "1px solid #f44336");
+        $('#Contacto_Nombre').css("border-left", "none");
+
+        $('#select2-Contacto_TipoPersona-container').css("border", "1px solid #f44336");
+        $('#select2-Contacto_Cargo-container').css("border", "1px solid #f44336");
+        $('#select2-Contacto_EstatusPersona-container').css("border", "1px solid #f44336");
+        $('#select2-Contacto_UnidadNegocio-container').css("border", "1px solid #f44336");
+        $('#select2-Contacto_Propietario-container').css("border", "1px solid #f44336");
+        $('#select2-Contacto_FuenteOrigen-container').css("border", "1px solid #f44336");
+
+        if ($('#Contacto_Email').val().length > 0) {
+            $('#Contacto_Email').css("border", "1px solid #d9dee3");
+            $('#Contacto_Email').css("border-left", "none");
+        }
+
+        if ($('#Contacto_Nombre').val().length > 0) {
+            $('#Contacto_Nombre').css("border", "1px solid #d9dee3");
+            $('#Contacto_Nombre').css("border-left", "none");
+        }
+
+        if ($("#Contacto_TipoPersona option:selected").val() > 0) {
+            $('#select2-Contacto_TipoPersona-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Contacto_Cargo option:selected").val() > 0) {
+            $('#select2-Contacto_Cargo-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Contacto_EstatusPersona option:selected").val() > 0) {
+            $('#select2-Contacto_EstatusPersona-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Contacto_UnidadNegocio option:selected").val() > 0) {
+            $('#select2-Contacto_UnidadNegocio-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Contacto_Propietario option:selected").val() > 0) {
+            $('#select2-Contacto_Propietario-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#Contacto_FuenteOrigen option:selected").val() > 0) {
+            $('#select2-Contacto_FuenteOrigen-container').css("border", "0px solid #d9dee3");
+        }
+
+        if ($("#checkbox_Empresa").is(':checked')) {
+            $('#select2-Contacto_Empresa-container').css("border", "1px solid #f44336");
+            $('#select2-Empresa_Departamento-container').css("border", "1px solid #f44336");
+            $('#select2-Empresa_Puesto-container').css("border", "1px solid #f44336");
+
+            if ($("#Contacto_Empresa option:selected").val() > 0) {
+                $('#select2-Contacto_Empresa-container').css("border", "0px solid #d9dee3");
+            }
+            if ($("#Empresa_Departamento option:selected").val() > 0) {
+                $('#select2-Empresa_Departamento-container').css("border", "0px solid #d9dee3");
+            }
+            if ($("#Empresa_Puesto option:selected").val() > 0) {
+                $('#select2-Empresa_Puesto-container').css("border", "0px solid #d9dee3");
+            }
+        }
+
+        if ($("#checkbox_Telefono").is(':checked')) {
+            $('#Contacto_Numero').css("border", "1px solid #f44336");
+            $('#Contacto_Numero').css("border-left", "none");
+
+            $('#Telefono_TipoTelefono').css("border", "1px solid #f44336");
+
+            if ($("#Telefono_TipoTelefono option:selected").val() > 0) {
+                $('#Telefono_TipoTelefono').css("border", "1px solid #d9dee3");
+            }
+
+            if ($('#Contacto_Numero').val().length > 0) {
+                $('#Contacto_Numero').css("border", "1px solid #d9dee3");
+                $('#Contacto_Numero').css("border-left", "none");
+            }
+        }
+
+        if ($('#Contacto_Numero').val().length > 0) {
+            if ($("#Telefono_TipoTelefono option:selected").val() > 0) {
+                Telefono = true;
+            }
+        } else {
+            Telefono = true;
+        }
+
+        if ($("#checkbox_Empresa").is(':checked')) {
+            if ($("#Contacto_Empresa option:selected").val() > 0) {
+                if ($("#Empresa_Departamento option:selected").val() > 0) {
+                    if ($("#Empresa_Puesto option:selected").val() > 0) {
+                        Empresa = true;
+                    }
+                }
+            }
+        } else {
+            Empresa = true;
+        }
+
+        if ($('#Contacto_Email').val().length > 0) {
+            if ($('#Contacto_Nombre').val().length > 0) {
+                if ($("#Contacto_TipoPersona option:selected").val() > 0) {
+                    if ($("#Contacto_Cargo option:selected").val() > 0) {
+                        if ($("#Contacto_EstatusPersona option:selected").val() > 0) {
+                            if ($("#Contacto_UnidadNegocio option:selected").val() > 0) {
+                                if ($("#Contacto_FuenteOrigen option:selected").val() > 0) {
+                                    if ($("#Contacto_Propietario option:selected").val() > 0) {
+                                        if (Empresa) {
+                                            if (Telefono) {
+                                                result = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function FormularioEmpresa() {
+        if ($('#checkbox_Empresa').prop('checked')) {
+
+            $("#checkbox_Empresa").prop("checked", false);
+            $("#BtnEmpresa").removeClass("btn-primary");
+            $("#BtnEmpresa").addClass("btn-outline-secondary");
+            $("#FormeEmpresa").css("display", "none");
+        } else {
+            $("#checkbox_Empresa").prop("checked", true);
+            $("#BtnEmpresa").removeClass("btn-outline-secondary");
+            $("#BtnEmpresa").addClass("btn-primary");
+
+            $("#FormeEmpresa").show();
+            $("#Contacto_Empresa").select2();
+            $("#Empresa_Departamento").select2();
+            $("#Empresa_Puesto").select2();
+
+            var posicion = $("#FormeEmpresa").offset().top;
+            $("html, body").animate({
+                scrollTop: posicion - 100
+            }, 500);
+        }
+    }
+
+    function FormularioTelefono() {
+        if ($('#checkbox_Telefono').prop('checked')) {
+            $("#checkbox_Telefono").prop("checked", false);
+            $("#BtnTelefono").removeClass("btn-primary");
+            $("#BtnTelefono").addClass("btn-outline-secondary");
+            $("#FormTelefono").css("display", "none");
+        } else {
+            $("#checkbox_Telefono").prop("checked", true);
+            $("#BtnTelefono").removeClass("btn-outline-secondary");
+            $("#BtnTelefono").addClass("btn-primary");
+
+            $("#FormTelefono").show();
+
+            var posicion = $("#FormTelefono").offset().top;
+            $("html, body").animate({
+                scrollTop: posicion - 100
+            }, 500);
+        }
+
+    }
+
+    $(document).ready(function () {
+        $('#Contacto_Numero').on('input', function () {
+            var telefono = $(this).val();
+            var regex = /^\d{10}$/; // Expresión regular para un número de teléfono de 10 dígitos
+
+            if (regex.test(telefono)) {
+                $('#error-msg').text(''); // Si el formato es válido, no se muestra mensaje de error
+            } else {
+                $('#error-msg').text('El formato del número de teléfono es incorrecto');
+            }
+        });
+    });
+</script>
+
+<script>
+    function CargaTipoTelefono(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CatTipoTelefono_Seleccionar", "Telefono")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Telefono_TipoTelefono").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Telefono_TipoTelefono").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Telefono_TipoTelefono").append(option);
+                    });
+                }
+
+                $('#Telefono_TipoTelefono option[value="' + Id + '"]').attr("selected", true);
+                $('#Tipo_Telefono').val('');
+                $("#BtnTipoTelefonoCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !', 'Nuevo tipo de teléfono registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function BtnRegistrarTipoTelefono() {
+        if (ValidaTipoTelefono()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#Tipo_Telefono').val();
+
+            var jsonObject = {
+                "CatTipoTelefono": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CatTipoTelefono_Agregar", "Telefono")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El tipo de teléfono ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Puesto no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaTipoTelefono(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Puesto no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidaTipoTelefono() {
+        var result = false;
+        $('#Tipo_Telefono').css("border", "1px solid #f44336");
+        $('#Tipo_Telefono').css("border-left", "none");
+
+
+        if ($('#Tipo_Telefono').val().length > 0) {
+            $('#Tipo_Telefono').css("border", "1px solid #d9dee3");
+            $('#Tipo_Telefono').css("border-left", "none");
+        }
+
+        if ($('#Tipo_Telefono').val().length > 0) {
+            result = true;
+        }
+        return result;
+    }
+
+</script>
+
+<script>
+    function CargaPuesto() {
+        $('#select2-Empresa_Departamento-container').css("border", "1px solid #f44336");
+
+        if ($("#Empresa_Departamento option:selected").val() > 0) {
+            $('#select2-Empresa_Departamento-container').css("border", "0px solid #d9dee3");
+        }
+
+        var obj = {};
+        obj['Id'] = $("#Empresa_Departamento option:selected").val();
+
+        var jsonObject = {
+            "Departamento": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Puesto_Seleccionar_IdDepartamento", "Puesto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Empresa_Puesto").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Empresa_Puesto").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Empresa_Puesto").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Empresa_Puesto").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                $("#Empresa_Puesto").append(option);
+            }
+        });
+    }
+
+    function AbrirPuesto() {
+        $('#select2-Empresa_Departamento-container').css("border", "1px solid #f44336");
+
+        if ($("#Empresa_Departamento option:selected").val() > 0) {
+            $('#select2-Empresa_Departamento-container').css("border", "0px solid #d9dee3");
+        }
+
+        var Empresa = $("#Empresa_Departamento option:selected").val();
+
+        if (Empresa > 0) {
+            $("#IdBtnModalPuestoAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona un departamento para crear un puesto nuevo.");
+        }
+    }
+
+    function BtnRegistrarPuesto() {
+        if (ValidaPuesto()) {
+
+            var Departamento = new Object();
+            Departamento.Id = $("#Empresa_Departamento option:selected").val();
+
+            var Puesto = new Object();
+            Puesto.Nombre = $('#Puesto_Nombre').val();
+            Puesto.Departamento = Departamento;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Puesto_Agregar", "Puesto")",
+                async: false,
+                data: JSON.stringify(Puesto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El puesto ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Puesto no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaPuestos(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Puesto no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaPuestos(Id) {
+
+        var obj = {};
+        obj['Id'] = $("#Empresa_Departamento option:selected").val();
+
+        var jsonObject = {
+            "Departamento": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Puesto_Seleccionar_IdDepartamento", "Puesto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Empresa_Puesto").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Empresa_Puesto").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Empresa_Puesto").append(option);
+                    });
+                }
+
+                $('#Empresa_Puesto option[value="' + Id + '"]').attr("selected", true);
+                $('#Puesto_Nombre').val('');
+                $("#BtnPuestoCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !', 'Nuevo puesto registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaPuesto() {
+        var result = false;
+        $('#Puesto_Nombre').css("border", "1px solid #f44336");
+        $('#Puesto_Nombre').css("border-left", "none");
+
+
+        if ($('#Puesto_Nombre').val().length > 0) {
+            $('#Puesto_Nombre').css("border", "1px solid #d9dee3");
+            $('#Puesto_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Puesto_Nombre').val().length > 0) {
+            result = true;
+        }
+        return result;
+    }
+</script>
+
+<script>
+    function CargaDepartamento() {
+
+        $('#select2-Contacto_Empresa-container').css("border", "1px solid #f44336");
+
+        if ($("#Contacto_Empresa option:selected").val() > 0) {
+            $('#select2-Contacto_Empresa-container').css("border", "0px solid #d9dee3");
+        }
+
+        var obj = {};
+        obj['Id'] = $("#Contacto_Empresa option:selected").val();
+
+        var jsonObject = {
+            "Empresa": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Departamento_Seleccionar_IdEmpresa", "Departamento")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Empresa_Departamento").empty();
+                    $("#Empresa_Puesto").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+
+                    $("#Empresa_Departamento").append(option);
+                    $("#Empresa_Puesto").append(option2);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Empresa_Departamento").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Empresa_Departamento").empty();
+                $("#Empresa_Puesto").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                var option2 = $(document.createElement('option'));
+                option2.text("SELECCIONAR");
+                option2.val(0);
+
+
+                $("#Empresa_Departamento").append(option);
+                $("#Empresa_Puesto").append(option2);
+            }
+        });
+    }
+
+    function AbrirDepartamento() {
+        $('#select2-Empresa_Empresa-container').css("border", "1px solid #f44336");
+
+        if ($("#Empresa_Empresa option:selected").val() > 0) {
+            $('#select2-Empresa_Empresa-container').css("border", "0px solid #d9dee3");
+        }
+
+        var Empresa = $("#Empresa_Empresa option:selected").val();
+
+        if (Empresa > 0) {
+            $("#IdBtnModalDepartamentoAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una empresa para crear un departamento nuevo.");
+        }
+    }
+
+    function BtnRegistrarDepartamento() {
+        if (ValidaTipo()) {
+
+            var Empresa = new Object();
+            Empresa.Id = $("#Empresa_Empresa option:selected").val();
+
+            var Departamento = new Object();
+            Departamento.Nombre = $('#Departamento_Nombre').val();
+            Departamento.Empresa = Empresa;
+
+            console.log(Departamento);
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Departamento_Agregar", "Departamento")",
+                async: false,
+                data: JSON.stringify(Departamento),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El departamento ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Departamento no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaDepartamentos(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Departamento no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaDepartamentos(Id) {
+        var obj = {};
+        obj['Id'] = $("#Empresa_Empresa option:selected").val();
+
+        var jsonObject = {
+            "Empresa": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Departamento_Seleccionar_IdEmpresa", "Departamento")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Empresa_Departamento").empty();
+                    $("#Empresa_Puesto").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+
+                    $("#Empresa_Departamento").append(option);
+                    $("#Empresa_Puesto").append(option2);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Empresa_Departamento").append(option);
+                    });
+
+
+                }
+
+                $('#Empresa_Departamento option[value="' + Id + '"]').attr("selected", true);
+                $('#Departamento_Nombre').val('');
+                $("#BtnDepartamentoCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !', 'Nuevo departamento registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaTipo() {
+        var result = false;
+
+        $('#Departamento_Nombre').css("border", "1px solid #f44336");
+        $('#Departamento_Nombre').css("border-left", "none");
+
+        if ($('#Departamento_Nombre').val().length > 0) {
+            $('#Departamento_Nombre').css("border", "1px solid #d9dee3");
+            $('#Departamento_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Departamento_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+
+    function BtnRegistrarFuenteOrigen() {
+        if (ValidaFuenteOrigen()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#FuenteOrigen_Nombre').val();
+
+            var jsonObject = {
+                "CatFuenteOrigen": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("FuenteOrigen_Agregar", "FuenteOrigen")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La fuente de origen ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Fuente de origen no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaFuenteOrigen(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Fuente de orige no registrada.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaFuenteOrigen(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("FuenteOrigen_Listar", "FuenteOrigen")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Contacto_FuenteOrigen").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Contacto_FuenteOrigen").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Contacto_FuenteOrigen").append(option);
+                    });
+                }
+                $('#Contacto_FuenteOrigen option[value="' + Id + '"]').attr("selected", true);
+                $('#FuenteOrigen_Nombre').val('');
+                $("#BtnFuenteOrigenCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva fuente de origen registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaFuenteOrigen() {
+        var result = false;
+
+        $('#FuenteOrigen_Nombre').css("border", "1px solid #f44336");
+        $('#FuenteOrigen_Nombre').css("border-left", "none");
+
+        if ($('#FuenteOrigen_Nombre').val().length > 0) {
+            $('#FuenteOrigen_Nombre').css("border", "1px solid #d9dee3");
+            $('#FuenteOrigen_Nombre').css("border-left", "none");
+        }
+
+        if ($('#FuenteOrigen_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+
+    function BtnRegistrarUnidadNegocio() {
+        if (ValidaUnidadNegocio()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#UnidadNegocio_Nombre').val();
+
+            var jsonObject = {
+                "CatUnidadNegocio": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UnidadNegocio_Agregar", "UnidadNegocio")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La unidad de negocio ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Unidad de negocio no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaUnidadNegocio(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Unidad de negocio no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaUnidadNegocio(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UnidadNegocio_Listar", "UnidadNegocio")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Contacto_UnidadNegocio").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Contacto_UnidadNegocio").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Contacto_UnidadNegocio").append(option);
+                    });
+                }
+                $('#Contacto_UnidadNegocio option[value="' + Id + '"]').attr("selected", true);
+                $('#UnidadNegocio_Nombre').val('');
+                $("#BtnUnidadNegocioCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva unidad de negocio registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaUnidadNegocio() {
+        var result = false;
+
+        $('#UnidadNegocio_Nombre').css("border", "1px solid #f44336");
+        $('#UnidadNegocio_Nombre').css("border-left", "none");
+
+        if ($('#UnidadNegocio_Nombre').val().length > 0) {
+            $('#UnidadNegocio_Nombre').css("border", "1px solid #d9dee3");
+            $('#UnidadNegocio_Nombre').css("border-left", "none");
+        }
+
+        if ($('#UnidadNegocio_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function BtnRegistrarEstatusPersona() {
+        if (ValidaEstatusPersona()) {
+            var obj = {};
+            obj['Nombre'] = $('#EstatusPersona_Nombre').val();
+
+            var jsonObject = {
+                "CatEstatusPersona": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EstatusPersona_Agregar", "EstatusPersona")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El estatus ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Nuevo estatus no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaEstatusPersona(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Nuevo estatus no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaEstatusPersona(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EstatusPersona_Listar", "EstatusPersona")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Contacto_EstatusPersona").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Contacto_EstatusPersona").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Contacto_EstatusPersona").append(option);
+                    });
+                }
+                $('#Contacto_EstatusPersona option[value="' + Id + '"]').attr("selected", true);
+                $('#EstatusPersona_Nombre').val('');
+                $("#BtnEstatusPersonaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo estatus registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaEstatusPersona() {
+        var result = false;
+
+        $('#EstatusPersona_Nombre').css("border", "1px solid #f44336");
+        $('#EstatusPersona_Nombre').css("border-left", "none");
+
+        if ($('#EstatusPersona_Nombre').val().length > 0) {
+            $('#EstatusPersona_Nombre').css("border", "1px solid #d9dee3");
+            $('#EstatusPersona_Nombre').css("border-left", "none");
+        }
+
+        if ($('#EstatusPersona_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function BtnRegistrarCargo() {
+        if (ValidaCargo()) {
+            var obj = {};
+            obj['Nombre'] = $('#Cargo_Nombre').val();
+
+            var jsonObject = {
+                "CatCargo": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Cargo_Agregar", "Cargo")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El cargo ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Cargo no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaCargo(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Cargo no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaCargo(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Cargo_Listar", "Cargo")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Contacto_Cargo").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Contacto_Cargo").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Contacto_Cargo").append(option);
+                    });
+                }
+                $('#Contacto_Cargo option[value="' + Id + '"]').attr("selected", true);
+                $('#Cargo_Nombre').val('');
+                $("#BtnCargoCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo cargo registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaCargo() {
+        var result = false;
+
+        $('#Cargo_Nombre').css("border", "1px solid #f44336");
+        $('#Cargo_Nombre').css("border-left", "none");
+
+        if ($('#Cargo_Nombre').val().length > 0) {
+            $('#Cargo_Nombre').css("border", "1px solid #d9dee3");
+            $('#Cargo_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Cargo_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function BtnRegistrarTipoPersona() {
+        if (ValidaTipo()) {
+            var obj = {};
+            obj['Nombre'] = $('#TipoPersona_Nombre').val();
+
+            var jsonObject = {
+                "CatTipoPersona": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("TipoPersona_Agregar", "TipoPersona")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El tipo de contecto ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Tipo de contecto no registrado.");
+                    } else if (result.Id > 0) {
+                        CargaTipoPersona(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Tipo de contecto no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaTipoPersona(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("TipoPersona_Listar", "TipoPersona")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Contacto_TipoPersona").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Contacto_TipoPersona").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Contacto_TipoPersona").append(option);
+                    });
+                }
+                $('#Contacto_TipoPersona option[value="' + Id + '"]').attr("selected", true);
+                $('#TipoPersona_Nombre').val('');
+                $("#BtnTipoPersonaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nuevo tipo de contecto registrado');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaTipo() {
+        var result = false;
+
+        $('#TipoPersona_Nombre').css("border", "1px solid #f44336");
+        $('#TipoPersona_Nombre').css("border-left", "none");
+
+        if ($('#TipoPersona_Nombre').val().length > 0) {
+            $('#TipoPersona_Nombre').css("border", "1px solid #d9dee3");
+            $('#TipoPersona_Nombre').css("border-left", "none");
+        }
+
+        if ($('#TipoPersona_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+</script>
+
+<script>
+    function BusquedaContactoEmail(e) {
+        /*e.value = e.value.toUpperCase();*/
+
+        if (e.value.length > 0) {
+            var obj = {};
+            obj['email'] = e.value.toUpperCase();
+
+            var jsonObject = {
+                "Email": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Contacto_Buscar_Email", "Contacto")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.length > 0) {
+
+                        var Table =
+                        "<table class='table table-sm table-striped table-hover'>" +
+                            "<thead>" +
+                                "<tr>" +
+                                    "<th>Email</th>" +
+                                    "<th>Contacto</th>" +
+                                    "<th>Acciones </th>" +
+                                "</tr>" +
+                            "</thead>" +
+                            "<tbody class='table-border-bottom-0'>";
+                        if (data[0].Busqueda > 0) {
+                            for (var b = 0; b < data.length; b++) {
+                            Table +=
+                                "<tr>" +
+                                    "<td><i class='fab fa-angular fa-lg text-danger me-3'></i> <strong>" + data[b].Email.email + "</strong></td>" +
+
+                                    "<td>" + data[b].Persona.Nombre + " " + data[b].Persona.ApellidoPaterno + " " + data[b].Persona.ApellidoMaterno + "</td>" +
+                                    "<td>" +
+                                        "<div class='dropdown'>" +
+                                            "<button type='button' class='btn p-0 dropdown-toggle hide-arrow' data-bs-toggle='dropdown'>" +
+                                                "<i class='bx bx-dots-vertical-rounded'></i>" +
+                                            "</button>" +
+                                            "<div class='dropdown-menu'>" +
+                                                "<a class='dropdown-item' href='javascript:void(0);'><i class='bx bx-edit-alt me-1'></i> Mostrar</a>" +
+                                            "</div>" +
+                                        "</div>" +
+                                    "</td>" +
+                                "</tr>";
+                            }
+                        }
+
+
+                       Table +=
+                            "</tbody>" +
+                        "</table>";
+
+                        $('#TablaBusquedaEmail').html(Table);
+
+                        if (data[0].Busqueda == 1) {
+                            $("#BtnAbrirBusqueda").trigger("click");
+                        } else if (data[0].Busqueda == 0) {
+                            $("#BtnBusquedaEmailCerrar").trigger("click");
+                        }
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+                }
+            });
+        }
+        e.focus();
+    }
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $("#Contacto_TipoPersona").select2();
+        $("#Contacto_Cargo").select2();
+        $("#Contacto_EstatusPersona").select2();
+        $("#Contacto_EstatusPersona").select2();
+        $("#Contacto_FuenteOrigen").select2();
+        $("#Contacto_UnidadNegocio").select2();
+    });
+
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Letras(e) {
+
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz ";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Numeros(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = "1234567890";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+
+</script>
+<script>
+    $('#Nv1Contacto').addClass("active open");
+    $('#Nv2ContactoCrear').addClass("active");
+</script>

@@ -1,0 +1,264 @@
+﻿
+@{
+    ViewBag.Title = "UnidadNegocio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+</style>
+
+<style>
+
+
+
+    .b-skills {
+        border-top: 1px solid #f9f9f9;
+        padding-top: 10px;
+        text-align: center;
+    }
+
+        .b-skills:last-child {
+            margin-bottom: -30px;
+        }
+
+        .b-skills h2 {
+            margin-bottom: 50px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+    .skill-item {
+        position: relative;
+        max-width: 90px;
+        width: 100%;
+        color: #555;
+        margin-left: 25px;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-top: 100%;
+        margin-bottom: 5px;
+    }
+
+    .skill-item .chart,
+    .skill-item .chart canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+        .skill-item .chart:before {
+            content: "";
+            width: 0;
+            height: 100%;
+        }
+
+        .skill-item .chart:before,
+        .skill-item .percent {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+    .skill-item .percent {
+        position: relative;
+        line-height: 1;
+        font-size: 20px;
+        font-weight: 900;
+        z-index: 2;
+    }
+
+        .skill-item .percent:after {
+            content: attr(data-after);
+            font-size: 20px;
+        }
+
+    p {
+        font-weight: 500;
+        FONT-SIZE: 10px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <h5 class="card-header">
+                        <i class='bx bx-box me-1'></i> CONTACTOS POR UNIDAD DE NEGOCIO:
+                        @if (ViewBag.Empresas != null)
+                        {
+                            @ViewBag.Empresas[0].CatUnidadNegocio.Nombre;
+                        }
+                    </h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table table-hover table-striped" id="TableListaEmpresas">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre de la empresa </th>
+                                                <th>Propietario del registro</th>
+                                                <th>Unidad de negocio </th>
+                                                <th>Tipo empresa </th>
+                                                <th>Industria</th>
+                                                <th>Fecha creación </th>
+                                                <th>Fecha última actividad</th>
+                                                <th>Estatus</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Nombre de la empresa </th>
+                                                <th>Propietario del registro</th>
+                                                <th>Unidad de negocio </th>
+                                                <th>Tipo empresa </th>
+                                                <th>Industria</th>
+                                                <th>Fecha creación </th>
+                                                <th>Fecha última actividad</th>
+                                                <th>Estatus</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody class="table-border-bottom-0">
+                                            @if (ViewBag.Empresas != null)
+                                            {
+                                                foreach (var item1 in ViewBag.Empresas)
+                                                {
+                                                    <tr>
+                                                        <td onclick="MostrarEmpresa(@item1.Id)"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong style="cursor: pointer;">@item1.Nombre</strong></td>
+                                                        <td>@item1.Persona.Nombre @item1.Persona.ApellidoPaterno @item1.Persona.ApellidoMaterno</td>
+                                                        <td>@item1.CatUnidadNegocio.Nombre</td>
+                                                        <td>@item1.CatTipoEmpresa.Nombre</td>
+                                                        <td>@item1.CatIndustria.Nombre</td>
+                                                        <td>@Convert.ToDateTime(@item1.FechaRegistro).ToString("yyyy-MM-dd") </td>
+                                                        <td>-</td>
+                                                        @if (@item1.Activo == 1)
+                                                        {
+                                                            <td><span class="badge bg-label-primary me-1">Activo</span></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td><span class="badge bg-label-danger me-1">Baja</span></td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $('#TableListaEmpresas').DataTable({
+        scrollY: 420,
+        scrollX: true,
+        columnDefs: [
+            {
+            }
+        ],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        "pageLength": 10,
+    });
+
+    function MostrarEmpresa(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Empresa", "Empresa")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+    $('#Nv1Empresa').addClass("active open");
+    $('#Nv1EmpresaLista').addClass("active");
+</script>

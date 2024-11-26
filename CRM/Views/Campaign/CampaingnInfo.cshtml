@@ -1,0 +1,1500 @@
+﻿
+@{
+    ViewBag.Title = "CampaingnInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/Scripts/Checkboxes-fSelect/fSelect.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+
+
+
+
+
+<style>
+    .nav-link {
+        display: block;
+        padding: 0.5rem 0.25rem;
+        color: #8e9baa;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .btn-outline-secondary-negado {
+        color: #ffffff;
+        border-color: #ffffff;
+        background: transparent;
+    }
+
+    #container {
+        height: 300px;
+    }
+
+    .highcharts-figure,
+    .highcharts-data-table table {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
+
+    .dataTables_filter label {
+        font-size: 10px; /* Ajusta el tamaño de la palabra "Buscar" */
+    }
+
+    .dataTables_filter input {
+        font-size: 10px; /* Ajusta el tamaño del texto dentro del input */
+        padding: 3px; /* Ajusta el padding del input */
+        height: auto; /* Asegura que el input se ajuste al contenido */
+    }
+</style>
+
+<!-- Alertas del sitio -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+<div class="row">
+    @*Información Principal de la campaña*@
+    <div class="col-lg-8 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="d-flex align-items-end row">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div>
+                                    <div class="card-body">
+
+                                        <h5 class="card-title text-primary"> CAMPAÑA : <strong>@ViewBag.Campana.Nombre</strong></h5>
+                                        <p class="mb-4">
+                                            Clave: <span class="fw-bold">@ViewBag.Campana.Clave</span>
+                                            <br />
+                                            Fecha Inicio: <span class="fw-bold">@ViewBag.Campana.FechaInicio.ToString("dd-MM-yyyy")</span> &nbsp;&nbsp;
+                                            Fecha Fin: <span class="fw-bold">@ViewBag.Campana.FechaFin.ToString("dd-MM-yyyy")</span> @*<span class="tf-icons bx bx-edit"></span>&nbsp;<span class="fw-bold"> Editar </span>*@
+                                            <br />
+                                            Creada por:  <span class="fw-bold">@ViewBag.Campana.Usuario.Persona.Nombre</span>
+                                            <br />
+                                            <span class="fw-bold">Descripción:</span> @ViewBag.Campana.Descripcion
+                                            <br />
+                                            <span class="fw-bold">Fecha de creación:</span> @ViewBag.Campana.FechaRegistro
+                                        </p>
+
+
+                                        <hr />
+                                        <a href="javascript:;" class="btn btn-sm btn-outline-primary" onclick="FormularioInformacion()">Información principal </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-center text-sm-left">
+                            <div class="card-body pb-0 px-0 px-md-4">
+                                <img src="~/assets/img/illustrations/marketing.png" height="140" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row" id="FormPrincipal">
+            <div class="col-md-12">
+                <div class="demo-inline-spacing">
+                    <input type="checkbox" id="checkbox_Contacto" value="0" style="display:none">
+                    <input type="checkbox" id="checkbox_Empresa" value="0" style="display:none">
+                    <button type="button" class="btn btn-outline-primary" id="BtnContacto" onclick="FormularioInformacion()">
+                        <span class="tf-icons bx bx-crown"></span>&nbsp; Información
+                    </button>
+                    <button type="button" class="btn btn-primary" id="BtnEmpresa" onclick="FormularioEmpresa()">
+                        <span class="tf-icons bx bx-folder-open"></span>&nbsp; Actividad
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="col-lg-12 col-md-8 col-lg-4 order-3 order-md-2">
+                <br />
+                <div class="col-xl-12">
+                    <div class="nav-align-top mb-4">
+                        <ul class="nav nav-tabs nav-fill" role="tablist">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
+                                        data-bs-target="#navs-justified-home" aria-controls="navs-justified-home"
+                                        aria-selected="true">
+                                    Actividad
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                        data-bs-target="#navs-justified-Correos" aria-controls="navs-justified-Correos"
+                                        aria-selected="false">
+                                    Correos electrónicos
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" style="max-height: 800px;">
+                            <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                                <div id="DataScroll1" data-simplebar style="max-height: 700px; overflow-y: auto;">
+                                    <div class="demo-inline-spacing mt-3">
+                                        <div class="list-group">
+                                            @if (ViewBag.CampanaBitacora != null)
+                                            {
+                                                foreach (var item in ViewBag.CampanaBitacora)
+                                                {
+                                                    <a href="javascript:void(0);" class="list-group-item list-group-item-action flex-column align-items-start">
+                                                        <div class="d-flex justify-content-between w-100">
+                                                            <h6>@item.Operacion</h6>
+                                                            <small class="text-muted">@Convert.ToDateTime(item.FechaRegistro).ToString("dd-MM-yyyy")</small>
+                                                        </div>
+                                                        <p class="mb-1">
+                                                            <strong>@item.Propietario</strong> @Html.Raw(item.Nota)
+                                                        </p>
+                                                        <small class="text-muted">@Convert.ToDateTime(item.FechaRegistro)</small>
+                                                    </a>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="navs-justified-Correos" role="tabpanel">
+                                <div id="DataScroll2" data-simplebar style="max-height: 700px; overflow-y: auto;">
+                                    <div class="demo-inline-spacing mt-3">
+                                        <div class="list-group">
+                                            @if (ViewBag.Correos != null)
+                                            {
+                                                foreach (var item in ViewBag.Correos)
+                                                {
+                                                    <div onclick="ConsultarCorreoData(@item.Id)" href="javascript:void(0);" class="list-group-item list-group-item-action flex-column align-items-start">
+                                                        <div class="d-flex justify-content-between w-100">
+                                                            <h6>Propietario: @item.Usuario.Persona.Nombre.ToUpper()</h6>
+                                                            <small class="text-muted">Última actualización: @Convert.ToDateTime(item.FechaRegistro)</small>
+                                                        </div>
+                                                        <p class="mb-1">
+                                                            <strong>Nombre :</strong>
+                                                            <br />
+                                                            (@item.Clave) - @item.Nombre
+                                                        </p>
+                                                        <div class="demo-inline-spacing text-left">
+                                                            <button type="button" class="btn btn-primary" onclick="EditarCorreo(@item.Id)">
+                                                                <span class="tf-icons bx bxs-envelope"></span>&nbsp; Editar plantilla
+                                                            </button>
+                                                            <button type="button" class="btn btn-primary" onclick="FormularioInformacionCorreo(@item.Id)">
+                                                                <span class="tf-icons bx bx-cog"></span>&nbsp; Actualizar configuración
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div id="FormInformacion" style="display:none">
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="d-flex align-items-end row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Información de Campaña! 🎉</h5>
+                                        <div class="row">
+                                            <small class="text-light fw-semibold">Completa los campos marcados *  </small>
+                                        </div>
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Clave </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-building-house"></i>
+                                                            </span>
+                                                            <input type="text" class="form-control" id="Campaign_Clave" placeholder="Clave" aria-label="" aria-describedby="Campaign_Clave" onkeyup="Mayus(this);" onchange="ValidaInput('Campaign_Clave')" value="@ViewBag.Campana.Clave" />
+                                                        </div>
+                                                        <button class="btn btn-primary" type="button" id="BtnAbrirBusqueda" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBusquedaEmpresa" aria-controls="offcanvasBusquedaEmpresa" style="display:none">
+                                                            DF
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Nombre </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-building-house"></i>
+                                                            </span>
+                                                            <input type="text" class="form-control" id="Campaign_Nombre" placeholder="Nombre" aria-label="" aria-describedby="Campaign_Nombre" onkeyup="Mayus(this);" onchange="ValidaInput('Campaign_Nombre')" value="@ViewBag.Campana.Nombre" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Fecha inicio  </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-calendar"></i>
+                                                            </span>
+                                                            <input type="date" class="form-control" id="Campaign_FechaInicio" placeholder="Nombre" aria-label="" aria-describedby="basic-icon-default-fullname2" onchange="ValidaInput('Campaign_FechaInicio')" value="@ViewBag.Campana.FechaInicio.ToString("yyyy-MM-dd")" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Fecha cierre  </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-calendar"></i>
+                                                            </span>
+                                                            <input type="date" class="form-control" id="Campaign_FechaCierre" placeholder="Nombre" aria-label="" aria-describedby="basic-icon-default-fullname2" onchange="ValidaInput('Campaign_FechaCierre')" value="@ViewBag.Campana.FechaFin.ToString("yyyy-MM-dd")" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                                                        <div class="input-group">
+                                                            <select id="Campaign_UnidadNegocio" class="form-select" aria-label="Campaign_UnidadNegocio" onchange="ValidaSelect('Campaign_UnidadNegocio')">
+                                                                <option value="0" selected>SELECCIONAR</option>
+                                                                @{
+                                                                    foreach (var item in ViewBag.UnidadNegocio)
+                                                                    {
+                                                                        <option value="@item.Id" @(item.Id == ViewBag.Campana.CampaignUnidadNegocio.CatUnidadNegocio.Id ? "selected" : "")>@item.Nombre.ToUpper()</option>
+                                                                    }
+                                                                }
+                                                            </select>
+
+                                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-12">
+                                                    <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                                                    <textarea class="form-control" id="Campaign_Descripcion" rows="3" onkeyup="Mayus(this);">@ViewBag.Campana.Descripcion</textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="demo-inline-spacing">
+                                                    <button type="button" class="btn btn-outline-secondary" style="width: 100%;" onclick="OcultarInformacion()()">
+                                                        <span class="tf-icons bx bx-subdirectory-left"></span>&nbsp; Cancelar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="demo-inline-spacing" id="DivRegistrarImporte">
+                                                    <button type="button" class="btn btn-outline-primary" style="width: 100%;" onclick="BtnActualizarImporfacion()">
+                                                        <span class="tf-icons bx bx-save"></span>&nbsp; Actualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuracion de correo -->
+        <div id="FormInformacionCorreo" style="display:none">
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="d-flex align-items-end row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Información de Correo electrónico 🎉</h5>
+                                        <div class="row">
+                                            <small class="text-light fw-semibold">Completa los campos marcados *  </small>
+                                        </div>
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Clave evento </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-world"></i>
+                                                            </span>
+                                                            <input type="text" class="form-control" id="Correo_Clave" placeholder="Clave única de evento " aria-label="" aria-describedby="Correo_Clave" onkeyup="Mayus(this);" onchange="ValidaInput('Correo_Clave')" @*value="@ViewBag.Campana.Clave"*@ />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Campañas  </label>
+                                                        <select id='Correo_Campaign' class="form-select" aria-label="Correo_Campaign" onchange="ValidaSelect('Correo_Campaign')">
+                                                            <option value="0" selected>SELECCIONAR</option>
+                                                            @{
+                                                                    if (ViewBag.Campaign != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.Campaign)
+                                                                        {
+                                                                            <option value="@item.Id">(@item.Clave.ToUpper()) @item.Nombre.ToUpper()</option>
+                                                                        }
+                                                                    }
+                                                                }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Nombre </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-world"></i>
+                                                            </span>
+                                                            <input type="text" class="form-control" id="Correo_Nombre" placeholder="Nombre" aria-label="" aria-describedby="Correo_Nombre" onkeyup="Mayus(this);" onchange="ValidaInput('Correo_Nombre')" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname"> Fecha inicio  </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-calendar"></i>
+                                                            </span>
+                                                            <input type="date" class="form-control" id="Correo_FechaInicio" placeholder="" aria-label="" aria-describedby="Correo_FechaInicio" onchange="ValidaInput('Correo_FechaInicio')" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname"> Fecha termino  </label>
+                                                        <div class="input-group input-group-merge">
+                                                            <span id="basic-icon-default-fullname2" class="input-group-text">
+                                                                <i class="bx bx-calendar"></i>
+                                                            </span>
+                                                            <input type="date" class="form-control" id="Correo_FechaTermino" placeholder="" aria-label="" aria-describedby="Correo_FechaTermino" onchange="ValidaInput('Correo_FechaTermino')" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Estatus </label>
+                                                        <div class="input-group">
+                                                            <select id='Correo_Estatus' class="form-select" aria-label="Correo_Estatus" onchange="ValidaSelect('Correo_Estatus')">
+                                                                <option value="0" selected>SELECCIONAR</option>
+                                                                @foreach (var item in ViewBag.EstatusMarketing)
+                                                                    {
+                                                                        <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                                                    }
+                                                            </select>
+                                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                                                        <div class="input-group">
+                                                            <select id='Correo_UnidadNegocio' class="form-select" aria-label="Correo_UnidadNegocio" onchange="ValidaSelect('Correo_UnidadNegocio')">
+                                                                <option value="0" selected>SELECCIONAR</option>
+                                                                @foreach (var item in ViewBag.UnidadNegocio)
+                                                                    {
+                                                                        <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                                                    }
+                                                            </select>
+                                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="basic-icon-default-fullname">* Propietario del registro  </label>
+                                                        <select id='Correo_Propietario' class="form-select" aria-label="Correo_Propietario" onchange="ValidaSelect('Correo_Propietario')" disabled>
+                                                            <option value="0" selected>SELECCIONAR</option>
+                                                            @foreach (var item in ViewBag.Usuarios)
+                                                                {
+                                                                    if (((CRM.Models.Usuario)System.Web.HttpContext.Current.Session["Sesion"]).Id == item.Id)
+                                                                    {
+                                                                        <option value="@item.Id" selected>@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@item.Id">@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                                                                    }
+                                                                }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label" for="basic-icon-default-fullname">*Fecha y hora de envío:</label>
+                                                        <input class="form-control" type="datetime-local" id="fecha-hora" name="fecha-hora">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                                                    <textarea class="form-control" id="Correo_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="demo-inline-spacing">
+                                                    <button type="button" class="btn btn-outline-secondary" style="width: 100%;" onclick="OcultarInformacionCorreo()()">
+                                                        <span class="tf-icons bx bx-subdirectory-left"></span>&nbsp; Cancelar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="demo-inline-spacing" id="DivRegistrarImporte">
+                                                    <button id="BtnActualizar" type="button" class="btn btn-outline-primary" style="width: 100%;">
+                                                        <span class="tf-icons bx bx-save"></span>&nbsp; Actualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    @*Barra derecha info de campaña*@
+    <div class="col-lg-4 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mb-3">
+                <div id="bordeCampana" class="card border ">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between" style="margin-bottom: 0rem; ">
+                            <div class="avatar flex-shrink-0">
+                                <div class="d-flex">
+                                    <div id="colorIcon" class="me-2 badge">
+                                        <i id="IconoCampana"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group " role="group" aria-label="First group">
+
+                                    <button type="button" class="btn"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-offset="0,4"
+                                            data-bs-placement="top"
+                                            data-bs-html="true"
+                                            title="<i class='bx bx-edit' ></i> <span>Editar</span>" onclick="BtnAbrirActualizarEstatus()">
+                                        <i class="tf-icons bx bx-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="fw-semibold d-block mb-1" style=" font-size: 15px;"><b>Estatus Campaña</b></span>
+                        <h3 id="textColor" class="card-title mb-2" style="font-size: 20px;">@ViewBag.Campana.CatEstatusMarketing.Nombre</h3>
+
+                    </div>
+                </div>
+            </div>
+
+            @*BARRA DE PROGRESO*@
+
+            <div class="col-lg-12 col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" id="DivViewProgreso">
+                            <p>Progreso - Campaña: </p>
+                            <div class="col-lg-12">
+                                <div class="progress">
+                                    <div class="progress-bar"
+                                         role="progressbar"
+                                         id="progressBar"
+                                         style="width: 0%"
+                                         aria-valuenow="0"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                        0%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*GRAFICA PARA LOS INDICADORES*@
+            <div class="col-lg-12 col-md-12 col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <span class="badge bg-label-primary p-2"><i class="bx bx-bar-chart-alt-2 text-primary"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                @*<button class="btn p-0"
+                                            type="button"
+                                            id="cardOpt3"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                        <a class="dropdown-item" onclick="MostrarAgregarImporte()">Editar</a>
+                                        <a class="dropdown-item" href="javascript:void(0);">Mostar Historico</a>
+                                    </div>*@
+                            </div>
+                        </div>
+                        <span class="fw-semibold d-block mb-1">Indicadores</span>
+                        <h3 class="card-title mb-2 texth3" id="Titulo_Importe">Grafica</h3>
+
+                        <canvas id="correoChart" width="100" height="50"></canvas>
+
+                    </div>
+                </div>
+            </div>
+            @*PROGRESO DE CAMPAÑA*@
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="accordion" id="accordionExample">
+
+                    @*CONTACTOS*@
+                    <div class="card accordion-item ">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button type="button"
+                                    class="accordion-button collapsed"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#accordionOne"
+                                    aria-expanded="false"
+                                    aria-controls="accordionOne">
+                                Contactos  &nbsp;<span id="Btn_Titulo_Contactos">
+                                    <b>
+                                        (
+                                        @if (ViewBag.InfoCampana != null)
+                                        {@ViewBag.InfoCampana.NumContacto}
+
+
+                                        )
+                                    </b>
+                                </span>
+                            </button>
+                        </h2>
+
+                        <div id="accordionOne"
+                             class="accordion-collapse collapse "
+                             data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p class="text-center">
+                                    <b>
+                                        @if (ViewBag.InfoCampana != null)
+                                        {@ViewBag.InfoCampana.Nombre}
+                                    </b>
+                                </p>
+                                <table id="TUsuario" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            @*<th>Correo</th>*@
+                                            <th style="text-align:center">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="Contenido">
+                                        @if (ViewBag.contactos != null)
+                                        {
+                                            foreach (var item1 in ViewBag.contactos)
+                                            {
+                                                <tr>
+                                                    <td>@item1.Usuario.Persona.Nombre</td>
+                                                    @*<td>@item1.Usuario.Persona.Email.email</td>*@
+                                                    <td class="text-center">
+                                                        <i onclick="eliminarContacto(@item1.Contacto.Id)" class="bx bx-user-minus" style="cursor: pointer;"></i>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <small class="text-light fw-semibold">Ve los contactos asociados a la campaña</small>
+                        </div>
+                    </div>
+
+
+
+                    @*OTROS DATOS*@
+                    @*<div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button type="button"
+                                    class="accordion-button collapsed"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#accordionTwo"
+                                    aria-expanded="false"
+                                    aria-controls="accordionTwo">
+                                otro dato  &nbsp;<span id="Btn_Titulo_Empresas"> (0)</span>
+                            </button>
+                        </h2>
+                        <div id="accordionTwo"
+                             class="accordion-collapse collapse"
+                             aria-labelledby="headingTwo"
+                             data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class=" demo-inline-spacing text-center" role="toolbar" aria-label="Toolbar with button groups">
+                                            <div class="btn-group " role="group" aria-label="First group">
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-offset="0,4"
+                                                        data-bs-placement="top"
+                                                        data-bs-html="true"
+                                                        title="<i class='bx bx-task' ></i> <span>Actividad</span>" onclick="OcultaFormularios()">
+                                                    <i class="tf-icons bx bx-task"></i>
+                                                </button>
+
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-offset="0,4"
+                                                        data-bs-placement="top"
+                                                        data-bs-html="true"
+                                                        title="<i class='bx bx-add-to-queue bx-xs' ></i> <span>Agregar empresa</span>" onclick="MostrarAgregarEmpresa()">
+                                                    <i class="tf-icons bx bx-add-to-queue"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="TableEmpresas">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <small class="text-light fw-semibold">descripcion zona.</small>
+                        </div>
+                    </div>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL ACTUALIZAR ESTATUS -->
+<div class="modal fade" id="modalEstatusOportunidad" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="backDropModalTitle">Actualizar estado de la Campaña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Estatus </label>
+                            <div class="input-group">
+                                <select id="SelectEstatus" class="form-select" aria-label="Oportunidad_EstatusOportunidad" onchange="ValidaEstatusOportunidad()">
+                                    <option value="0" selected>SELECCIONAR</option>
+                                    @foreach (var item in ViewBag.EstatusMarketing)
+                                    {
+                                        if (item.Id != ViewBag.Campana.CatEstatusMarketing.Id)
+                                        {
+                                            <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                        }
+                                    }
+                                </select>
+
+
+                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEstatusOpurtunidad" aria-controls="offcanvasEstatusOpurtunidad">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <label for="exampleFormControlTextarea1" class="form-label">Observación </label>
+                        <textarea class="form-control" id="Status_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" id="BtnCancelarOportunidadEstatus" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="BtnGuardarOportunidadEstatus" onclick="ActualizarEstatusCampana()">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/Scripts/Checkboxes-fSelect/fSelect.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+
+
+<script>
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketinPlantillas').addClass("active");
+    const val = search('config');
+
+    $(document).ready(function () {
+        $('#TUsuario').DataTable({
+            paging: false,         // Deshabilita la paginación
+            lengthChange: false,   // Deshabilita el menú de longitud de página
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+            }
+        }).on('init.dt', function () {
+            $('.dataTables_filter input').attr('placeholder', 'Contacto');
+        });
+
+
+        function initializeSimpleBar(tabId) {
+            const barra = document.getElementById(tabId);
+            if (barra) {
+                new SimpleBar(barra, { autoHide: true });
+            }
+        }
+
+        // Initialize SimpleBar on the initially visible tab
+        initializeSimpleBar('DataScroll1');
+
+        // Re-initialize SimpleBar on tab show event
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            const target = $(e.target).data('bs-target');
+            if (target === '#navs-justified-home') {
+                initializeSimpleBar('DataScroll1');
+            } else if (target === '#navs-justified-Correos') {
+                initializeSimpleBar('DataScroll2');
+            }
+        });
+
+
+
+        // Inicializar la gráfica
+        const ctx = $('#correoChart')[0].getContext('2d');
+
+        const data = {
+            labels: ['Enviados', 'Leídos', 'Rechazados'],
+            datasets: [{
+                label: 'Estado de Correos',
+                data: [50, 30, 20], // Reemplaza estos valores con tus datos reales
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'bar', // Puedes cambiar esto a 'pie', 'doughnut', etc.
+            data: data
+        };
+
+        const correoChart = new Chart(ctx, config);
+
+        //text-info  textColor
+
+        var statusId = @ViewBag.Campana.CatEstatusMarketing.Id;
+        var borderClass;
+        var iconClass;
+        var iconColor;
+        var textColor;
+        var progressValue;
+
+        switch(statusId) {
+            case 1:
+                borderClass = 'border-danger'; // Rojo
+                iconClass = 'bx bx-x-circle'; // Cancelado
+                iconColor = 'bg-label-danger';
+                textColor = 'text-danger';
+                progressValue = 0; // Cancelado
+
+                break;
+            case 2:
+                borderClass = 'border-warning'; // Amarillo
+                iconClass = 'bx bx-loader-circle'; // Progreso
+                iconColor = 'bg-label-warning';
+                textColor = 'text-warning';
+                progressValue = 50; // Ejemplo de progreso
+
+                break;
+            case 3:
+                borderClass = 'border-info'; // Azul
+                iconClass = 'bx bxs-badge-check'; // Inicializada
+                iconColor = 'bg-label-info';
+                textColor = 'text-info';
+                progressValue = 25; // Ejemplo de progreso
+
+                break;
+            case 4:
+                borderClass = 'border-dark'; // Morado
+                iconClass = 'bx bxs-flag-checkered'; // Finalizado
+                iconColor = 'bg-label-dark';
+                textColor = 'text-dark';
+                progressValue = 100; // Finalizado
+
+                break;
+            default:
+                borderClass = ''; // Sin clase
+                iconClass = ''; // Sin clase
+                iconColor = '';
+                textColor = '';
+        }
+
+        $('#bordeCampana').addClass(borderClass);
+        $('#IconoCampana').addClass(iconClass);
+        $('#colorIcon').addClass(iconColor);
+        $('#textColor').addClass(textColor);
+        $('#progressBar').css('width', progressValue + '%').attr('aria-valuenow', progressValue);
+        $('#progressBar').text(progressValue + '%');
+    });
+
+
+    function BtnAbrirActualizarEstatus() {
+        $("#modalEstatusOportunidad").modal("show");
+    }
+
+    function ActualizarEstatusCampana() {
+
+        var CatEstatusMarketing = new Object();
+        CatEstatusMarketing.Id = $("#SelectEstatus option:selected").val();
+
+        var Campaign = new Object();
+        Campaign.Id = val;
+        Campaign.Descripcion = $("#Status_Descripcion").val();
+        Campaign.CatEstatusMarketing = CatEstatusMarketing;
+
+
+        var CampaignUnidadNegocio = new Object();
+        CampaignUnidadNegocio.Campaign = Campaign;
+
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("Campaign_ActualizarEstatus", "Campaign")",
+            async: false,
+            data: JSON.stringify(CampaignUnidadNegocio),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Id == -1) {
+                    AlertWarning("Problemas al registrar ", "La clave que intentas registrar ya se encuentra registrada.");
+                } else if (result.Id == 0) {
+                    AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                } else if (result.Id > 0) {
+                    swal({
+                        title: "Campaña Actualizada. !",
+                        icon: "success",
+                        buttons: {
+                            agregar: {
+                                text: "Aceptar", className: 'sweet-continuar'
+                            },
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "agregar":
+
+                                //window.location.href = "/Correo/Crear?Id=" + result.Id;
+                                window.location.reload();
+                            break;
+                        }
+                    });
+                }
+            },
+            error: function () {
+                AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+            }
+        });
+    }
+
+    function FormularioInformacion() {
+        $("#FormInformacion").show();
+        $("#FormPrincipal").css("display", "none");
+
+        $("#Oportunidad_UnidadNegocio").select2();
+        $("#Oportunidad_TipoOportunidad").select2();
+        $("#Oportunidad_Prioridad").select2();
+
+        var posicion = $("#FormInformacion").offset().top;
+        $("html, body").animate({
+            scrollTop: posicion - 100
+        }, 500);
+    }
+
+    function OcultarInformacion() {
+        $("#FormInformacion").css("display", "none");
+        $("#FormPrincipal").show();
+
+        var posicion = $("#FormPrincipal").offset().top;
+        $("html, body").animate({
+            scrollTop: posicion - 100
+        }, 500);
+    }
+
+    /*************funcion actualizar correo******************/
+    function FormularioInformacionCorreo(Id) {
+        const Model = {
+            Id: Id
+        }
+
+        $.ajax({
+        type: "POST",
+        url: "@Url.Action("CampaignCorreoElectronico_Seleccionar_Id", "Campaign")",
+        async: false,
+        data: JSON.stringify(Model),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+            success: function (data) {
+                $('#Correo_Nombre').val(data.Nombre);
+                $('#Correo_Clave').val(data.Clave);
+                $('#Correo_FechaInicio').val(convertDate(data.FechaInicio));
+                $('#Correo_FechaTermino').val(convertDate(data.FechaTermino));
+                $('#fecha-hora').val(convertDateTime(data.FechaEnvio));
+                $('#Correo_Descripcion').val(data.Descripcion);
+
+                $('#Correo_Propietario').val(data.Usuario.Id);
+                $('#Correo_Campaign').val(data.Campaign.Id);
+                $('#Correo_UnidadNegocio').val(data.CatUnidadNegocio.Id);
+                $('#Correo_Estatus').val(data.CatEstatusMarketing.Id);
+                $('#BtnActualizar').off('click');
+                $('#BtnActualizar').click(function () {
+                    ActualizarCorreo(data.Id);
+                });
+            }
+        });
+        $("#FormInformacionCorreo").show();
+        $("#FormPrincipal").css("display", "none");
+
+        var posicion = $("#FormInformacionCorreo").offset().top;
+        $("html, body").animate({
+            scrollTop: posicion - 100
+        }, 500);
+    }
+
+    function OcultarInformacionCorreo() {
+        $("#FormInformacionCorreo").css("display", "none");
+        $("#FormPrincipal").show();
+
+        var posicion = $("#FormPrincipal").offset().top;
+        $("html, body").animate({
+            scrollTop: posicion - 100
+        }, 500);
+    }
+
+    /*******************************************************/
+
+    function EditarCorreo(Id) {
+        window.location.href = "/Correo/Plantilla?config=" + Id;
+    }
+
+    function ActualizarCorreo(Id) {
+        if (ValidarFormCorreo()) {
+
+            const CatEstatusMarketing ={
+                Id: $("#Correo_Estatus option:selected").val()
+            }
+            const CatUnidadNegocio = {
+                Id: $("#Correo_UnidadNegocio option:selected").val()
+            }
+            const Campaign = {
+                Id: $('#Correo_Campaign option:selected').val()
+            }
+
+            const Model = {
+                Id: Id,
+                Campaign: Campaign,
+                CatEstatusMarketing: CatEstatusMarketing,
+                CatUnidadNegocio: CatUnidadNegocio,
+                Clave: $('#Correo_Clave').val(),
+                Nombre: $('#Correo_Nombre').val(),
+                FechaInicio: $('#Correo_FechaInicio').val(),
+                FechaTermino: $('#Correo_FechaTermino').val(),
+                FechaEnvio: $('#fecha-hora').val(),
+                Descripcion: $('#Correo_Descripcion').val()
+            }
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CampaignCorreoElectronico_Actualizar", "Campaign")",
+                    async: false,
+                    data: JSON.stringify(Model),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.Id == -1) {
+                            AlertWarning("Problemas al registrar ", "La clave que intentas registrar ya se encuentra registrada.");
+                        } else if (result.Id == 0) {
+                            AlertDanger("Problemas al registrar ", "Correo no registrado.");
+                        } else if (result.Id > 0) {
+                            swal({
+                                title: "Correo Actualizado. !",
+                                icon: "success",
+                                buttons: {
+                                    agregar: {
+                                        text: "Aceptar", className: 'sweet-continuar'
+                                    },
+                                },
+                            })
+                                .then((value) => {
+                                    window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        AlertDanger("Problemas al registrar ", "Correo no registrada.");
+                    }
+                });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function BtnActualizarImporfacion() {
+        if (ValidarForm()) {
+            var CatUnidadNegocio = new Object();
+            CatUnidadNegocio.Id = $("#Campaign_UnidadNegocio option:selected").val();
+
+
+
+            var Campaign = new Object();
+            Campaign.Id = val;
+            Campaign.Clave = $('#Campaign_Clave').val();
+            Campaign.Nombre = $('#Campaign_Nombre').val();
+            Campaign.FechaInicio = $('#Campaign_FechaInicio').val();
+            Campaign.FechaFin = $('#Campaign_FechaCierre').val();
+            Campaign.Descripcion = $('#Campaign_Descripcion').val();
+
+            var CampaignUnidadNegocio = new Object();
+            CampaignUnidadNegocio.CatUnidadNegocio = CatUnidadNegocio;
+            CampaignUnidadNegocio.Campaign = Campaign;
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Campaign_Actualizar", "Campaign")",
+                async: false,
+                data: JSON.stringify(CampaignUnidadNegocio),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La clave que intentas registrar ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                    } else if (result.Id > 0) {
+                        swal({
+                            title: "Campaña Actualizada. !",
+                            icon: "success",
+                            buttons: {
+                                agregar: {
+                                    text: "Aceptar", className: 'sweet-continuar'
+                                },
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "agregar":
+
+                                    //window.location.href = "/Correo/Crear?Id=" + result.Id;
+                                    window.location.reload();
+                                break;
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                }
+            });
+
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidarForm() {
+        var result = false;
+
+        $('#Campaign_Clave').css("border", "1px solid #f44336");
+        $('#Campaign_Clave').css("border-left", "none");
+
+        $('#Campaign_Nombre').css("border", "1px solid #f44336");
+        $('#Campaign_Nombre').css("border-left", "none");
+
+        $('#Campaign_FechaInicio').css("border", "1px solid #f44336");
+        $('#Campaign_FechaInicio').css("border-left", "none");
+
+        $('#Campaign_FechaCierre').css("border", "1px solid #f44336");
+        $('#Campaign_FechaCierre').css("border-left", "none");
+
+        $('#Campaign_UnidadNegocio').css("border", "1px solid #f44336");
+        $('#Campaign_Estatus').css("border", "1px solid #f44336");
+        $('#Campaign_Propietario').css("border", "1px solid #f44336");
+
+        if ($('#Campaign_Clave').val().length > 0) {
+            $('#Campaign_Clave').css("border", "1px solid #d9dee3");
+            $('#Campaign_Clave').css("border-left", "none");
+        }
+
+        if ($('#Campaign_Nombre').val().length > 0) {
+            $('#Campaign_Nombre').css("border", "1px solid #d9dee3");
+            $('#Campaign_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Campaign_FechaInicio').val().length > 0) {
+            $('#Campaign_FechaInicio').css("border", "1px solid #d9dee3");
+            $('#Campaign_FechaInicio').css("border-left", "none");
+        }
+
+        if ($('#Campaign_FechaCierre').val().length > 0) {
+            $('#Campaign_FechaCierre').css("border", "1px solid #d9dee3");
+            $('#Campaign_FechaCierre').css("border-left", "none");
+        }
+
+        if ($("#Campaign_UnidadNegocio option:selected").val() > 0) {
+            $('#Campaign_UnidadNegocio').css("border", "1px solid #d9dee3");
+        }
+
+        //if ($("#Campaign_Estatus option:selected").val() > 0) {
+        //    $('#Campaign_Estatus').css("border", "1px solid #d9dee3");
+        //}
+
+        //if ($("#Campaign_Propietario option:selected").val() > 0) {
+        //    $('#Campaign_Propietario').css("border", "1px solid #d9dee3");
+        //}
+
+        if ($('#Campaign_Clave').val().length > 0) {
+            if ($('#Campaign_Nombre').val().length > 0) {
+                if ($('#Campaign_FechaInicio').val().length > 0) {
+                    if ($('#Campaign_FechaCierre').val().length > 0) {
+                        if ($("#Campaign_UnidadNegocio option:selected").val() > 0) {
+                            result = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    function eliminarContacto(id) {
+        swal({
+            title: "Eliminar contacto",
+            text: "¿Deseas eliminar a este contacto de la lista?",
+            icon: "error",
+            buttons: {
+                Si: {
+                    text: "Sí, eliminar",
+                    value: "si"
+
+                },
+                cancel: "Cancelar"
+            },
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+
+                switch (willDelete) {
+
+                    case "si":
+                        eliminarConfirmado(id);
+                        break;
+                }
+            });
+    }
+
+
+
+
+    function consultarlista(Id) {
+        //alert(Id);
+    }
+    function ConsultarCorreoData(Id) {
+        //alert('hola' + Id)
+    }
+
+
+
+
+
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function search(variable) {
+        return new URLSearchParams(window.location.search).get(variable);
+    }
+    function convertDate(dateString) {
+        var date = new Date(parseInt(dateString.replace('/Date(', '').replace(')/', '')));
+        return date.toISOString().split('T')[0];
+    }
+    function convertDateTime(dateString) {
+        var date = new Date(parseInt(dateString.replace('/Date(', '').replace(')/', '')));
+        // Obtener la fecha y hora local en lugar de UTC
+        var localDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+        return localDateTime.replace('T', ' '); // Reemplaza 'T' con un espacio para formato más legible
+    }
+
+    function ValidarFormCorreo() {
+        var result = false;
+
+        $('#Correo_Clave').css("border", "1px solid #f44336");
+        $('#Correo_Clave').css("border-left", "none");
+
+        $('#Correo_Campaign').css("border", "1px solid #f44336");
+
+        $('#Correo_Nombre').css("border", "1px solid #f44336");
+        $('#Correo_Nombre').css("border-left", "none");
+
+        $('#Correo_FechaInicio').css("border", "1px solid #f44336");
+        $('#Correo_FechaInicio').css("border-left", "none");
+
+        $('#Correo_FechaTermino').css("border", "1px solid #f44336");
+        $('#Correo_FechaTermino').css("border-left", "none");
+
+        $('#fecha-hora').css("border", "1px solid #f44336");
+        $('#fecha-hora').css("border-left", "none");
+
+
+
+        $('#Correo_Estatus').css("border", "1px solid #f44336");
+        $('#Correo_UnidadNegocio').css("border", "1px solid #f44336");
+        $('#Correo_Propietario').css("border", "1px solid #f44336");
+
+        if ($('#Correo_Clave').val().length > 0) {
+            $('#Correo_Clave').css("border", "1px solid #d9dee3");
+            $('#Correo_Clave').css("border-left", "none");
+        }
+
+        if ($("#Correo_Campaign option:selected").val() > 0) {
+            $('#Correo_Campaign').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Correo_Nombre').val().length > 0) {
+            $('#Correo_Nombre').css("border", "1px solid #d9dee3");
+            $('#Correo_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Correo_FechaInicio').val().length > 0) {
+            $('#Correo_FechaInicio').css("border", "1px solid #d9dee3");
+            $('#Correo_FechaInicio').css("border-left", "none");
+        }
+
+        if ($('#Correo_FechaTermino').val().length > 0) {
+            $('#Correo_FechaTermino').css("border", "1px solid #d9dee3");
+            $('#Correo_FechaTermino').css("border-left", "none");
+        }
+        if ($('#fecha-hora').val().length > 0) {
+            $('#fecha-hora').css("border", "1px solid #d9dee3");
+            $('#fecha-hora').css("border-left", "none");
+        }
+
+        if ($("#Correo_Estatus option:selected").val() > 0) {
+            $('#Correo_Estatus').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Correo_UnidadNegocio option:selected").val() > 0) {
+            $('#Correo_UnidadNegocio').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Correo_Propietario option:selected").val() > 0) {
+            $('#Correo_Propietario').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Correo_Clave').val().length > 0) {
+            if ($("#Correo_Campaign option:selected").val() > 0) {
+                if ($('#Correo_Nombre').val().length > 0) {
+                    if ($('#Correo_FechaInicio').val().length > 0) {
+                        if ($('#Correo_FechaTermino').val().length > 0) {
+                            if ($("#Correo_Estatus option:selected").val() > 0) {
+                                if ($("#Correo_UnidadNegocio option:selected").val() > 0) {
+                                    if ($("#Correo_Propietario option:selected").val() > 0) {
+                                        if ($('#fecha-hora').val().length > 0) {
+                                            result = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+</script>
+
+
+
+@if (@ViewBag.InfoCampana != null)
+{
+    <script>
+        function eliminarConfirmado(Id)
+        {
+        const Contacto = {
+        Id: Id
+        }
+
+        const Lista = {
+
+        Id: @ViewBag.InfoCampana.Id,
+        Contacto: Contacto
+        }
+
+        $.ajax({
+        url: "@Url.Action("ListaContacto_Eliminar_IdContacto", "Lista")",
+        data: JSON.stringify(Lista),
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data) {
+
+        swal({
+        title: "Persona Eliminada !",
+        text: " ",
+        icon: "success",
+        button: "Aceptar",
+        }).then((value) =>
+        {
+        //CargaUsuarios();
+        window.location.reload();
+        });
+        },
+        error: function(resultado) {
+        alert("Error funcion ");
+        }
+        });
+
+        }
+    </script>
+}
+
+

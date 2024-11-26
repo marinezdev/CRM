@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        /*        color: #333 !important;*/
+        /*      border: 1px solid transparent;*/
+        /*     border-radius: 2px;*/
+
+        color: #697a8d;
+        background-color: #f0f2f4;
+        border: 0px solid #d9dee3;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff !important;
+            border: 1px solid #696cff;
+            background-color: white;
+            /*            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+            background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);
+            background: -o-linear-gradient(top, #fff 0%, #dcdcdc 100%);*/
+            background: linear-gradient(to bottom, #696cff 0%, #696cff 100%);
+            box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            color: #697a8d !important;
+            border: 0px solid #fff;
+            background-color: #585858;
+            /* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); */
+            /* background: -webkit-linear-gradient(top, #585858 0%, #111 100%); */
+            background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+            background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+            background: -o-linear-gradient(top, #585858 0%, #111 100%);
+            background: linear-gradient(to bottom, #e9eaeb 0%, #eaeaeb 100%);
+            border-color: rgba(67, 89, 113, 0.3);
+        }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #d9dee3;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: transparent;
+        margin-left: 3px;
+        color: #697a8d;
+    }
+</style>
+<div class="card mb-4">
+    <h5 class="card-header"><i class='bx bx-clipboard me-1'></i> Etapas de venta</h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold"> Creación y administración de etapas de venta </small>
+                <br /><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover table-striped" id="TableListaEtapas">
+                    <thead>
+                        <tr>
+                            <th>Etapas </th>
+                            <th>Nombre </th>
+                            <th>Estatus</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Etapas </th>
+                            <th>Nombre </th>
+                            <th>Estatus</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var item1 in ViewBag.EtapaOportunidad)
+                        {
+                            <tr>
+                                <td><strong>@item1.Id</strong></td>
+                                <td><strong>@item1.Nombre</strong></td>
+                                <td><span class="badge bg-label-primary me-1">Activo</span></td>
+                                <td>
+                                    <div class="">
+                                        <button type="button" class="btn btn-primary"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-offset="0,4"
+                                                data-bs-placement="top"
+                                                data-bs-html="true"
+                                                title="<i class='bx bx-select-multiple bx-xs' ></i> <span> Mostrar tareas </span>"
+                                                onclick="MostrarTareas(@item1.Id)">
+                                            <span class="tf-icons bx bx-select-multiple"></span>&nbsp; 
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $('#TableListaEtapas').DataTable({
+        columnDefs: [
+            {
+                //"orderable": false,
+                //"targets": [0, 8],
+                //"width": "0px"
+            }
+        ],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        "pageLength": 10,
+    });
+
+    function MostrarTareas(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                window.location.href = '@Url.Action("Index", "TareaEtapa")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+</script>
+
+<script>
+    $('#Nv1Configuracion').addClass("active open");
+    $('#Nv1EtapaLista').addClass("active");
+</script>

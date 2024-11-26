@@ -1,0 +1,1270 @@
+﻿
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+<style>
+    h6, .h6 {
+        font-size: 0.7375rem;
+    }
+
+    .table:not(.table-dark) th {
+        color: #000000;
+    }
+
+    table.dataTable.no-footer {
+        border-bottom: 1px solid #cdcdcd;
+    }
+</style>
+
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-7 col-md-12 col-7 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">
+                                Funnel de ventas del año
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                                (<span id="Label_Total_EtapasOportunidades"></span>)
+                            </h5>
+
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-md-12 col-5 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2">
+                                Oportunidades por etapa
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                                (<span id="Label_Total_EtapasOportunidades2"></span>)
+                            </h5>
+
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn p-0"
+                                    type="button"
+                                    id="orederStatistics"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                <a class="dropdown-item" href="javascript:void(0);">Actualizar </a>
+                                <a class="dropdown-item" href="javascript:void(0);">Mostrar histórico </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="p-0 m-0" id="TablaEtapasOportunidades">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0 ">
+                            <h5 class="m-0 me-2" style="font-size: 23px; color:#000000">
+                                <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                                Información de objetivos
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </h5>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-icon btn-primary"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-offset="0,4"
+                                    data-bs-placement="top"
+                                    data-bs-html="true"
+                                    title="<i class='bx bx-add-to-queue bx-xs' ></i> <span> Agregar Responsable </span>" onclick="MostrarAgregarResponsable()">
+                                <span class="tf-icons bx bx-add-to-queue"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <h5 class="card-header"></h5>
+                            <div class="table-responsive text-nowrap" id="TablaObjetivos">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Area</th>
+                                            <th>Responsable</th>
+                                            <th>%</th>
+                                            <th>
+                                                Objetivo
+                                                <script>
+                                                    document.write(new Date().getFullYear());
+                                                </script>
+                                            </th>
+                                            <th>Factura acumulado</th>
+                                            <th>% Cumplimiento real</th>
+                                            <th>Monto faltante meta</th>
+                                            <th>Oportunidades en proceso </th>
+                                            <th>% En prospectación  </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+<script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+
+<!-- MODAL NUEVO RESPONSABLE  -->
+<div class="modal fade" id="modalNuevoResponsable" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="backDropModalTitle">
+                    Registrar Nuevo Responsable
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Nuevo Responsable  </label>
+                            <select id='Venta_Responsable' class="form-select" aria-label="Venta_Responsable" onchange="ValidaSelect('Venta_Responsable')">
+                                <option value="0" selected>SELECCIONAR</option>
+                                @foreach (var item in ViewBag.Usuarios)
+                                {
+                                    <option value="@item.Id">@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                            <select id='Venta_UnidadNegocio' class="form-select" aria-label="Venta_UnidadNegocio" onchange="ValidaSelect('Venta_UnidadNegocio')">
+                                <option value="0" selected>SELECCIONAR</option>
+                                @foreach (var item in ViewBag.UnidadNegocio)
+                                {
+                                    <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">
+                                * Facturación recurrente ($ Monto)
+                            </label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control numberPositivo" id="Venta_FacturacionRecurrente" placeholder="Facturación recurrente" aria-label="" aria-describedby="Venta_FacturacionRecurrente" onchange="ValidaInput('Venta_FacturacionRecurrente')" />
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Proyectos nuevos ($ Monto)</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control numberPositivo" id="Venta_ProyectosNuevos" placeholder="Proyectos nuevos" aria-label="" aria-describedby="Venta_ProyectosNuevos" onchange="ValidaInput('Venta_ProyectosNuevos')" />
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                        <textarea class="form-control" id="Venta_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="BtnGuardarOportunidadEstatus" onclick="BtnRegistrarResponsable()">Registrar </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL NUEVO IMPORTE MES  -->
+<div class="modal fade" id="modalNuevoImporteMes" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" id="ModalContenteNuevoImporteMes">
+
+    </div>
+</div>
+
+<!-- MODAL NUEVO IMPORTE MES  -->
+<div class="modal fade" id="modalActualizarImportes" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="backDropModalTitle">
+                    Actualizar montos
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">
+                                * Facturación recurrente ($ Monto)
+                            </label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control numberPositivo" id="ActualizarVenta_FacturacionRecurrente" placeholder="Facturación recurrente" aria-label="" aria-describedby="ActualizarVenta_FacturacionRecurrente" onchange="ValidaInput('ActualizarVenta_FacturacionRecurrente')" />
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Proyectos nuevos ($ Monto)</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control numberPositivo" id="ActualizarVenta_ProyectosNuevos" placeholder="Proyectos nuevos" aria-label="" aria-describedby="ActualizarVenta_ProyectosNuevos" onchange="ValidaInput('ActualizarVenta_ProyectosNuevos')" />
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BntCancelarActualizarImportes" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <div id="DivActuzaliarImportes">
+
+                </div>
+                
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    function BtnRegistrarResponsable() {
+        if (ValidarResponsable()) {
+
+            var Usuario = new Object();
+            Usuario.Id = $("#Venta_Responsable option:selected").val();
+
+            var CatUnidadNegocio = new Object();
+            CatUnidadNegocio.Id = $("#Venta_UnidadNegocio option:selected").val();
+
+            var ObjetivosResponsables = new Object();
+            ObjetivosResponsables.Usuario = Usuario;
+            ObjetivosResponsables.CatUnidadNegocio = CatUnidadNegocio;
+            ObjetivosResponsables.FacturacionRecurrente = $('#Venta_FacturacionRecurrente').val().replace(/,/g, '');
+            ObjetivosResponsables.ProyectosNuevos = $('#Venta_ProyectosNuevos').val().replace(/,/g, '');
+            ObjetivosResponsables.Descripcion = $('#Venta_Descripcion').val();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObjetivosResponsables_Agregar", "ObjetivosResponsables")",
+                async: false,
+                data: JSON.stringify(ObjetivosResponsables),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+
+                    if (result.Id > 0) {
+                        swal({
+                            title: "Nuevo responsable registrado !",
+                            icon: "success",
+                            buttons: {
+                                agregar: {
+                                    text: "Aceptar", className: 'sweet-continuar'
+                                },
+                            },
+                        }).then((value) => {
+                            switch (value) {
+                                case "agregar":
+                                    location.reload();
+                                break;
+                            }
+                        });
+
+                    } else if (result.Id == 0) {
+                        AlertWarning("Problemas al registrar ", "Responsable no resgistrado.");
+                    } else if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "Responsable ya se encuentra registrado.");
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Responsable no registrado.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidarResponsable() {
+        var result = false;
+
+        $('#Venta_Responsable').css("border", "1px solid #f44336");
+        $('#Venta_UnidadNegocio').css("border", "1px solid #f44336");
+        $('#Venta_FacturacionRecurrente').css("border", "1px solid #f44336");
+        $('#Venta_ProyectosNuevos').css("border", "1px solid #f44336");
+
+        if ($("#Venta_Responsable option:selected").val() > 0) {
+            $('#Venta_Responsable').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Venta_UnidadNegocio option:selected").val() > 0) {
+            $('#Venta_UnidadNegocio').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Venta_FacturacionRecurrente').val().length > 0) {
+            $('#Venta_FacturacionRecurrente').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Venta_ProyectosNuevos').val().length > 0) {
+            $('#Venta_ProyectosNuevos').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Venta_Responsable option:selected").val() > 0) {
+            if ($("#Venta_UnidadNegocio option:selected").val() > 0) {
+                if ($('#Venta_FacturacionRecurrente').val().length > 0) {
+                    if ($('#Venta_ProyectosNuevos').val().length > 0) {
+                        result = true;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    function MostrarAgregarResponsable() {
+        $("#modalNuevoResponsable").modal("show");
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        CargaFunnelVentas();
+        CargaObjetivos();
+    });
+
+    function CargaFunnelVentas() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Funnel_Ventas", "OportunidadEtapa")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                PintaGraficaFunnel(data);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaGraficaFunnel(dbData) {
+        const Nombres = [];
+        const Porcentajes = [];
+        var SumTotal = 0;
+        var Tabla = "";
+        var met = [];
+        var SumGlob = 0;
+        for (var b = 0; b < dbData.length; b++) {
+            SumTotal += dbData[b].Total;
+        }
+
+        for (var b = 0; b < dbData.length; b++) {
+            var Porcentaje = 0;
+            var gPorcentaje = 0;
+            var gv1 = 0;
+            var gv2 = 0;
+            var uno = [];
+
+            Nombres.push(dbData[b].CatEtapaOportunidad.Nombre);
+            Porcentaje = ((dbData[b].Total * 100) / SumTotal).toFixed(2);
+            gPorcentaje = ((dbData[b].Total * 100) / SumTotal).toFixed(0);
+            Porcentajes.push(Porcentaje).toFixed(2);
+            SumGlob += dbData[b].Suma;
+
+            if (gPorcentaje > 0) {
+                gv2 = (gPorcentaje / 2) + 50;
+                gv1 = ((gv2 - 100) * -1);
+            } else {
+                gv2 = 50.5;
+                gv1 = 49.5;
+            }
+
+            uno.push(gv1, gv2);
+            met.push(uno);
+
+            Tabla += "<li class='d-flex mb-2 pb-1' onclick='MostrarEtapa(" + dbData[b].CatEtapaOportunidad.Id + ")'>" +
+                            "<div class='avatar flex-shrink-0 me-3'>" +
+                                "<span class='avatar-initial rounded bg-label-primary'>" +
+                                "<i class='bx bx-bulb'></i>" +
+                                "</span>" +
+                            "</div>" +
+                            "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                                "<div class='me-2'>" +
+                                    "<h6 class='mb-0'>" + dbData[b].CatEtapaOportunidad.Nombre + "</h6>" +
+                                    "<small class='text-muted'>" + Porcentaje + " % </small>" +
+                                "</div>" +
+                                "<div class='user-progress'>" +
+                                    "<small class='fw-semibold'>" + formatProdPrice(dbData[b].Suma.toFixed(2)) + "</small>" +
+                                "</div>" +
+                            "</div>" +
+                        "</li>";
+        }
+
+        Tabla += "<li class='d-flex mb-2 pb-1'>" +
+                    "<div class='avatar flex-shrink-0 me-3'>" +
+                    //"<span class='avatar-initial rounded bg-label-primary'>" +
+                    //"<i class='bx bx-bulb'></i>" +
+                    //"</span>" +
+                    "</div>" +
+                    "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                    "<div class='me-2'>" +
+                    "<h6 class='mb-0'></h6>" +
+                   /* "<small class='text-muted'>" + Porcentaje + " % </small>" +*/
+                    "</div>" +
+                        "<div class='user-progress'>" +
+                            "<small class='fw-semibold'><strong> Total: " + formatProdPrice(SumGlob.toFixed(2)) + "</strong></small>" +
+                    "   </div>" +
+                    "</div>" +
+                "</li>";
+
+        $('#Label_Total_EtapasOportunidades').html(SumTotal);
+        $('#Label_Total_EtapasOportunidades2').html(SumTotal);
+        $('#TablaEtapasOportunidades').html(Tabla);
+
+
+        // setup
+        const data = {
+            labels: Nombres,
+            datasets: [{
+                label: 'Weekly Sales',
+                data: met,
+                backgroundColor: [
+                    'rgba(223, 16, 86, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                ],
+                borderColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+        // funnelChart plugin block
+        const funnelChart = {
+            id: 'funnelChart',
+            beforeDatasetsDraw(chart, args, pluginOptions) {
+                const { ctx, data, chartArea: { top, left, bottom, right, width, height }, scales: { x, y }
+                } = chart;
+
+                ctx.save();
+
+                for (let i = 0; i < chart.getDatasetMeta(0).data.length - 1; i++) {
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(102,102,102,0.2)';
+                    ctx.strokeStyle = 'rgba(102,102,102,0.2)';
+
+                    ctx.moveTo(chart.getDatasetMeta(0).data[i].base, chart.getDatasetMeta(0).data[i].y + (chart.getDatasetMeta(0).data[i].height / 2));
+                    ctx.lineTo(chart.getDatasetMeta(0).data[i].x, chart.getDatasetMeta(0).data[i].y + (chart.getDatasetMeta(0).data[i].height / 2));
+                    ctx.lineTo(chart.getDatasetMeta(0).data[i + 1].x, chart.getDatasetMeta(0).data[i + 1].y - (chart.getDatasetMeta(0).data[i + 1].height / 2));
+                    ctx.lineTo(chart.getDatasetMeta(0).data[i + 1].base, chart.getDatasetMeta(0).data[i + 1].y - (chart.getDatasetMeta(0).data[i + 1].height / 2));
+                    ctx.closePath();
+
+                    ctx.stroke();
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                for (let j = 0; j < chart.getDatasetMeta(0).data.length; j++) {
+                    var Porcentaje = 0;
+                    Porcentaje = ((dbData[j].Total * 100) / SumTotal).toFixed(2);
+                    //const datapointPercentage = Porcentaje.toFixed(2);
+                    //const quantity = dbData[j].Total;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = 'bold 15px sans-serif';
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    ctx.fillText(` ${dbData[j].Total} (${Porcentaje}%)`, (chart.getDatasetMeta(0).data[0].x - left) / 2 + left, chart.getDatasetMeta(0).data[j].y);
+                }
+            }
+        }
+        // config
+        const config = {
+            type: 'bar',
+            data,
+            options: {
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            display: false,
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            },
+            plugins: [funnelChart]
+        };
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    }
+
+    function MostrarEtapa(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Etapa", "Oportunidad")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+</script>
+<script>
+    function CargaObjetivos() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ObjetivosResponsables_Selecionar_Year", "ObjetivosResponsables")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                PintaTablaObjetivos(result);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaTablaObjetivos(dbData) {
+        console.log(dbData);
+        var date = new Date();
+        /* Javascript recalculará la fecha si el mes es menor de 0 (enero)
+          o mayor de 11 (diciembre) */
+        date.setMonth(date.getMonth() - 1);
+        let mesActual = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(date);
+
+
+        var fecha = new Date().getFullYear();
+        /*let mesActual = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());*/
+        var Tabla = "";
+        var SumObjetivos = 0;
+        var SumOportunidadesGanadas = 0;
+        var SumAcumuladoMes = 0;
+        var SumAcumuladoYear = 0;
+        var MontoCumplimientoPorcentaje = 0;
+        var MontoFaltante = 0;
+        var SumOportunidadesEnproceso = 0;
+        var Prespectacion = 0;
+        var SumFacturacionRecurrente = 0;
+        var SumProyectosNuevos = 0;
+
+        for (var b = 0; b < dbData.length; b++) {
+            SumObjetivos += dbData[b].FacturacionRecurrente + dbData[b].ProyectosNuevos;
+            SumOportunidadesGanadas += dbData[b].Acumulado;
+            SumAcumuladoMes += dbData[b].MontoAcumuladoMes;
+            SumAcumuladoYear += dbData[b].MontoAcumulado;
+            SumOportunidadesEnproceso += dbData[b].EnProceso;
+            SumFacturacionRecurrente += dbData[b].FacturacionRecurrente;
+            SumProyectosNuevos += dbData[b].ProyectosNuevos;
+        }
+
+        MontoCumplimientoPorcentaje = ((SumAcumuladoYear * 100) / SumObjetivos);
+        MontoFaltante = convertirNegativoAPositivo(SumObjetivos - SumAcumuladoYear);
+        Prespectacion = ((SumOportunidadesEnproceso * 100) / SumObjetivos);
+
+        Tabla += "<table class='table table-hover table-striped' id='TableListaReporte'>" +
+                    "<thead>" +
+                        "<tr class='text-center' style='background-color: #e7e7ff;'>" +
+                            "<th>Area</th>" +
+                            "<th>Responsable</th>" +
+                            "<th>Facturacion Recurrente</th>" +
+                            "<th>Proyectos Nuevos</th>" +
+                            "<th>%</th>" +
+                            "<th> Objetivo " + fecha + "</th>" +
+                            "<th> Oportunidades <br> ganadas </th>" +
+                            "<th> Facturado <br> al cierre de " + mesActual + " </th>" +
+                            "<th> Factura <br> acumulado " + fecha + "</th>" +
+                            "<th>% Cumplimiento <br> real</th>" +
+                            "<th>Monto faltante <br> meta</th>" +
+                            "<th>Oportunidades <br> en proceso </th>" +
+                            "<th>% En prospectación  </th>" +
+                        "</tr>" +
+                    "</thead>" +
+                "<tbody class='table-border-bottom-0'>";
+
+        for (var b = 0; b < dbData.length; b++) {
+            var CumplimientoPorcentaje = "0.00";
+            var _Prespectacion = "0.00";
+            var Monto = dbData[b].FacturacionRecurrente + dbData[b].ProyectosNuevos;
+            var Porcentaje = (Monto * 100 / SumObjetivos).toFixed(2);
+            var Cumplimiento = dbData[b].MontoAcumulado;
+            var Faltante = Monto - Cumplimiento;
+            if (Monto != 0) {
+                CumplimientoPorcentaje = ((Cumplimiento * 100) / Monto).toFixed(2);
+                _Prespectacion = ((dbData[b].EnProceso * 100) / Monto).toFixed(2);
+            }
+
+
+
+
+            Tabla += "<tr>" +
+                        "<td><strong  onclick='BtnAbrirVentaUnidadNegocio("+ dbData[b].CatUnidadNegocio.Id +")' style='cursor: pointer;'>" + dbData[b].CatUnidadNegocio.Nombre + "</strong></td>" +
+                        "<td>" +
+                        "<font style='vertical-align: inherit;'" +
+                            "onclick='BtnActulizarMontos(" + dbData[b].Id + ")'>" +
+                            "<a><span><font style='vertical-align: inherit; color: #696cff'><i class='tf-icons bx bx-edit'></i></font></span></a>" +
+                        "</font>" +
+                             dbData[b].Usuario.Persona.Nombre + " " + dbData[b].Usuario.Persona.ApellidoPaterno + " " + dbData[b].Usuario.Persona.ApellidoMaterno +
+                        "</td>" +
+                        "<td style='text-align: right;'>" + formatProdPrice(dbData[b].FacturacionRecurrente.toFixed(2)) + "</td>" +
+                        "<td style='text-align: right;'>" + formatProdPrice(dbData[b].ProyectosNuevos.toFixed(2)) + "</td>" +
+                        "<td style='text-align: right;'>" + Porcentaje+" % </td>" +
+                        "<td style='text-align: right;'> " + formatProdPrice(Monto.toFixed(2)) + "</td>" +
+                        "<td style='background-color: #31c5c5; color: #000; text-align: right;'> <strong> " + formatProdPrice(dbData[b].Acumulado.toFixed(2)) + "</strong></td>" +
+                        "<td style='text-align: right;'>" +
+                            " "+ formatProdPrice(dbData[b].MontoAcumuladoMes.toFixed(2))+
+                            "<font style='vertical-align: inherit;'" +
+                                "onclick='BtnAbrirActualizarMonto("+ dbData[b].Id +")'>" +
+                                "<a><span><font style='vertical-align: inherit; color: #696cff'><i class='tf-icons bx bx-edit'></i></font></span></a>" +
+                            "</font>" +
+                        "</td>" +
+                        "<td style='text-align: right;'>" +
+                             formatProdPrice(dbData[b].MontoAcumulado.toFixed(2)) +
+                            "<font style='vertical-align: inherit;'" +
+                                "onclick='BtnAbrirActualizarMontoYear("+ dbData[b].Id +")'>" +
+                                "<a><span><font style='vertical-align: inherit; color: #696cff;'><i class='tf-icons bx bx-edit'></i></font></span></a>" +
+                            "</font>" +
+                        "</td>" +
+                        "<td style='text-align: right;'>" + CumplimientoPorcentaje + " % </td>" +
+                        "<td style='text-align: right;'> " + FunMontoImg(Faltante) + "</td>" +
+                        "<td style='text-align: right; background-color: #61b6f0;'> " + formatProdPrice(dbData[b].EnProceso.toFixed(2)) + "</td>" +
+                        "<td style='text-align: right;'> " + _Prespectacion + " % </td>" +
+                    "</tr>";
+        }
+
+
+        Tabla += "</tbody >" +
+                "<footer>" +
+                    "<tr >" +
+                        "<th></th>" +
+                        "<th></th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(SumFacturacionRecurrente.toFixed(2)) + " </strong></th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(SumProyectosNuevos.toFixed(2)) + " </strong></th>" +
+                        "<th style='text-align: right;'><strong> 100 % </strong> </th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(SumObjetivos.toFixed(2))  + " </strong></th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(SumOportunidadesGanadas.toFixed(2)) + " </strong></th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(SumAcumuladoMes.toFixed(2)) + " </strong></th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(SumAcumuladoYear.toFixed(2)) + " </strong></th>" +
+                        "<th style='text-align: right;'><strong> " + MontoCumplimientoPorcentaje.toFixed(2) +" % </strong></th>" +
+                        "<th style='text-align: right;'><strong> " + formatProdPrice(MontoFaltante.toFixed(2))+ "</strong></th>" +
+                        /*"<th style='text-align: right;'><strong>$ " + MontoFaltante.toLocaleString('en') + "</strong></th>" +*/
+                        "<th style='text-align: right;'><strong>$ " + SumOportunidadesEnproceso.toLocaleString('en') + "</strong></th>" +
+                        "<th style='text-align: right;'><strong>" + Prespectacion.toFixed(2) +" % </strong></th>" +
+                    "</tr>" +
+                "</footer>" +
+                "</table>";
+        $('#TablaObjetivos').html(Tabla);
+
+        $('#TableListaReporte').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+            },
+            "order": [[9, "desc"]],
+            "paging": false,
+            "searching": false,
+            "pageLength": false,
+        });
+    }
+
+    function BtnActulizarMontos(Id) {
+
+        var ObjetivosResponsables = new Object();
+        ObjetivosResponsables.Id = Id;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ObjetivosResponsables_Seleccionar_Id", "ObjetivosResponsables")",
+            async: false,
+            data: JSON.stringify(ObjetivosResponsables),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Id) {
+                    $("#modalActualizarImportes").modal("show");
+
+                    var numeroConComas1 = formatoNumeroConComas(result.FacturacionRecurrente.toFixed(2));
+                    var numeroConComas2 = formatoNumeroConComas(result.ProyectosNuevos.toFixed(2));
+
+
+                    $("#ActualizarVenta_FacturacionRecurrente").val(numeroConComas1);
+                    $("#ActualizarVenta_ProyectosNuevos").val(numeroConComas2);
+
+
+
+                    var Contenido = "<button type='button' class='btn btn-primary' onclick='BtnActulizarImporte(" + Id + ")'>Actualizar </button>";
+                    $('#DivActuzaliarImportes').html(Contenido);
+                }
+            },
+            error: function () {
+
+            }
+        });
+
+    }
+
+    function BtnActulizarImporte(Id) {
+        if (ValidarActulizarImporte()) {
+
+            var ObjetivosResponsables = new Object();
+            ObjetivosResponsables.Id = Id;
+            ObjetivosResponsables.FacturacionRecurrente = $('#ActualizarVenta_FacturacionRecurrente').val().replace(/,/g, '');
+            ObjetivosResponsables.ProyectosNuevos = $('#ActualizarVenta_ProyectosNuevos').val().replace(/,/g, '');
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObjetivosResponsables_Actualizar", "ObjetivosResponsables")",
+                async: false,
+                data: JSON.stringify(ObjetivosResponsables),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    CargaObjetivos();
+                    $('#BntCancelarActualizarImportes').trigger('click');
+                },
+                error: function () {
+
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidarActulizarImporte() {
+        var result = false;
+
+        $('#ActualizarVenta_FacturacionRecurrente').css("border", "1px solid #f44336");
+        $('#ActualizarVenta_ProyectosNuevos').css("border", "1px solid #f44336");
+
+        if ($('#ActualizarVenta_FacturacionRecurrente').val().length > 0) {
+            $('#ActualizarVenta_FacturacionRecurrente').css("border", "1px solid #d9dee3");
+        }
+        if ($('#ActualizarVenta_ProyectosNuevos').val().length > 0) {
+            $('#ActualizarVenta_ProyectosNuevos').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#ActualizarVenta_FacturacionRecurrente').val().length > 0) {
+            if ($('#ActualizarVenta_ProyectosNuevos').val().length > 0) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+
+    function BtnAbrirVentaUnidadNegocio(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("VentasUnidadNegocio", "Administracion")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+    function formatProdPrice(value) {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function convertirNegativoAPositivo(numero) {
+        if (numero < 0) {
+            return -numero;
+        } else {
+            return numero;
+        }
+    }
+
+    function FunMontoImg(numero) {
+        var cantidad = "";
+
+        if (numero == 0) {
+            // NO COLOCAR IMAGEN
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else if (numero < 0) {
+            // COLOCAR IMAGEN VERDER
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2))) + " <img src='../assets/img/icons/FlechaVerde.png' width='12%' /> ";
+        } else {
+            // COLOCAR IMAGEN ROJA
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2))) + " <img src='../assets/img/icons/FlechaRoja.png' width='12%' /> ";
+        }
+
+        return cantidad;
+    }
+
+
+</script>
+
+<script>
+    function BtnAbrirActualizarMonto(Id) {
+        var fecha = new Date().getFullYear();
+
+        var date = new Date();
+        /* Javascript recalculará la fecha si el mes es menor de 0 (enero)
+          o mayor de 11 (diciembre) */
+        date.setMonth(date.getMonth() - 1);
+        let mesActual = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(date);
+        var Contenido = "";
+
+        Contenido +=    "<form class='modal-content'>" +
+                            "<div class='modal-header'>" +
+                                "<h5 class='modal-title'>Nuevo importe mes: " + mesActual + " " + fecha + "</h5>" +
+                                "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>" +
+                            "</div>" +
+                            "<div class='modal-body'>" +
+                                "<div class='row'>" +
+                                    "<div class='col-lg-12'>" +
+                                        "<div class='mb-3'>" +
+                                            "<label class='form-label' for='basic-icon-default-fullname'>* Monto</label>" +
+                                            "<div class='input-group input-group-merge'>" +
+                                                "<span class='input-group-text'>$</span>" +
+                                                "<input type='text' class='form-control numberPositivo' id='Monto_Nuevo_Importe' placeholder='Monto' aria-label='' aria-describedby='Venta_Monto' />" +
+                                                /*"<span class='input-group-text'>.00</span>" +*/
+                                            "</div>" +
+                                        "</div>" +
+                                    "</div>" +
+                                "</div>" +
+                            "</div>" +
+                            "<div class='modal-footer'>" +
+                                "<button type='button' class='btn btn-outline-secondary' data-bs-dismiss='modal' id='BntCancelarNuevoImporte'>" +
+                                    "Cancelar" +
+                                "</button>" +
+                                "<button type='button' class='btn btn-primary' onclick='BtnRegistrarNuevoImporte("+ Id +")'> Registrar </button>" +
+                            "</div>" +
+                        "</form>";
+
+        $('#ModalContenteNuevoImporteMes').html(Contenido);
+        $("#modalNuevoImporteMes").modal("show");
+        document.querySelectorAll(".numberPositivo").forEach(el => el.addEventListener("keyup", numberFormatPositivo));
+    }
+
+    function BtnRegistrarNuevoImporte(Id) {
+        if (ValidarNuevoImporte()) {
+
+            var ObjetivosResponsables = new Object();
+            ObjetivosResponsables.Id = Id;
+
+            var ObjetivoFacturaAcumulado = new Object();
+            ObjetivoFacturaAcumulado.ObjetivosResponsables = ObjetivosResponsables;
+            ObjetivoFacturaAcumulado.Monto = $('#Monto_Nuevo_Importe').val().replace(/,/g, '');
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObjetivoFacturaAcumulado_Mes_Agregar", "ObjetivoFacturaAcumulado")",
+                async: false,
+                data: JSON.stringify(ObjetivoFacturaAcumulado),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    CargaObjetivos();
+                    $('#BntCancelarNuevoImporte').trigger('click');
+                    $('#Monto_Nuevo_Importe').val("");
+                },
+                error: function () {
+
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidarNuevoImporte() {
+        var result = false;
+
+        $('#Monto_Nuevo_Importe').css("border", "1px solid #f44336");
+
+        if ($('#Monto_Nuevo_Importe').val().length > 0) {
+            $('#Monto_Nuevo_Importe').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Monto_Nuevo_Importe').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    function BtnAbrirActualizarMontoYear(Id) {
+         var obj = {};
+
+        obj['UrlVaible'] = Id;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Index", "ObjetivoFacturaAcumulado")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+</script>
+
+<script>
+
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+
+    const MILLARES = ",";
+    const DECIMALES = ".";
+    const DTFLOCAL = new Intl.NumberFormat('en-US');
+
+    // Formatear solamente numeros decimales positivos
+    function numberFormatPositivo(e) {
+        if (this.value === "") {
+            return;
+        }
+        // Obtenemos un array con el numero y los decimales si hay
+        let contenido = "";
+        if (MILLARES === ",") {
+            contenido = this.value.replace(/[^0-9\.]/g, "").split(".");
+        } else {
+            contenido = this.value.replace(/[^0-9\,]/g, "").split(",");
+        }
+        // añadimos los separadores de miles al primer numero del array
+        contenido[0] = contenido[0].length ? DTFLOCAL.format(parseInt(contenido[0])) : "0";
+        // Juntamos el numero con los decimales si hay decimales
+        this.value = contenido.length > 1 ? contenido.slice(0, 2).join(".") : contenido[0];
+    }
+
+    window.onload = function () {
+        //SE EJECUTA DESPUES CARGAR EL CODIGO CSS y HTML
+        // Creamos el evento keyup
+        document.querySelectorAll(".numberPositivo").forEach(el => el.addEventListener("keyup", numberFormatPositivo));
+    };
+
+
+    function formatoNumeroConComas(numero) {
+        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $('#Nv1Ventas').addClass("active open");
+</script>

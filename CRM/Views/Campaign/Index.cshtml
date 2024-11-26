@@ -1,0 +1,486 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+<div class="card mb-4">
+    <h5 class="card-header">Nueva Campaña</h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold">Completa los campos marcados *</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Clave </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Campaign_Clave" placeholder="Clave" aria-label="" aria-describedby="Campaign_Clave" onkeyup="Mayus(this);" onchange="ValidaInput('Campaign_Clave')" />
+                    </div>
+                    <button class="btn btn-primary" type="button" id="BtnAbrirBusqueda" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBusquedaEmpresa" aria-controls="offcanvasBusquedaEmpresa" style="display:none">
+                        DF
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-building-house"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Campaign_Nombre" placeholder="Nombre" aria-label="" aria-describedby="Campaign_Nombre" onkeyup="Mayus(this);" onchange="ValidaInput('Campaign_Nombre')" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Fecha inicio  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control" id="Campaign_FechaInicio" placeholder="Nombre" aria-label="" aria-describedby="basic-icon-default-fullname2" onchange="ValidaInput('Campaign_FechaInicio')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Fecha cierre  </label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control" id="Campaign_FechaCierre" placeholder="Nombre" aria-label="" aria-describedby="basic-icon-default-fullname2" onchange="ValidaInput('Campaign_FechaCierre')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Unidad de negocio </label>
+                    <div class="input-group">
+                        <select id='Campaign_UnidadNegocio' class="form-select" aria-label="Campaign_UnidadNegocio" onchange="ValidaSelect('Campaign_UnidadNegocio')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.UnidadNegocio)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Estatus </label>
+                    <div class="input-group">
+                        <select id='Campaign_Estatus' class="form-select" aria-label="Campaign_Estatus" onchange="ValidaSelect('Campaign_Estatus')">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @foreach (var item in ViewBag.EstatusMarketing)
+                            {
+                                <option value="@item.Id">@item.Nombre.ToUpper()</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUnidadNegocio" aria-controls="offcanvasUnidadNegocio">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Propietario del registro  </label>
+                    <select id='Campaign_Propietario' class="form-select" aria-label="Campaign_Propietario" onchange="ValidaSelect('Campaign_Propietario')" disabled>
+                        <option value="0" selected>SELECCIONAR</option>
+                        @foreach (var item in ViewBag.Usuarios)
+                        {
+                            if (((CRM.Models.Usuario)System.Web.HttpContext.Current.Session["Sesion"]).Id == item.Id)
+                            {
+                                <option value="@item.Id" selected>@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Persona.Nombre.ToUpper() @item.Persona.ApellidoPaterno.ToUpper() @item.Persona.ApellidoMaterno.ToUpper()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                <textarea class="form-control" id="Campaign_Descripcion" rows="3" onkeyup="Mayus(this);"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="demo-inline-spacing">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="BtnGuardarCampaign()">
+                        <span class="tf-icons bx bx-save"></span>&nbsp; Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function BtnGuardarCampaign() {
+        if (ValidarForm()) {
+            var CatUnidadNegocio = new Object();
+            CatUnidadNegocio.Id = $("#Campaign_UnidadNegocio option:selected").val();
+
+            var CatEstatusMarketing = new Object();
+            CatEstatusMarketing.Id = $("#Campaign_Estatus option:selected").val();
+
+            var Usuario = new Object();
+            Usuario.Id = $("#Campaign_Propietario option:selected").val();
+
+            var Campaign = new Object();
+            Campaign.CatEstatusMarketing = CatEstatusMarketing;
+            Campaign.Usuario = Usuario;
+            Campaign.Id = $("#Campaign_UnidadNegocio option:selected").val();
+            Campaign.Clave = $('#Campaign_Clave').val();
+            Campaign.Nombre = $('#Campaign_Nombre').val();
+            Campaign.FechaInicio = $('#Campaign_FechaInicio').val();
+            Campaign.FechaFin = $('#Campaign_FechaCierre').val();
+            Campaign.Descripcion = $('#Campaign_Descripcion').val();
+
+            var CampaignUnidadNegocio = new Object();
+            CampaignUnidadNegocio.CatUnidadNegocio = CatUnidadNegocio;
+            CampaignUnidadNegocio.Campaign = Campaign;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Campaign_Agregar", "Campaign")",
+                async: false,
+                data: JSON.stringify(CampaignUnidadNegocio),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La clave que intentas registrar ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                    } else if (result.Id > 0) {
+                        swal({
+                            title: "Nueva campaña registrada. !",
+                            icon: "success",
+                            buttons: {
+                                agregar: {
+                                    text: "Aceptar", className: 'sweet-continuar'
+                                },
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "agregar":
+                                 
+                                    window.location.href = "/Correo/Crear?Id=" + result.Id;
+
+                                break;
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Campaña no registrada.");
+                }
+            });
+
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidarForm() {
+        var result = false;
+
+        $('#Campaign_Clave').css("border", "1px solid #f44336");
+        $('#Campaign_Clave').css("border-left", "none");
+
+        $('#Campaign_Nombre').css("border", "1px solid #f44336");
+        $('#Campaign_Nombre').css("border-left", "none");
+
+        $('#Campaign_FechaInicio').css("border", "1px solid #f44336");
+        $('#Campaign_FechaInicio').css("border-left", "none");
+
+        $('#Campaign_FechaCierre').css("border", "1px solid #f44336");
+        $('#Campaign_FechaCierre').css("border-left", "none");
+
+        $('#Campaign_UnidadNegocio').css("border", "1px solid #f44336");
+        $('#Campaign_Estatus').css("border", "1px solid #f44336");
+        $('#Campaign_Propietario').css("border", "1px solid #f44336");
+
+        if ($('#Campaign_Clave').val().length > 0) {
+            $('#Campaign_Clave').css("border", "1px solid #d9dee3");
+            $('#Campaign_Clave').css("border-left", "none");
+        }
+
+        if ($('#Campaign_Nombre').val().length > 0) {
+            $('#Campaign_Nombre').css("border", "1px solid #d9dee3");
+            $('#Campaign_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Campaign_FechaInicio').val().length > 0) {
+            $('#Campaign_FechaInicio').css("border", "1px solid #d9dee3");
+            $('#Campaign_FechaInicio').css("border-left", "none");
+        }
+
+        if ($('#Campaign_FechaCierre').val().length > 0) {
+            $('#Campaign_FechaCierre').css("border", "1px solid #d9dee3");
+            $('#Campaign_FechaCierre').css("border-left", "none");
+        }
+
+        if ($("#Campaign_UnidadNegocio option:selected").val() > 0) {
+            $('#Campaign_UnidadNegocio').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Campaign_Estatus option:selected").val() > 0) {
+            $('#Campaign_Estatus').css("border", "1px solid #d9dee3");
+        }
+
+        if ($("#Campaign_Propietario option:selected").val() > 0) {
+            $('#Campaign_Propietario').css("border", "1px solid #d9dee3");
+        }
+
+        if ($('#Campaign_Clave').val().length > 0) {
+            if ($('#Campaign_Nombre').val().length > 0) {
+                if ($('#Campaign_FechaInicio').val().length > 0) {
+                    if ($('#Campaign_FechaCierre').val().length > 0) {
+                        if ($("#Campaign_UnidadNegocio option:selected").val() > 0) {
+                            if ($("#Campaign_Estatus option:selected").val() > 0) {
+                                if ($("#Campaign_Propietario option:selected").val() > 0) {
+                                    result = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+</script>
+<script>
+
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Letras(e) {
+
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz ";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Numeros(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = "1234567890";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+</script>
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+</script>
+
+
+<script>
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketingCampana').addClass("active");
+</script>

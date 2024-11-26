@@ -1,0 +1,1450 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="card">
+            <h5 class="card-header">Reporte de objetivos, facturación y nuevos proyectos.  </h5>
+            <!-- Basic Pagination -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <small class="text-light fw-semibold">Completa los campos marcados *</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-icon-default-fullname">* Año  </label>
+                            <select class="form-select" id="Select_Year" aria-label="Contacto_Sexo" onchange="CargaObjetivos()">
+                                <option value="0" selected="">SELECCIONAR</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ContenedorReporte" style="display:none">
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12 mb-1">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                            <div class="card-title mb-0 ">
+                                <h5 class="m-0 me-2" style="font-size: 23px; color:#000000">
+                                    <span class="badge bg-label-primary p-2"><i class="bx bxs-trophy text-primary"></i></span>
+                                    <span id="BloqueTablaTitulo">  </span>
+                                </h5>
+                            </div>
+                            <div class="dropdown">
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card">
+                                <h5 class="card-header"></h5>
+                                <div class="table-responsive text-nowrap" id="TablaObjetivos">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Area</th>
+                                                <th>Responsable</th>
+                                                <th>%</th>
+                                                <th>
+                                                    Objetivo
+                                                    <script>
+                                                        document.write(new Date().getFullYear());
+                                                    </script>
+                                                </th>
+                                                <th>Factura acumulado</th>
+                                                <th>% Cumplimiento real</th>
+                                                <th>Monto faltante meta</th>
+                                                <th>Oportunidades en proceso </th>
+                                                <th>% En prospectación  </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-border-bottom-0">
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td> </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-6 mb-4 order-0">
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 0rem;">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <h5><span id="TituloObjetivo"> Objetivo </span> </h5>
+                        </div>
+                        <div class="col-lg-2 text-center">
+                            <h6 style="text-align: right; padding-bottom: 0px; margin-bottom: 0rem; "><img style="text-align: right; " src="~/assets/img/illustrations/istockphoto-1282050925-612x612.jpg" width="100%"></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table width="100%">
+                                <tr>
+                                    <td width="30%"><strong><h6 class="mb-0" style="text-align: left; color: #000000; font-size: 16px; padding-bottom: 5px;"> Meta a cumplir: </h6></strong></td>
+                                    
+                                    <td colspan="2"><h6 class="mb-0" style="text-align: right; padding-bottom: 5px;"> <span id="TituloIncremento"></span></h6></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;"> <span id="TituloFacturacion"></span> </h6></td>
+                                    <td width="30%"><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="TotalFacturacion"> $0.00 </h6></strong></td>
+                                    <td rowspan="3" class="text-center"><br /> <h6 style="text-align: right;"><img style="padding-bottom: 10px; text-align: right; " src="../assets/img/icons/FlechaVerde.png" width="12%"><small class="fw-semibold" id="Acumulado" style="font-size: 25px; color: #474747; text-align: right;"><span id="TotalIncrementoPorcentaje"></span></small></h6></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;"> Nuevos Proyectos</h6></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="TotalNuevosProyecto"> $0.00 </h6></strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><h6 class="mb-0" style="text-align: left; color: #000000; font-size: 16px; padding-bottom: 5px;"> <span id="TituloObjetivo2"></span> </h6></strong></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="TotalObjetivos"> $0.00 </h6></strong></td>
+                                </tr>
+                            </table>
+                            <br />
+                        </div>
+                        <div class="col-lg-12">
+                            <div id="GraficaObjetivos" style="height: 150px"><img src="~/assets/img/icons/SoupyLazyGnatcatcher-size_restricted.gif" width="100%" height="100%" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <h5><span id="TituloGraficaObjetivo">   </span> </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4 order-0">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <h5> <span id="TituloNuevosProyectos"></span></h5>
+                        </div>
+                        <div class="col-lg-2 text-center">
+                            <h6 style="text-align: right; padding-bottom: 0px; margin-bottom: 0rem; "><img style="text-align: right; " src="~/assets/img/illustrations/win-award-trophy-cup-icon-sign-flat-style-vector-illustration-isolated-white-background_503038-367.jpg" width="100%"></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table>
+                                <tr>
+                                    <td width="48%"><strong><h6 class="mb-0" style="text-align: left; color: #000000; font-size: 16px; padding-bottom: 5px;"> Meta a cumplir: </h6></strong></td>
+                                    <td width="30%"><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px;"> MX </h6></strong></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px;"> % </h6></strong></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;"> Nuevos Proyectos</h6></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque2TituloNuevosProyectos"> $0.00 </h6></strong>   </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;"> <span id="Bloque2TituloOportunidades"></span> </h6></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque2TotalOportunidades"> $0.00 </h6></strong></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque2TotalPorcentajeMonto"> % </h6></strong> </td>
+                                </tr>
+                                <tr>
+                                    <td><strong><h6 class="mb-0" style="text-align: left; color: #000000; font-size: 16px; padding-bottom: 5px;"> Monto faltante </h6></strong></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque2TotalFaltante"> $0.00 </h6></strong></td>
+                                    <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" > <span id="Bloque2TotalPorcentajeFaltante"></span>  </h6></strong></td>
+                                </tr>
+                            </table>
+                            <br />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="GraficaNuevosProyectos" style="height: 150px"><img src="~/assets/img/icons/SoupyLazyGnatcatcher-size_restricted.gif" width="100%" height="100%" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <h5><span id="TituloObjetivo11"> Oportunidades Ganadas Vs Monto faltante  </span> </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-6 mb-4 order-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <h5> <span id="Bloque3TituloFacturacion"></span></h5>
+                                </div>
+                                <div class="col-lg-2 text-center">
+                                    <h6 style="text-align: right; padding-bottom: 0px; margin-bottom: 0rem; "><img style="text-align: right; " src="~/assets/img/illustrations/business-goal-achievement-concept-vector.jpg" width="100%"></h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <table>
+                                        <tr>
+                                            <td width="30%"><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;" id="Bloque3TituloFacturacionAnterior"> </h6></td>
+                                            <td width="35%"><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque3TotalFacturacion"> $0.00 </h6></strong></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;" id="Bloque3TituloFacturacionYear"> </h6></td>
+                                            <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque3TotalFacturacionYear"> $0.00 </h6></strong></td>
+                                            <td><h6 class="mb-0" style="text-align: right; padding-bottom: 5px;"> <span id="Bloque3TituloAcumulado">% Incremento vs 2022</span></h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque3TotalDiferenciaFacturacion"> $0.00 </h6></strong></td>
+                                            <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;"> <span id="Bloque3PorcentajeFacturacion"></span>  </h6></strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-7">
+                                    <div id="DivmyChartAcelerometro">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <h5> <span id="TituloGraficaFacturacion"></span>  </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4 order-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <h5><span id="Bloque4TituloObjetivo"> Objetivo </span> </h5>
+                                </div>
+                                <div class="col-lg-2 text-center">
+                                    <h6 style="text-align: right; padding-bottom: 0px; margin-bottom: 0rem; "><img style="text-align: right; " src="~/assets/img/illustrations/istockphoto-1282050925-612x612.jpg" width="100%"></h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <table>
+                                        <tr>
+                                            <td width="33%"><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;" id="Bloque4TituloFacturacion"> </h6></td>
+                                            <td width="34%"><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque4TotalFacturacion"> $0.00 </h6></strong></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="mb-0" style="text-align: left; padding-bottom: 5px;" id="Bloque4TituloMeta"> </h6></td>
+                                            <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque4TotalMeta"> $0.00 </h6></strong></td>
+                                            <td><h6 class="mb-0" style="text-align: right; padding-bottom: 5px;"> <span id="Bloque4TituloAcumulado">% Incremento vs 2022</span></h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;" id="Bloque4Total"> $0.00 </h6></strong></td>
+                                            <td><strong><h6 class="mb-0" style="text-align: right; color: #000000; font-size: 16px; padding-bottom: 5px;"><img style="padding-bottom: 1px; text-align: right; " src="../assets/img/icons/FlechaRoja.png" width="12%"> <span id="Bloque4TotalPorcenjate"></span>  </h6></strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-7">
+                                    <div id="DivmyChartAcelerometro2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <h5> <span id="Bloque4TituloGraficaFacturacion"></span>  </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5  style="margin-bottom: 5px; "> <span id="Bloque6TituloOportunidad"> Oportunidades </span>  </h5>
+                    <h5 style="margin-bottom: 5px; "> <span id="Bloque6TituloOportunidad2">  </span>  </h5>
+                    <h5 style="margin-bottom: 5px; "> <span id="Bloque6TituloOportunidad3">  </span>  </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="accordion mt-3 text-center" id="accordionExample">
+                            <div class="card accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne">
+                                        Accordion Item 1
+                                    </button>
+                                </h2>
+
+                                <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        Lemon drops chocolate cake gummies carrot cake chupa chups muffin topping. Sesame snaps icing
+                                        marzipan gummi bears macaroon dragée danish caramels powder. Bear claw dragée pastry topping
+                                        soufflé. Wafer gummi bears marshmallow pastry pie.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="false" aria-controls="accordionTwo">
+                                        Accordion Item 2
+                                    </button>
+                                </h2>
+                                <div id="accordionTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        Dessert ice cream donut oat cake jelly-o pie sugar plum cheesecake. Bear claw dragée oat cake
+                                        dragée ice cream halvah tootsie roll. Danish cake oat cake pie macaroon tart donut gummies.
+                                        Jelly beans candy canes carrot cake. Fruitcake chocolate chupa chups.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionThree" aria-expanded="false" aria-controls="accordionThree">
+                                        Accordion Item 3
+                                    </button>
+                                </h2>
+                                <div id="accordionThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        Oat cake toffee chocolate bar jujubes. Marshmallow brownie lemon drops cheesecake. Bonbon
+                                        gingerbread marshmallow sweet jelly beans muffin. Sweet roll bear claw candy canes oat cake
+                                        dragée caramels. Ice cream wafer danish cookie caramels muffin.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5> <span id="Bloque5TituloOportunidad"> Oportunidades </span>  </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <ul class="p-0 m-0" id="TablaEtapasOportunidades">
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 text-center text-sm-left">
+                            <img src="~/assets/img/illustrations/win-award-trophy-cup-icon-sign-flat-style-vector-illustration-isolated-white-background_503038-367.jpg" height="150" alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png" data-app-light-img="illustrations/man-with-laptop-light.png" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+    function CargaObjetivos() {
+
+        var ObjetivosResponsables = new Object();
+        ObjetivosResponsables.Id = $("#Select_Year option:selected").val();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ObjetivosResponsables_Reporte_Year", "ObjetivosResponsables")",
+            async: false,
+            data: JSON.stringify(ObjetivosResponsables),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                $("#ContenedorReporte").show();
+                $('#DivmyChartAcelerometro').html('');
+                $('#DivmyChartAcelerometro2').html('');
+
+                PintaTablaObjetivos(data);
+                PintaObjetivos(data);
+
+                var Oportunidad = new Object();
+                Oportunidad.Year = $("#Select_Year option:selected").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Oportunidad_Seleccionar_Year_CerradoGanado", "Oportunidad")",
+                    async: false,
+                    data: JSON.stringify(Oportunidad),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (dbOportunidades) {
+                        CargaOportunidades(data, dbOportunidades);
+                    },
+                    error: function () {
+                        $('#Bloque6TituloOportunidad').html('Oportunidades cerradas ganadas ' + $("#Select_Year option:selected").val() + ' no encontradas');
+                        $('#Bloque6TituloOportunidad2').html('');
+                        $('#Bloque6TituloOportunidad3').html('');
+                        $('#accordionExample').html("<img style='padding-bottom: 1px; text-align: center;' src='../assets/img/icons/NoEncontrado.jpg' width='50%' />");
+                    }
+                });
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function CargaOportunidades(dbData, dbOportunidades) {
+        console.log(dbData);
+        console.log(dbOportunidades);
+
+        var html = '';
+        var Monto = 0;
+
+        $('#accordionExample').html('');
+        for (var b = 0; b < dbData.length; b++) {
+            Monto += dbData[b].Acumulado;
+
+            var Table = "<div class='col-lg-12'>" +
+                        "<div class='table-responsive text-nowrap'>" +
+                        "<table class='table table-hover table-striped' id='TableListaOportunidades" + dbData[b].Id + "'>" +
+                            "<thead>" +
+                                "<tr>" +
+                                    "<th>Oportunidad </th>" +
+                                    "<th>Importe </th>" +
+                                    "<th>Empresa </th>" +
+                                    "<th>Unidad de negocio </th>" +
+                                    "<th>Tipo </th>" +
+                                    "<th>Prioridad </th>" +
+                                    "<th>Fecha creación </th>" +
+                                    "<th>Fecha cierre </th>" +
+                                    "<th>Estatus</th>" +
+                                    "<th>Progreso</th>" +
+                                "</tr>" +
+                            "</thead>" +
+                            "<tfoot>" +
+                                "<tr>" +
+                                    "<th>Oportunidad </th>" +
+                                    "<th>Importe </th>" +
+                                    "<th>Empresa </th>" +
+                                    "<th>Unidad de negocio </th>" +
+                                    "<th>Tipo </th>" +
+                                    "<th>Prioridad </th>" +
+                                    "<th>Fecha creación </th>" +
+                                    "<th>Fecha cierre </th>" +
+                                    "<th>Estatus</th>" +
+                                    "<th>Progreso</th>" +
+                                "</tr>" +
+                            "</tfoot>" +
+                        "<tbody class='table-border-bottom-0'>";
+                    for (var r = 0; r < dbOportunidades.length; r++) {
+
+                        if (dbData[b].CatUnidadNegocio.Nombre == dbOportunidades[r].CatUnidadNegocio.Nombre) {
+                            var Importe = "$0.00";
+                            if (dbOportunidades[r].Importe != null) {
+                                Importe = dbOportunidades[r].Importe;
+                            }
+                            var Empresa = "";
+                            if (dbOportunidades[r].Empresa != null) {
+                                Empresa = dbOportunidades[r].Empresa;
+                            }
+                            var Progreso = "0";
+                            if (dbOportunidades[r].Empresa != null) {
+                                Progreso = dbOportunidades[r].Progreso;
+                            }
+
+                            Table += "<tr class='text-center'>" +
+                                "<td onclick='MostrarOportunidad(" + dbOportunidades[r].Id + ")'> <strong style='cursor: pointer;'>" + dbOportunidades[r].Nombre + "</strong></td>" +
+                                "<td class='valor' style='text-align:right'>" + Importe + "</td> " +
+                                "<td>" + Empresa + "</td>" +
+                                "<td>" + dbOportunidades[r].CatUnidadNegocio.Nombre + "</td> " +
+                                "<td>" + dbOportunidades[r].CatTipoOportunidad.Nombre + "</td>" +
+                                "<td>" + dbOportunidades[r].CatPrioridad.Nombre + "</td>" +
+                                "<td>" + dbOportunidades[r].FechaCierre + "</td>" +
+                                "<td>" + dbOportunidades[r].FechaCierre + "</td>" +
+                                "<td><span class='badge bg-label-primary me-1'>" + dbOportunidades[r].CatEstatusOpurtunidad.Nombre + "</span></td>" +
+                                "<td><span class='badge bg-label-primary me-1'>" + Progreso + " %</span></td>" +
+                                "</tr>";
+                        }
+                    }
+
+                    Table += "</tbody>" +
+                        "</table>" +
+                        "</div>" +
+                        "</div>";
+            html +=
+                "<div class='card accordion-item'>" +
+                "<h2 class='accordion-header' id='heading" + dbData[b].Id + "'>" +
+                    "<button type='button' class='accordion-button collapsed' data-bs-toggle='collapse' data-bs-target='#accordion" + dbData[b].Id + "' aria-expanded='false' aria-controls='accordion" + dbData[b].Id + "'>" +
+                    dbData[b].CatUnidadNegocio.Nombre +
+                    ": &nbsp;&nbsp;" +
+                    " <strong> " + formatProdPrice(dbData[b].Acumulado.toFixed(2)) +  "</strong>" +
+                    "</button>" +
+                "</h2>" +
+
+                "<div id='accordion" + dbData[b].Id + "' class='accordion-collapse collapse' data-bs-parent='#accordionExample' style=''>" +
+                    "<div class='accordion-body'>" +
+                        Table +
+                    "</div>" +
+                "</div>" +
+            "</div>";
+        }
+
+        $('#Bloque6TituloOportunidad').html('Oportunidades cerradas ganadas <strong>' + $("#Select_Year option:selected").val() + '</strong>');
+        $('#Bloque6TituloOportunidad2').html('Total de oportunidades: <strong>' + dbOportunidades.length + '</strong>');
+        $('#Bloque6TituloOportunidad3').html('Monto: <strong>' + formatProdPrice(Monto.toFixed(2)) + '</strong>');
+        $('#accordionExample').html(html);
+
+        for (var b = 0; b < dbData.length; b++) {
+            var tabla = $('#TableListaOportunidades' + dbData[b].Id).DataTable({
+                columnDefs: [
+                    {
+                        targets: [6], visible: true, searchable: false, orderable: true,
+                        render: function (value) {
+                            if (value === null) return "";
+                            var pattern = /Date\(([^)]+)\)/; //date format from server side
+                            var results = pattern.exec(value);
+                            var dt = new Date(parseFloat(results[1]));
+                            if (dt.getFullYear() === 9999) return ""; //Control para MaxValue
+                            return (dt.getFullYear()) + "-" + ('0' + (dt.getMonth() + 1)).slice(-2) + "-" + ('0' + dt.getDate()).slice(-2);
+                        }
+                    },
+                    {
+                        targets: [7], visible: true, searchable: false, orderable: true,
+                        render: function (value) {
+                            if (value === null) return "";
+                            var pattern = /Date\(([^)]+)\)/; //date format from server side
+                            var results = pattern.exec(value);
+                            var dt = new Date(parseFloat(results[1]));
+                            if (dt.getFullYear() === 9999) return ""; //Control para MaxValue
+                            return (dt.getFullYear()) + "-" + ('0' + (dt.getMonth() + 1)).slice(-2) + "-" + ('0' + dt.getDate()).slice(-2);
+                        }
+                    },
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+                },
+                "pageLength": 10,
+            });
+        }
+    }
+
+    function PintaObjetivos(dbData) {
+        /*console.log(dbData);*/
+
+        var SumObjetivos = 0;
+        var SumFacturacionRecurrente = 0;
+        var SumProyectosNuevos = 0;
+        var SumOportunidadesGanadas = 0;
+        var SumAcumuladoMes = 0;
+        var SumAcumuladoYear = 0;
+        var SumOportunidadesEnproceso = 0;
+
+        // BLOQUE 1
+        var PorcentajeObjetivo = 0;
+        var MontoAcumuladoMesOld = 0;
+
+        // BLOQUE 2
+        var MontoFaltante = 0;
+        var PorcentajeMonto = 0;
+        var PorcentajeFaltante = 0;
+
+        // BLOQUE 3
+        var DiferenciaFacturacion = 0;
+        var PorcentajeFacturacion = 0;
+        var PorcentajeFacturacionTotal = 0;
+
+        // BLOQUE 4
+        var TotalObjetivo = 0;
+        var TotalPorcentaje = 0;
+        var TotalPorcentajeFaltante = 0;
+
+        for (var b = 0; b < dbData.length; b++) {
+            SumObjetivos += dbData[b].FacturacionRecurrente + dbData[b].ProyectosNuevos;
+            if (dbData[b].MontoAcumuladoMesOld > 0) {
+                SumFacturacionRecurrente = dbData[b].MontoAcumuladoMesOld;
+            } else {
+                SumFacturacionRecurrente += dbData[b].FacturacionRecurrente;
+            }
+
+            SumProyectosNuevos += dbData[b].ProyectosNuevos;
+            SumOportunidadesGanadas += dbData[b].Acumulado;
+            SumAcumuladoMes += dbData[b].MontoAcumuladoMes;
+            SumAcumuladoYear += dbData[b].MontoAcumulado;
+            SumOportunidadesEnproceso += dbData[b].EnProceso;
+            /*MontoAcumuladoMesOld = dbData[b].MontoAcumuladoMesOld;*/
+        }
+
+        PorcentajeObjetivo = ((SumProyectosNuevos / SumFacturacionRecurrente) * 100);
+
+        MontoFaltante = SumProyectosNuevos - SumOportunidadesGanadas;
+        PorcentajeMonto = ((SumOportunidadesGanadas / SumProyectosNuevos) * 100);
+        PorcentajeFaltante = ((MontoFaltante / SumProyectosNuevos) * 100);
+
+        DiferenciaFacturacion = SumAcumuladoYear - SumFacturacionRecurrente;
+        /*PorcentajeFacturacion = ((DiferenciaFacturacion / SumFacturacionRecurrente) * 100);*/
+        PorcentajeFacturacion = (DiferenciaFacturacion / SumFacturacionRecurrente);
+        PorcentajeFacturacionTotal = ((SumAcumuladoYear / SumFacturacionRecurrente) * 100);
+
+        TotalObjetivo = SumObjetivos - SumAcumuladoYear;
+        TotalPorcentaje = (TotalObjetivo / SumObjetivos) * 100;
+        TotalPorcentajeFaltante = ((SumAcumuladoYear / SumObjetivos) * 100);
+
+
+        //console.log(SumObjetivos);
+        //console.log(SumFacturacionRecurrente);
+        //console.log(SumProyectosNuevos);
+        //console.log(SumOportunidadesGanadas);
+        //console.log(SumAcumuladoMes);
+        //console.log(SumAcumuladoYear);
+        //console.log(SumOportunidadesEnproceso);
+
+
+        var year = $("#Select_Year option:selected").val();
+
+        // PRIMER BLOQUE
+
+        $('#TituloObjetivo').html('Objetivo ' + year);
+        $('#TituloFacturacion').html('Facturación ' + (year -1));
+        $('#TituloObjetivo2').html('Objetivo ' + year);
+        $('#TituloIncremento').html('% Incremento vs ' + (year - 1));
+        $('#TituloGraficaObjetivo').html('Facturación '+ (year - 1) +'  vs Meta ' + year);
+
+        $('#TotalFacturacion').html(formatProdPrice(SumFacturacionRecurrente.toFixed(2)));
+        $('#TotalNuevosProyecto').html(formatProdPrice(SumProyectosNuevos.toFixed(2)));
+        $('#TotalObjetivos').html(formatProdPrice(SumObjetivos.toFixed(2)));
+        $('#TotalIncrementoPorcentaje').html('% ' + PorcentajeObjetivo.toFixed(2));
+
+        $('#GraficaObjetivos').html('');
+        $('#GraficaObjetivos').html('<canvas id="GraficaObjetivosBar" width="100%" height="200"></canvas>');
+
+        // SEGUNDO BLOQUE
+        $('#TituloNuevosProyectos').html('Nuevos proyectos ' + year);
+        $('#Bloque2TituloOportunidades').html('Oportunidades ganadas ' + year);
+
+        $('#Bloque2TituloNuevosProyectos').html(formatProdPrice(SumProyectosNuevos.toFixed(2)));
+        $('#Bloque2TotalOportunidades').html(formatProdPrice(SumOportunidadesGanadas.toFixed(2)));
+
+        $('#Bloque2TotalFaltante').html(formatProdPrice(MontoFaltante.toFixed(2)));
+        $('#Bloque2TotalPorcentajeMonto').html('% ' + PorcentajeMonto.toFixed(2));
+        $('#Bloque2TotalPorcentajeFaltante').html(ImgPorcentajeFaltante(PorcentajeFaltante));
+
+        $('#GraficaNuevosProyectos').html('');
+        $('#GraficaNuevosProyectos').html('<canvas id="GraficaNuevosProyectosBar" width="100%" height="200"></canvas>');
+
+        // TERCER BLOQUE
+        $('#Bloque3TituloFacturacion').html('Facturación ' + year);
+        $('#Bloque3TituloFacturacionAnterior').html('Facturación ' + (year - 1));
+        $('#Bloque3TituloFacturacionYear').html('Facturación ' + year);
+        $('#TituloGraficaFacturacion').html('Facturación ' + year + '  vs ' + (year - 1));
+        $('#Bloque3TituloAcumulado').html('(Acumulada ' + year + ')');
+
+        $('#Bloque3TotalFacturacion').html(formatProdPrice(SumFacturacionRecurrente.toFixed(2)));
+        $('#Bloque3TotalFacturacionYear').html(formatProdPrice(SumAcumuladoYear.toFixed(2)));
+        $('#Bloque3TotalDiferenciaFacturacion').html(formatProdPrice(convertirNegativoAPositivo(DiferenciaFacturacion.toFixed(2))));
+        $('#Bloque3PorcentajeFacturacion').html(ImgPorcentajeFacturacion(PorcentajeFacturacion));
+
+        // CUARTO BLOQUE
+        $('#Bloque4TituloObjetivo').html('Objetivo ' + year);
+        $('#Bloque4TituloFacturacion').html('Facturación ' + year);
+        $('#Bloque4TituloMeta').html('Meta a cumplir ' + year);
+        $('#Bloque4TituloGraficaFacturacion').html('Facturación ' + year + ' vs Meta ' + year);
+        $('#Bloque4TituloAcumulado').html('(Acumulada ' + year + ')');
+
+
+        $('#Bloque4TotalFacturacion').html(formatProdPrice(SumAcumuladoYear.toFixed(2)));
+        $('#Bloque4TotalMeta').html(formatProdPrice(SumObjetivos.toFixed(2)));
+        $('#Bloque4Total').html(formatProdPrice(TotalObjetivo.toFixed(2)));
+        $('#Bloque4TotalPorcenjate').html('% ' + TotalPorcentaje.toFixed(2));
+
+        // QUINTO BLOQUE
+        $('#Bloque5TituloOportunidad').html('Oportunidades ' + year);
+
+
+        GraficaObjetivos(SumFacturacionRecurrente, SumObjetivos);
+        GraficaNuevosProyectos(SumOportunidadesGanadas, MontoFaltante);
+
+        $('#DivmyChartAcelerometro').html('<canvas id="myChartAcelerometro" style="height: 150px"></canvas>');
+        $('#DivmyChartAcelerometro2').html('<canvas id="myChartAcelerometro2" style="height: 150px"></canvas>');
+        GraficaFacturacion(PorcentajeFacturacionTotal);
+        GraficaBloque4(TotalPorcentajeFaltante);
+        CargaFunnelVentas();
+    }
+
+    function PintaTablaObjetivos(dbData) {
+        var date = new Date();
+        /* Javascript recalculará la fecha si el mes es menor de 0 (enero)
+          o mayor de 11 (diciembre) */
+        date.setMonth(date.getMonth() - 1);
+        let mesActual = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(date);
+
+
+        var fecha = $("#Select_Year option:selected").val();
+
+        $('#BloqueTablaTitulo').html('Información de objetivos ' + fecha);
+        $('#TablaObjetivos').html("");
+
+        /*let mesActual = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());*/
+        var Tabla = "";
+        var SumObjetivos = 0;
+        var SumOportunidadesGanadas = 0;
+        var SumAcumuladoMes = 0;
+        var SumAcumuladoYear = 0;
+        var MontoCumplimientoPorcentaje = 0;
+        var MontoFaltante = 0;
+        var SumOportunidadesEnproceso = 0;
+        var Prespectacion = 0;
+        var SumFacturacionRecurrente = 0;
+        var SumProyectosNuevos = 0;
+
+        for (var b = 0; b < dbData.length; b++) {
+            SumObjetivos += dbData[b].FacturacionRecurrente + dbData[b].ProyectosNuevos;
+            SumOportunidadesGanadas += dbData[b].Acumulado;
+            SumAcumuladoMes += dbData[b].MontoAcumuladoMes;
+            SumAcumuladoYear += dbData[b].MontoAcumulado;
+            SumOportunidadesEnproceso += dbData[b].EnProceso;
+            SumFacturacionRecurrente += dbData[b].FacturacionRecurrente;
+            SumProyectosNuevos += dbData[b].ProyectosNuevos;
+        }
+
+        MontoCumplimientoPorcentaje = ((SumAcumuladoYear * 100) / SumObjetivos);
+        MontoFaltante = convertirNegativoAPositivo(SumObjetivos - SumAcumuladoYear);
+        Prespectacion = ((SumOportunidadesEnproceso * 100) / SumObjetivos);
+
+        Tabla += "<table class='table table-hover table-striped' id='TableListaReporte'>" +
+            "<thead>" +
+            "<tr class='text-center' style='background-color: #e7e7ff;'>" +
+            "<th>Area</th>" +
+            "<th>Responsable</th>" +
+            "<th>Facturacion Recurrente</th>" +
+            "<th>Proyectos Nuevos</th>" +
+            "<th>%</th>" +
+            "<th> Objetivo " + fecha + "</th>" +
+            "<th> Oportunidades <br> ganadas </th>" +
+            "<th> Factura <br> acumulado " + fecha + "</th>" +
+            "<th>% Cumplimiento <br> real</th>" +
+            "<th>Monto faltante <br> meta</th>" +
+            //"<th>Oportunidades <br> en proceso </th>" +
+            //"<th>% En prospectación  </th>" +
+            "</tr>" +
+            "</thead>" +
+            "<tbody class='table-border-bottom-0'>";
+
+        for (var b = 0; b < dbData.length; b++) {
+            var CumplimientoPorcentaje = "0.00";
+            var _Prespectacion = "0.00";
+            var Monto = dbData[b].FacturacionRecurrente + dbData[b].ProyectosNuevos;
+            var Porcentaje = (Monto * 100 / SumObjetivos).toFixed(2);
+            var Cumplimiento = dbData[b].MontoAcumulado;
+            var Faltante = Monto - Cumplimiento;
+            if (Monto != 0) {
+                CumplimientoPorcentaje = ((Cumplimiento * 100) / Monto).toFixed(2);
+                _Prespectacion = ((dbData[b].EnProceso * 100) / Monto).toFixed(2);
+            }
+
+
+
+
+            Tabla += "<tr>" +
+                        "<td><strong  onclick='BtnAbrirVentaUnidadNegocio(" + dbData[b].CatUnidadNegocio.Id + ")' style='cursor: pointer;'>" + dbData[b].CatUnidadNegocio.Nombre + "</strong></td>" +
+                        "<td>" + dbData[b].Usuario.Persona.Nombre + " " + dbData[b].Usuario.Persona.ApellidoPaterno + " " + dbData[b].Usuario.Persona.ApellidoMaterno +
+                        "</td>" +
+                        "<td style='text-align: right;'>" + formatProdPrice(dbData[b].FacturacionRecurrente.toFixed(2)) + "</td>" +
+                        "<td style='text-align: right;'>" + formatProdPrice(dbData[b].ProyectosNuevos.toFixed(2)) + "</td>" +
+                        "<td style='text-align: right;'>" + Porcentaje + " % </td>" +
+                        "<td style='text-align: right;'> " + formatProdPrice(Monto.toFixed(2)) + "</td>" +
+                        "<td style='background-color: #31c5c5; color: #000; text-align: right;'> <strong> " + formatProdPrice(dbData[b].Acumulado.toFixed(2)) + "</strong></td>" +
+
+                        "<td style='text-align: right;'>" +
+                            formatProdPrice(dbData[b].MontoAcumulado.toFixed(2)) +
+                            "<font style='vertical-align: inherit;'" +
+                                "onclick='BtnAbrirActualizarMontoYear(" + dbData[b].Id + ","+ fecha +")'>" +
+                                "<a><span><font style='vertical-align: inherit; color: #696cff;'><i class='tf-icons bx bx-edit'></i></font></span></a>" +
+                            "</font>" +
+                        "</td>" +
+                        "<td style='text-align: right;'>" + CumplimientoPorcentaje + " % </td>" +
+                        "<td style='text-align: right;'> " + FunMontoImg(Faltante) + "</td>" +
+                        //"<td style='text-align: right;'> 0 % </td>" +
+                        //"<td style='text-align: right;'> 0 % </td>" +
+                    "</tr>";
+        }
+
+
+        Tabla += "</tbody >" +
+            "<footer>" +
+            "<tr >" +
+            "<th></th>" +
+            "<th></th>" +
+            "<th style='text-align: right;'><strong> " + formatProdPrice(SumFacturacionRecurrente.toFixed(2)) + " </strong></th>" +
+            "<th style='text-align: right;'><strong> " + formatProdPrice(SumProyectosNuevos.toFixed(2)) + " </strong></th>" +
+            "<th style='text-align: right;'><strong> 100 % </strong> </th>" +
+            "<th style='text-align: right;'><strong> " + formatProdPrice(SumObjetivos.toFixed(2)) + " </strong></th>" +
+            "<th style='text-align: right;'><strong> " + formatProdPrice(SumOportunidadesGanadas.toFixed(2)) + " </strong></th>" +
+            "<th style='text-align: right;'><strong> " + formatProdPrice(SumAcumuladoYear.toFixed(2)) + " </strong></th>" +
+            "<th style='text-align: right;'><strong> " + MontoCumplimientoPorcentaje.toFixed(2) + " % </strong></th>" +
+            "<th style='text-align: right;'><strong> " + formatProdPrice(MontoFaltante.toFixed(2)) + "</strong></th>" +
+/*            "<th style='text-align: right;'><strong>$ " + MontoFaltante.toLocaleString('en') + "</strong></th>" +*/
+            //"<th style='text-align: right;'><strong>$ " + SumOportunidadesEnproceso.toLocaleString('en') + "</strong></th>" +
+            //"<th style='text-align: right;'><strong>" + Prespectacion.toFixed(2) + " % </strong></th>" +
+            "</tr>" +
+            "</footer>" +
+            "</table>";
+        $('#TablaObjetivos').html(Tabla);
+
+        $('#TableListaReporte').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+            },
+            "order": [[9, "desc"]],
+            "paging": false,
+            "searching": false,
+            "pageLength": false,
+        });
+    }
+
+    function GraficaObjetivos(SumFacturacionRecurrente, SumObjetivos) {
+
+        const Nombres = ['Facturacion ', 'Objetivos '];
+        const Porcentajes = [SumFacturacionRecurrente, SumObjetivos];
+        const BackgroundColor = ['#2196F3', '#03A9F4'];
+        const HoverBackgroundColor = ['#00a2b7', '#00a2b7'];
+
+        // setup
+        var data = {
+            labels: Nombres,
+            datasets: [{
+                /*    label: 'Weekly Sales',*/
+                data: Porcentajes,
+                backgroundColor: BackgroundColor,
+                hoverBorderWidth: 0,
+                hoverBackgroundColor: HoverBackgroundColor,
+                borderWidth: 1
+            }]
+        };
+
+        // config
+        const config = {
+            type: 'bar',
+            data,
+            options: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function (t, d) {
+                            var xLabel = d.datasets[t.datasetIndex].label;
+                            var yLabel = t.xLabel >= 1000 ? '$' + t.xLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.xLabel;
+                            /*var yLabel = t.yLabel >= 1000 ? '$' + t.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.yLabel;*/
+                            return xLabel + ': ' + yLabel;
+                        }
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        ticks: {
+                            callback: function (value, index, values) {
+                                if (parseInt(value) >= 1000) {
+                                    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                } else {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        scaleFontSize: 8
+                    }],
+                    yAxes: [{ stacked: true, scaleFontSize: 8 }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        yAlign: 'bottom',
+                        displayColors: false
+                    }
+                },
+
+
+            },
+            plugins: [ChartDataLabels],
+            //options: {
+            //}
+
+        };
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('GraficaObjetivosBar'),
+            config
+        );
+
+        // Instantly assign Chart.js version
+        const chartVersion = document.getElementById('chartVersion');
+    }
+
+    function GraficaNuevosProyectos(SumOportunidadesGanadas, MontoFaltante) {
+
+        const Nombres = ['Oportunidades Ganadas ', 'Monto Faltante '];
+        const Porcentajes = [SumOportunidadesGanadas, MontoFaltante];
+        const BackgroundColor = ['#2196F3', '#03A9F4'];
+        const HoverBackgroundColor = ['#00a2b7', '#00a2b7'];
+
+        // setup
+        var data = {
+            labels: Nombres,
+            datasets: [{
+                /*    label: 'Weekly Sales',*/
+                data: Porcentajes,
+                backgroundColor: BackgroundColor,
+                hoverBorderWidth: 0,
+                hoverBackgroundColor: HoverBackgroundColor,
+                borderWidth: 1
+            }]
+        };
+
+        // config
+        const config = {
+            type: 'pie',
+            data,
+            options: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function (t, d) {
+                            var xLabel = d.datasets[t.datasetIndex].label;
+                            var yLabel = t.xLabel >= 1000 ? '$' + t.xLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.xLabel;
+                            /*var yLabel = t.yLabel >= 1000 ? '$' + t.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '$' + t.yLabel;*/
+                            return xLabel + ': ' + yLabel;
+                        }
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        ticks: {
+                            callback: function (value, index, values) {
+                                if (parseInt(value) >= 1000) {
+                                    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                } else {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        scaleFontSize: 8
+                    }],
+                    yAxes: [{ stacked: true, scaleFontSize: 8 }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        yAlign: 'bottom',
+                        displayColors: false
+                    }
+                },
+
+
+            },
+            plugins: [ChartDataLabels],
+            //options: {
+            //}
+
+        };
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('GraficaNuevosProyectosBar'),
+            config
+        );
+
+        // Instantly assign Chart.js version
+        const chartVersion = document.getElementById('chartVersion');
+    }
+
+    function GraficaFacturacion(PorcentajeFacturacionTotal) {
+        var porcentaje = 0;
+
+        porcentaje = PorcentajeFacturacionTotal;
+
+
+        // setup
+        const data = {
+            labels: ['', '', ''],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [50, 35, 15],
+                backgroundColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                needleValue: porcentaje.toFixed(2),
+                borderColor: 'white',
+                borderWidth: 2,
+                cutout: '70%',
+                circumference: 180,
+                rotation: 270,
+                borderRadius: 2,
+            }]
+        };
+
+        // gaugeNeedle blok
+        const gaugeNeedle = {
+            id: 'gaugeNeedle2',
+            afterDatasetDraw(chart, args, options) {
+                const { ctx, config, data, chartArea: { top, bottom, left, right, width,
+                    height } } = chart;
+
+                ctx.save();
+                //console.log(data);
+                const needleValue = data.datasets[0].needleValue;
+                const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
+                //console.log(needleValue);
+
+                const cx = width / 2;
+                const cy = chart._metasets[0].data[0].y;
+
+                // needle
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.beginPath();
+                ctx.moveTo(0, -2);
+                ctx.lineTo(height - (ctx.canvas.offsetTop + 20), 0);
+                ctx.lineTo(0, 2);
+                ctx.fillStyle = '#444';
+                ctx.fill();
+                ctx.restore();
+
+                // needle dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, 10);
+                ctx.fill();
+                ctx.restore();
+
+                ctx.font = '30px Helvetica';
+                ctx.fillStyle = '#444';
+                ctx.fillText(needleValue + '%', cx, cy + 50);
+                ctx.textAlign = 'center';
+                ctx.restore();
+            }
+        };
+
+        // config
+        const config = {
+            type: 'doughnut',
+            data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        yAlign: 'bottom',
+                        displayColors: false,
+                        callbacks: {
+                            label: function (tooltipItem, data, value) {
+                                const tracker = tooltipItem.dataset.needleValue;
+                                return `Porcentaje cumplido : ${tracker} %`;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [gaugeNeedle]
+        };
+
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChartAcelerometro'),
+            config
+        );
+        myChart.reset();
+
+    }
+
+    function GraficaBloque4(PorcentajeFacturacionTotal) {
+        var porcentaje = 0;
+
+        porcentaje = PorcentajeFacturacionTotal;
+
+        // setup
+        const data = {
+            labels: ['', '', ''],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [50, 35, 15],
+                backgroundColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                needleValue: porcentaje.toFixed(2),
+                borderColor: 'white',
+                borderWidth: 2,
+                cutout: '70%',
+                circumference: 180,
+                rotation: 270,
+                borderRadius: 2,
+            }]
+        };
+
+        // gaugeNeedle blok
+        const gaugeNeedle = {
+            id: 'gaugeNeedle2',
+            afterDatasetDraw(chart, args, options) {
+                const { ctx, config, data, chartArea: { top, bottom, left, right, width,
+                    height } } = chart;
+
+                ctx.save();
+                //console.log(data);
+                const needleValue = data.datasets[0].needleValue;
+                const dataTotal = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                const angle = Math.PI + (1 / dataTotal * needleValue * Math.PI);
+                //console.log(needleValue);
+
+                const cx = width / 2;
+                const cy = chart._metasets[0].data[0].y;
+
+                // needle
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.beginPath();
+                ctx.moveTo(0, -2);
+                ctx.lineTo(height - (ctx.canvas.offsetTop + 20), 0);
+                ctx.lineTo(0, 2);
+                ctx.fillStyle = '#444';
+                ctx.fill();
+                ctx.restore();
+
+                // needle dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, 100);
+                ctx.fill();
+                ctx.restore();
+
+                ctx.font = '30px Helvetica';
+                ctx.fillStyle = '#444';
+                ctx.fillText(needleValue + '%', cx, cy + 50);
+                ctx.textAlign = 'center';
+                ctx.restore();
+            }
+        };
+
+        // config
+        const config = {
+            type: 'doughnut',
+            data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        yAlign: 'bottom',
+                        displayColors: false,
+                        callbacks: {
+                            label: function (tooltipItem, data, value) {
+                                const tracker = tooltipItem.dataset.needleValue;
+                                return `Porcentaje cumplido : ${tracker} %`;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [gaugeNeedle]
+        };
+
+         /// render init block
+        const myChart = new Chart(
+            document.getElementById('myChartAcelerometro2'),
+            config
+        );
+
+    }
+
+
+    function CargaFunnelVentas() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Funnel_Ventas", "OportunidadEtapa")",
+            async: false,
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                PintaGraficaFunnel(data);
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function PintaGraficaFunnel(dbData) {
+        //const Nombres = [];
+        //const Porcentajes = [];
+        var SumTotal = 0;
+        var Tabla = "";
+      /*  var met = [];*/
+        var SumGlob = 0;
+        for (var b = 0; b < dbData.length; b++) {
+            SumTotal += dbData[b].Total;
+        }
+
+        for (var b = 0; b < dbData.length; b++) {
+            var Porcentaje = 0;
+         /*   var gPorcentaje = 0;*/
+            //var gv1 = 0;
+            //var gv2 = 0;
+           /* var uno = [];*/
+
+            /*Nombres.push(dbData[b].CatEtapaOportunidad.Nombre);*/
+            Porcentaje = ((dbData[b].Total * 100) / SumTotal).toFixed(2);
+           /* gPorcentaje = ((dbData[b].Total * 100) / SumTotal).toFixed(0);*/
+          /*  Porcentajes.push(Porcentaje).toFixed(2);*/
+            SumGlob += dbData[b].Suma;
+
+            //if (gPorcentaje > 0) {
+            //    gv2 = (gPorcentaje / 2) + 50;
+            //    gv1 = ((gv2 - 100) * -1);
+            //} else {
+            //    gv2 = 50.5;
+            //    gv1 = 49.5;
+            //}
+
+            /*uno.push(gv1, gv2);*/
+      /*      met.push(uno);*/
+
+            Tabla += "<li class='d-flex mb-2 pb-1' onclick='MostrarEtapa(" + dbData[b].CatEtapaOportunidad.Id + ")'>" +
+                "<div class='avatar flex-shrink-0 me-3'>" +
+                "<span class='avatar-initial rounded bg-label-primary'>" +
+                "<i class='bx bx-bulb'></i>" +
+                "</span>" +
+                "</div>" +
+                "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+                "<div class='me-2'>" +
+                "<h6 class='mb-0'>" + dbData[b].CatEtapaOportunidad.Nombre + "</h6>" +
+                "<small class='text-muted'>" + Porcentaje + " % </small>" +
+                "</div>" +
+                "<div class='user-progress'>" +
+                "<small class='fw-semibold'>" + formatProdPrice(dbData[b].Suma.toFixed(2)) + "</small>" +
+                "</div>" +
+                "</div>" +
+                "</li>";
+        }
+
+        Tabla += "<li class='d-flex mb-2 pb-1'>" +
+            "<div class='avatar flex-shrink-0 me-3'>" +
+            //"<span class='avatar-initial rounded bg-label-primary'>" +
+            //"<i class='bx bx-bulb'></i>" +
+            //"</span>" +
+            "</div>" +
+            "<div class='d-flex w-100 flex-wrap align-items-center justify-content-between gap-2'>" +
+            "<div class='me-2'>" +
+            "<h6 class='mb-0'></h6>" +
+            /* "<small class='text-muted'>" + Porcentaje + " % </small>" +*/
+            "</div>" +
+            "<div class='user-progress'>" +
+            "<small class='fw-semibold'><strong> Total: " + formatProdPrice(SumGlob.toFixed(2)) + "</strong></small>" +
+            "   </div>" +
+            "</div>" +
+            "</li>";
+
+        //$('#Label_Total_EtapasOportunidades').html(SumTotal);
+        //$('#Label_Total_EtapasOportunidades2').html(SumTotal);
+        $('#TablaEtapasOportunidades').html(Tabla);
+
+    }
+
+    function MostrarEtapa(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Etapa", "Oportunidad")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+
+    function formatProdPrice(value) {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function BtnAbrirActualizarMontoYear(Id, fecha) {
+         var obj = {};
+
+        obj['UrlVaible'] = Id;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Anterior", "ObjetivoFacturaAcumulado")?cont=' + result.Url + '&year=' + fecha;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+    function convertirNegativoAPositivo(numero) {
+        if (numero < 0) {
+            return -numero;
+        } else {
+            return numero;
+        }
+    }
+
+    function ImgPorcentajeFacturacion(numero) {
+        if (numero == 0) {
+            // NO COLOCAR IMAGEN
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else if (numero < 0) {
+            numero = ((numero) * 100);
+            // COLOCAR IMAGEN VERDER
+            cantidad = " <img style='padding-bottom: 1px; text-align: right;' src='../assets/img/icons/FlechaRoja.png' width='12%' /> " + formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else {
+            numero = ((numero) * 100);
+            // COLOCAR IMAGEN ROJA
+            cantidad = " <img style='padding-bottom: 1px; text-align: right;' src='../assets/img/icons/FlechaVerde.png' width='12%' /> " + formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        }
+
+        return cantidad;
+    }
+
+    function ImgPorcentajeFaltante(numero) {
+        if (numero == 0) {
+            // NO COLOCAR IMAGEN
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else if (numero < 0) {
+            // COLOCAR IMAGEN VERDER
+            cantidad = " <img style='padding-bottom: 1px; text-align: right;' src='../assets/img/icons/FlechaVerde.png' width='17%' /> " + formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else {
+            // COLOCAR IMAGEN ROJA
+            cantidad = " <img style='padding-bottom: 1px; text-align: right;' src='../assets/img/icons/FlechaRoja.png' width='17%' /> " + formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        }
+
+        return cantidad;
+    }
+
+    function MostrarOportunidad(num) {
+        var obj = {};
+
+        obj['UrlVaible'] = num;
+
+        var jsonObject = {
+            "URL": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("URL_Cifrar", "URLS")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '@Url.Action("Oportunidad", "Oportunidad")?cont=' + result.Url;
+            },
+            error: function () {
+                AlertDanger("Problemas al consultar ", "Intentolo mas tarde.");
+            }
+        });
+    }
+
+    function FunMontoImg(numero) {
+        var cantidad = "";
+
+        if (numero == 0) {
+            // NO COLOCAR IMAGEN
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2)));
+        } else if (numero < 0) {
+            // COLOCAR IMAGEN VERDER
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2))) + " <img src='../assets/img/icons/FlechaVerde.png' width='12%' /> ";
+        } else {
+            // COLOCAR IMAGEN ROJA
+            cantidad = formatProdPrice(convertirNegativoAPositivo(numero.toFixed(2))) + " <img src='../assets/img/icons/FlechaRoja.png' width='12%' /> ";
+        }
+
+        return cantidad;
+
+    }
+    $('#Nv2Reportes').addClass("active open");
+</script>

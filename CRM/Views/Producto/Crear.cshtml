@@ -1,0 +1,1150 @@
+﻿
+@{
+    ViewBag.Title = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+<div class="card mb-4">
+    <h5 class="card-header">Producto </h5>
+    <!-- Basic Pagination -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <small class="text-light fw-semibold">Completa los campos marcados *</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Categoría   </label>
+                    <div class="input-group">
+                        <select id='Oportunidad_Categoria' class="form-select" aria-label="Oportunidad_Categoria" onchange="CargaSubCategorias()">
+                            <option value="0" selected>SELECCIONAR</option>
+                            @if (ViewBag.CategoriasProducto != null)
+                            {
+                                foreach (var item in ViewBag.CategoriasProducto)
+                                {
+                                    <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                                }
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCategoria" aria-controls="offcanvasCategoria">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <button class="btn btn-primary" type="button" id="IdBtnModalSebCategoriaAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSubCategoria" aria-controls="offcanvasSubCategoria" style="display:none;">+</button>
+                    <label class="form-label" for="basic-icon-default-fullname">* Sub Categoría  </label>
+                    <div class="input-group">
+                        <select id='Oportunidad_SubCategoria' class="form-select" aria-label="Oportunidad_SubCategoria" onchange="CargaClasificaciones()">
+                            <option value="0" selected>SELECCIONAR</option>
+                        </select>
+                        <button class="btn btn-primary" type="button" id="IdBtnModalSebCategoria" onclick="AbrirSubCategoria()">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <button class="btn btn-primary" type="button" id="IdBtnModalClasificacionAbrir" data-bs-toggle="offcanvas" data-bs-target="#offcanvasClasificacion" aria-controls="offcanvasClasificacion" style="display:none;">+</button>
+                    <label class="form-label" for="basic-icon-default-fullname">* Clasificación  </label>
+                    <div class="input-group">
+                        <select id='Oportunidad_Clasificacion' class="form-select" aria-label="Oportunidad_Clasificacion" onchange="CargaProductos()">
+                            <option value="0" selected>SELECCIONAR</option>
+                        </select>
+                        <button class="btn btn-primary" type="button" id="IdBtnModalClasificacion" onclick="AbrirClasificacion()">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre producto</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Producto_Nombre" placeholder="Nombre producto" aria-label="" aria-describedby="Producto_Nombre" onchange="ValidaInput('Producto_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* SKU</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Producto_SKU" placeholder="SKU" aria-label="" aria-describedby="Producto_SKU" onchange="ValidaInput('Producto_SKU')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+            <div class="col-lg-12">
+                <small class="text-light fw-semibold">Importe </small>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Importe</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" id="Oportunidad_Importe" placeholder="Importe" aria-label="" aria-describedby="Oportunidad_Importe" onchange="ValidaInput('Oportunidad_Importe')" />
+                        <span class="input-group-text">.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Moneda </label>
+                    <select id='Oportunidad_Moneda' class="form-select" aria-label="Oportunidad_Moneda" onchange="ValidaSelect('Oportunidad_Moneda')">
+                        <option value="0" selected>SELECCIONAR</option>
+                        @foreach (var item in ViewBag.Moneda)
+                        {
+                            <option value="@item.Id"> @item.Nombre.ToUpper() </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Tipo de cambio</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-dollar"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Oportunidad_TipoCambio" placeholder="Tipo de cambio" aria-label="" aria-describedby="Oportunidad_TipoCambio" onchange="ValidaInput('Oportunidad_TipoCambio')" />
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="col-lg-12">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción </label>
+                <textarea class="form-control" id="Producto_Descripcion" rows="2" onkeyup="Mayus(this);"></textarea>
+                <br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 text-center">
+                <div id="ImgEmpleado" style="width:50%"></div>
+                <input id="fileInput4" type="file" style="visibility:hidden">
+                <progress id="fileProgres" style="width: 100%; display: none;"></progress>
+            </div>
+            <div class="col-lg-4">
+                <button class="btn btn-danger" type="button" id="BtnEliminarImagen" style="display:none;" onclick="EliminarImagen()">Eliminar Imagen</button>
+            </div>
+            <div class="col-lg-4">
+                <button type="button" class="btn btn-dark mb-2 d-grid w-100" id="BtnNuvaImagenFotografica">Subir Imagen </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="demo-inline-spacing">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="BtnRegistrarProducto()">
+                        <span class="tf-icons bx bx-save"></span>&nbsp; Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---  FORMULARIO NUEVA CATEGORÍA  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCategoria" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA CATEGORÍA </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre categoría</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Categoria_Nombre" placeholder="Categoría" aria-label="" aria-describedby="Categoria_Nombre" onchange="ValidaInput('Categoria_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarCategoria()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnCategoriaCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVA SUBCATEGORIA  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSubCategoria" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA SUB CATEGORÍA </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre sub categoría</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="SubCategoria_Nombre" placeholder="Sub categoría" aria-label="" aria-describedby="SubCategoria_Nombre" onchange="ValidaInput('SubCategoria_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarSubCategoria()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnSubCategoriaCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+<!---  FORMULARIO NUEVA CLASIFICACIÓN  -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasClasificacion" aria-labelledby="offcanvasBothLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasBothLabel" class="offcanvas-title">NUEVA CLASIFICACIÓN </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <label class="form-label" for="basic-icon-default-fullname">* Nombre clasificación</label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-fullname2" class="input-group-text">
+                            <i class="bx bx-clipboard"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Clasificacion_Nombre" placeholder="clasificación" aria-label="" aria-describedby="Clasificacion_Nombre" onchange="ValidaInput('Clasificacion_Nombre')" onkeyup="Mayus(this);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-2 d-grid w-100" onclick="BtnRegistrarClasificacion()">Registrar </button>
+        <button type="button" class="btn btn-outline-secondary d-grid w-100" data-bs-dismiss="offcanvas" id="BtnClasificacionCerrar">  Cancelar  </button>
+    </div>
+</div>
+
+
+<script>
+    function BtnRegistrarProducto() {
+        if (ValidaProducto()) {
+            var CatClasificacionProducto = new Object();
+            CatClasificacionProducto.Id = $("#Oportunidad_Clasificacion option:selected").val();
+
+            var CatProducto = new Object();
+            CatProducto.CatClasificacionProducto = CatClasificacionProducto;
+            CatProducto.Nombre = $('#Producto_Nombre').val();
+            CatProducto.SKU = $('#Producto_SKU').val();
+            CatProducto.Descripcion = $('#Producto_Descripcion').val();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Producto_Agregar", "Producto")",
+                async: false,
+                data: JSON.stringify(CatProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -2) {
+                        AlertWarning("Problemas al registrar ", "El SKU ya se encuentra asociado a otro producto.");
+                    } else if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "El nombre del producto que intentas agregar ya se encuentra registrado.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Producto no registrado.");
+                    } else if (result.Id > 0) {
+                        swal({
+                            title: "Nuevo producto registrado !",
+                            icon: "success",
+                            buttons: {
+                                agregar: {
+                                    text: "Aceptar", className: 'sweet-continuar'
+                                },
+                            },
+                        }).then((value) => {
+                            switch (value) {
+                                case "agregar":
+                                    window.location.href = '@Url.Action("Index", "Producto")';
+                                break;
+                            }
+                        });
+
+
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Producto no registrado.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function ValidaProducto() {
+        var result = false;
+        $('#Producto_Nombre').css("border", "1px solid #f44336");
+        $('#Producto_Nombre').css("border-left", "none");
+
+        $('#Producto_SKU').css("border", "1px solid #f44336");
+        $('#Producto_SKU').css("border-left", "none");
+
+        if ($('#Producto_Nombre').val().length > 0) {
+            $('#Producto_Nombre').css("border", "1px solid #d9dee3");
+            $('#Producto_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Producto_SKU').val().length > 0) {
+            $('#Producto_SKU').css("border", "1px solid #d9dee3");
+            $('#Producto_SKU').css("border-left", "none");
+        }
+
+        if ($('#Producto_Nombre').val().length > 0) {
+            if ($('#Producto_SKU').val().length > 0) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    function EliminarImagen() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_EliminarImagen", "Producto")",
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (respuesta) {
+                $('#ImgEmpleado').html('');
+                $("#BtnEliminarImagen").css("display", "none");
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+                $("#BtnEliminarImagen").css("display", "none");
+            }
+        });
+    }
+
+    $('#BtnNuvaImagenFotografica').click(function () {
+        $("#fileInput4").click();
+    });
+
+    $('#fileInput4').change(function () {
+        var fileInput = document.getElementById('fileInput4');
+
+        if (fileInput.files.length > 0) {
+            for (i = 0; i < fileInput.files.length; i++) {
+                var ext = fileInput.files[i].name.split('.').pop();
+                Extencion = fileInput.files[i].name.split('.').pop();
+
+                // Convertimos en minúscula porque
+                // la extensión del archivo puede estar en mayúscula
+                ext = ext.toLowerCase();
+
+                if (ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
+                    Carga = true;
+                } else {
+                    Carga = false;
+                    Formato = ext;
+                    break;
+                }
+            }
+
+            for (i = 0; i < fileInput.files.length; i++) {
+                var filesize = ((fileInput.files[i].size / 1024) / 1024).toFixed(4);
+
+                if (filesize < 10) {
+                    CargaTam = true;
+                } else {
+                    CargaTam = false;
+                    Tam = filesize;
+                    break;
+                }
+            }
+
+            if (Carga) {
+                if (CargaTam) {
+
+                    $("#BtnNuvaImagenFotografica").prop('disabled', true);
+                    var formData = new FormData();
+
+                    for (i = 0; i < fileInput.files.length; i++) {
+                        formData.append(fileInput.files[i].name, fileInput.files[i]);
+                    }
+
+                    $("#fileProgres").show();
+
+                    $.ajax({
+                        url: '/api/FileAPI/UploadFilesImagen',
+                        type: 'POST',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (documento) {
+                            CargaImagen(documento);
+                        },
+                        xhr: function () {
+                            var fileXhr = $.ajaxSettings.xhr();
+                            if (fileXhr.upload) {
+                                $("progress").show();
+                                fileXhr.upload.addEventListener("progress", function (e) {
+                                    if (e.lengthComputable) {
+                                        $("#fileProgres").attr({
+                                            value: e.loaded,
+                                            max: e.total
+                                        });
+                                    }
+                                }, false);
+                            }
+                            return fileXhr;
+                        },
+                        error: function () {
+                            AlertWarning("Problema ocurrido", "Problemas para leer el archivo");
+                            $("#BtnNuvaImagenFotografica").prop('disabled', false);
+                            CerrarProgres();
+                        }
+                    }).done(function (results) {
+                        setTimeout(CerrarProgres, 1000);
+                    });
+
+                } else {
+                    AlertPrimary("Formulario incompleto ", "Intentas cargar una imagen muy pesada: " + Tam + " MG" + " Límite permitido 10 MG");
+                }
+            } else {
+                AlertPrimary("Formulario incompleto ", "Intentas cargar un formato no permitido: " + Formato + " Formato de archivo permitido: .png, .jpg, jpeg ");
+            }
+        } else {
+            $("#BtnNuvaImagenFotografica").prop('disabled', false);
+            AlertPrimary("Formulario incompleto ","Selecciona un archivo.");
+        }
+    });
+
+    function CerrarProgres() {
+        $("#fileProgres").css("display", "none");
+    }
+
+    function CargaImagen(Imagen) {
+        $("#BtnNuvaImagenFotografica").prop('disabled', false);
+
+        var ProductoImagen = new Object();
+        ProductoImagen.NmArchivo = Imagen.NmArchivo;
+        ProductoImagen.NmOriginal = Imagen.NmOriginal;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Producto_AgregarImagen", "Producto")",
+            data: JSON.stringify(ProductoImagen),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (respuesta) {
+                console.log(respuesta);
+                $('#ImgEmpleado').html('');
+
+                var image = new Image();
+
+                var src = 'http://' + respuesta;
+                image.src = src;
+                image.style.width = '100%';
+
+                $('#ImgEmpleado').append(image);
+                $("#BtnEliminarImagen").show();
+
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+                $("#BtnEliminarImagen").css("display", "none");
+            }
+        });
+    }
+
+</script>
+<script>
+
+    function CargaClasificaciones() {
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_SubCategoria option:selected").val();
+
+        var jsonObject = {
+            "CatSubcategoriaProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ClasificacionProducto_Listar", "ClasificacionProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Clasificacion").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Clasificacion").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Oportunidad_Clasificacion").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                $("#Oportunidad_Clasificacion").append(option);
+            }
+        });
+
+        $("#Oportunidad_Clasificacion").select2();
+    }
+
+    function CargaSubCategorias() {
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Categoria option:selected").val();
+
+        var jsonObject = {
+            "CatCategoriasProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SubcategoriaProducto_Listar", "SubcategoriaProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_SubCategoria").empty();
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+
+                    $("#Oportunidad_SubCategoria").append(option);
+                    $("#Oportunidad_Clasificacion").append(option2);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_SubCategoria").append(option);
+                    });
+                }
+            },
+            error: function () {
+                $("#Oportunidad_SubCategoria").empty();
+                $("#Oportunidad_Clasificacion").empty();
+
+                var option = $(document.createElement('option'));
+                option.text("SELECCIONAR");
+                option.val(0);
+
+                var option2 = $(document.createElement('option'));
+                option2.text("SELECCIONAR");
+                option2.val(0);
+
+
+                $("#Oportunidad_SubCategoria").append(option);
+                $("#Oportunidad_Clasificacion").append(option2);
+            }
+        });
+
+        $("#Oportunidad_SubCategoria").select2();
+    }
+</script>
+<script>
+    function BtnRegistrarClasificacion() {
+        if (ValidaClasificacion()) {
+            var CatSubcategoriaProducto = new Object();
+            CatSubcategoriaProducto.Id = $("#Oportunidad_SubCategoria option:selected").val();
+
+            var CatClasificacionProducto = new Object();
+            CatClasificacionProducto.Nombre = $('#Clasificacion_Nombre').val();
+            CatClasificacionProducto.CatSubcategoriaProducto = CatSubcategoriaProducto;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ClasificacionProducto_Agregar", "ClasificacionProducto")",
+                async: false,
+                data: JSON.stringify(CatClasificacionProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La clasificación ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Clasificación no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaClasificacion(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Clasificación no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaClasificacion(Id) {
+
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_SubCategoria option:selected").val();
+
+        var jsonObject = {
+            "CatSubcategoriaProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ClasificacionProducto_Listar", "ClasificacionProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    $("#Oportunidad_Clasificacion").append(option);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Clasificacion").append(option);
+                    });
+                }
+                $('#Oportunidad_Clasificacion option[value="' + Id + '"]').attr("selected", true);
+                $('#Clasificacion_Nombre').val('');
+                $("#BtnClasificacionCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva clasificación registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+
+        
+    }
+
+
+    function ValidaClasificacion() {
+        var result = false;
+
+        $('#Clasificacion_Nombre').css("border", "1px solid #f44336");
+        $('#Clasificacion_Nombre').css("border-left", "none");
+
+        if ($('#Clasificacion_Nombre').val().length > 0) {
+            $('#Clasificacion_Nombre').css("border", "1px solid #d9dee3");
+            $('#Clasificacion_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Clasificacion_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    function AbrirClasificacion() {
+        $('#select2-Oportunidad_SubCategoria-container').css("border", "1px solid #f44336");
+
+        if ($("#Oportunidad_SubCategoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_SubCategoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        var Categoria = $("#Oportunidad_SubCategoria option:selected").val();
+
+        if (Categoria > 0) {
+            $("#IdBtnModalClasificacionAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una subcategoría para crear una clasificación nueva.");
+        }
+    }
+</script>
+
+<script>
+    function BtnRegistrarSubCategoria() {
+        if (ValidaSubCategoria()) {
+
+            var CatCategoriasProducto = new Object();
+            CatCategoriasProducto.Id = $("#Oportunidad_Categoria option:selected").val();
+
+            var CatSubcategoriaProducto = new Object();
+            CatSubcategoriaProducto.Nombre = $('#SubCategoria_Nombre').val();
+            CatSubcategoriaProducto.CatCategoriasProducto = CatCategoriasProducto;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SubcategoriaProducto_Agregar", "SubcategoriaProducto")",
+                async: false,
+                data: JSON.stringify(CatSubcategoriaProducto),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La Sub categoría ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Sub categoría no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaSubcategoria(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Sub categoría no registrada.");
+                }
+            });
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaSubcategoria(Id) {
+
+        var obj = {};
+        obj['Id'] = $("#Oportunidad_Categoria option:selected").val();
+
+        var jsonObject = {
+            "CatCategoriasProducto": obj
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SubcategoriaProducto_Listar", "SubcategoriaProducto")",
+            async: false,
+            data: JSON.stringify(jsonObject),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_SubCategoria").empty();
+                    $("#Oportunidad_Clasificacion").empty();
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+                    $("#Oportunidad_SubCategoria").append(option);
+                    $("#Oportunidad_Clasificacion").append(option2);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_SubCategoria").append(option);
+                    });
+                }
+                $('#Oportunidad_SubCategoria option[value="' + Id + '"]').attr("selected", true);
+                $('#SubCategoria_Nombre').val('');
+                $("#BtnSubCategoriaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva sub categoría registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaSubCategoria() {
+        var result = false;
+
+        $('#SubCategoria_Nombre').css("border", "1px solid #f44336");
+        $('#SubCategoria_Nombre').css("border-left", "none");
+
+        if ($('#SubCategoria_Nombre').val().length > 0) {
+            $('#SubCategoria_Nombre').css("border", "1px solid #d9dee3");
+            $('#SubCategoria_Nombre').css("border-left", "none");
+        }
+
+        if ($('#SubCategoria_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    function AbrirSubCategoria() {
+        $('#select2-Oportunidad_Categoria-container').css("border", "1px solid #f44336");
+
+        if ($("#Oportunidad_Categoria option:selected").val() > 0) {
+            $('#select2-Oportunidad_Categoria-container').css("border", "0px solid #d9dee3");
+        }
+
+        var Categoria = $("#Oportunidad_Categoria option:selected").val();
+
+        if (Categoria > 0) {
+            $("#IdBtnModalSebCategoriaAbrir").trigger("click");
+        } else {
+            AlertPrimary("Formulario incompleto ! ", "Selecciona una categoría para crear una subcategoría nueva.");
+        }
+    }
+</script>
+
+<script>
+    function BtnRegistrarCategoria() {
+        if (ValidaCategoria()) {
+
+            var obj = {};
+            obj['Nombre'] = $('#Categoria_Nombre').val();
+
+            var jsonObject = {
+                "CatCategoriasProducto": obj
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CategoriasProducto_Agregar", "CategoriasProducto")",
+                async: false,
+                data: JSON.stringify(jsonObject),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Id == -1) {
+                        AlertWarning("Problemas al registrar ", "La Categoría ya se encuentra registrada.");
+                    } else if (result.Id == 0) {
+                        AlertDanger("Problemas al registrar ", "Categoría no registrada.");
+                    } else if (result.Id > 0) {
+                        CargaCategoria(result.Id);
+                    }
+                },
+                error: function () {
+                    AlertDanger("Problemas al registrar ", "Categoría no registrada.");
+                }
+            });
+
+        } else {
+            AlertIncompleto();
+        }
+    }
+
+    function CargaCategoria(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CategoriasProducto_Listar", "CategoriasProducto")",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    $("#Oportunidad_Categoria").empty();
+                    $("#Oportunidad_SubCategoria").empty();
+                    $("#Oportunidad_Clasificacion").empty();
+
+
+                    var option = $(document.createElement('option'));
+                    option.text("SELECCIONAR");
+                    option.val(0);
+
+                    var option2 = $(document.createElement('option'));
+                    option2.text("SELECCIONAR");
+                    option2.val(0);
+
+                    var option3 = $(document.createElement('option'));
+                    option3.text("SELECCIONAR");
+                    option3.val(0);
+
+                    $("#Oportunidad_Categoria").append(option);
+                    $("#Oportunidad_SubCategoria").append(option2);
+                    $("#Oportunidad_Clasificacion").append(option3);
+
+                    $(data).each(function () {
+                        var option = $(document.createElement('option'));
+
+                        option.text(this.Nombre.toUpperCase());
+                        option.val(this.Id);
+
+                        $("#Oportunidad_Categoria").append(option);
+                    });
+                }
+                $('#Oportunidad_Categoria option[value="' + Id + '"]').attr("selected", true);
+                $('#Categoria_Nombre').val('');
+                $("#BtnCategoriaCerrar").trigger("click");
+                AlertSuccess('Registro exitoso !','Nueva categoría registrada');
+            },
+            error: function () {
+                AlertDanger("Problemas de conexión ", "Inténtelo mas tarde.");
+            }
+        });
+    }
+
+    function ValidaCategoria() {
+        var result = false;
+
+        $('#Categoria_Nombre').css("border", "1px solid #f44336");
+        $('#Categoria_Nombre').css("border-left", "none");
+
+        if ($('#Categoria_Nombre').val().length > 0) {
+            $('#Categoria_Nombre').css("border", "1px solid #d9dee3");
+            $('#Categoria_Nombre').css("border-left", "none");
+        }
+
+        if ($('#Categoria_Nombre').val().length > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $("#Oportunidad_Categoria").select2();
+    });
+
+    function ValidaInput(name) {
+        if ($('#' + name).val().length > 0) {
+            $('#' + name).css("border", "1px solid #d9dee3");
+            $('#' + name).css("border-left", "none");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+        }
+    }
+
+    function ValidaSelect(name) {
+        if ($('#' + name + ' option:selected').val() > 0) {
+            $('#select2-' + name + '-container').css("border", "0px solid #d9dee3");
+            $('#' + name).css("border", "1px solid #d9dee3");
+        } else {
+            $('#' + name).css("border", "1px solid #f44336");
+            $('#select2-' + name + '-container').css("border", "1px solid #f44336");
+        }
+    }
+
+    function Letras(e) {
+
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz ";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Numeros(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = "1234567890";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+        if (letras.indexOf(tecla) == -1 && !tecla_especial)
+            return false;
+    }
+
+    function Mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+</script>
+
+<script>
+    $('#Nv1Producto').addClass("active open");
+    $('#Nv1ProductoCrear').addClass("active");
+</script>

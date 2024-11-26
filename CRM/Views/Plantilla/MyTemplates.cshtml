@@ -1,0 +1,813 @@
+﻿
+@{
+    ViewBag.Title = "MyTemplates";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/summernote/summernote-lite.css" />
+
+<style>
+    .card {
+        position: relative;
+        overflow: hidden;
+        height: 270px;
+    }
+
+
+    .card-img {
+        width: 100%;
+        height: 100%;
+        transition: opacity 0.3s ease;
+    }
+
+    .card-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        text-align: center;
+        z-index: 1;
+    }
+
+
+        .card-overlay h5 {
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .card-overlay a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 0px solid #fff;
+            border-radius: 5px;
+            display: none;
+        }
+
+    .card:hover .my-img {
+        opacity: 0.8;
+    }
+
+
+    .card:hover .card-overlay {
+        opacity: 1;
+    }
+
+
+    .my-custom-card {
+        /*height: 400px;*/
+        position: relative;
+    }
+
+
+    .delete-button {
+        position: absolute;
+        /*top: -73%;
+        right: -53%;*/
+    }
+
+    .my-custom-card .delete-button {
+        display: none;
+    }
+
+    .my-custom-card:hover .delete-button {
+        display: block;
+    }
+
+    .my-custom-card:hover .card-overlay h5,
+    .my-custom-card:hover .card-overlay a {
+        display: block;
+    }
+
+
+    /********Plantilla en blanco*********/
+    .my-special-template .card-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        opacity: 2;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+    }
+
+        .my-special-template .card-overlay h5,
+        .my-special-template .card-overlay a {
+            /* Estilos para el texto y el botón */
+            color: black;
+            display: block; /* Mostrar el título y el botón por defecto */
+        }
+
+            .my-special-template .card-overlay a:hover {
+                background-color: #6c757d; /* Cambiar color al pasar el cursor sobre el botón */
+            }
+
+    .my-special-template .card-img {
+        opacity: 2; /* Cambiar opacidad de la imagen */
+    }
+
+
+    /* Estilos para la imagen de ayuda */
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    .help-icon {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .right-image {
+        position: absolute;
+        top: 25px;
+        right: 20px;
+        width: 50px;
+        height: auto;
+    }
+
+    .summernote-btn-red {
+        background-color: #FE0000;
+        color: white;
+        border: none;
+    }
+
+        .summernote-btn-red:hover {
+            background-color: #ea0000;
+            border-radius: 3px;
+        }
+</style>
+
+<!-- Modal para img de ayuda-->
+<div class="modal fade" id="helpModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="backDropModalTitle">Lista de Variables</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <ul>
+                                <li><strong>[Nombre completo]</strong><br>Uso: Saluda al destinatario por su nombre completo. Ejemplo: "Hola [Nombre Completo],"</li>
+                                <li><strong>[Nombre corto]</strong><br>Uso: Saluda al destinatario de manera más informal. Ejemplo: "Hola [Nombre],"</li>
+                                <li><strong>[Fecha]</strong><br>Uso: Incluye la fecha actual en tu correo. Ejemplo: "Hoy es [Fecha]."</li>
+                                <li><strong>[Nombre empresa]</strong><br>Uso: Menciona tu empresa en el correo. Ejemplo: "Gracias por contactar a [Nombre de la Empresa]."</li>
+                                <li><strong>[Cargo]</strong><br>Uso: Menciona el puesto del destinatario. Ejemplo: "Nos dirigimos a usted como [Cargo] de su empresa."</li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" id="BtnCancelarOportunidadEstatus" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Toast with Placements -->
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold" id="AlertaTitulo"></div>
+        <small id="AlertaFecha"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="AlertaTexto"></div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="row">
+            <div class="col-lg-7 col-md-12 col-12 mb-1">
+                <div class="card h-100">
+
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="row w-100">
+                            <div class="col-md-12">
+                                <div class="card-title mb-3">
+                                    <h4>
+                                        Edición de Correo
+                                    </h4>
+                                    <p>Diseña o edita el correo electrónico que recibiran tus contactos.</p>
+                                </div>
+
+                                <img src="~/assets/img/illustrations/Help.png" alt="Imagen derecha" id="helpIcon" class="right-image" onclick="BtnAbrirVariablesCorreo()" style="cursor: pointer;">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="card-body">
+                        <div id="summernote">
+                           
+                                <img src="~/assets/img/illustrations/Sección de ayuda.png" alt="Sección de ayuda" style="width: 100%; height: auto;" />
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-5 col-md-12 col-5 mb-1">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0" style="background-image: linear-gradient(114deg, #6a0dad 30%, #9370db 99%);">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2 mb-3" style="font-weight: bold; color: #fff;">
+                                Plantillas disponibles
+                            </h5>
+
+                        </div>
+
+                    </div>
+                    <ul class="nav nav-tabs nav-fill" role="tablist">
+                       
+                        <li class="nav-item">
+                            <button type="button"
+                                    class="nav-link active"
+                                    role="tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#nav1"
+                                    aria-controls="nav2"
+                                    aria-selected="false">
+                                <i class="tf-icons bx bxs-copy-alt text-primary"></i> Mis plantillas
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="card-body tab-pane show active fade" id="nav1" role="tabpanel">
+                            <div class="row">
+
+                                @if (ViewBag.MyTemplates != null)
+                                {
+                                    foreach (var R in ViewBag.MyTemplates)
+                                    {
+                                        <div class="col-md-6 mb-5">
+                                            <div class="card my-custom-card position-relative" id="@R.Id" onmouseover="showOverlay(this)" onmouseout="hideOverlay(this)">
+                                                <div class="card-overlay">
+                                                    <h5 class="card-title" id="template-name-@R.Id">@R.Nombre</h5>
+                                                    <a onclick="InsertarHTML(@R.Id)" class="btn btn-primary">Usar</a>
+                                                    <p></p>
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="d-flex justify-content-center mt-10">
+                                                                <a onclick="eliminarPlantilla(@R.Id)" class="btn btn-danger mr-2" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+                                                                    <i class="bx bx-trash" style="font-size: 1rem;"></i>
+                                                                </a>
+                                                                <a onclick="editarPlantilla(@R.Id)" class="btn btn-warning ml-2" style="padding: 0.25rem 0.5rem; margin-left:10px; font-size: 0.875rem;">
+                                                                    <i class="bx bx-edit" style="font-size: 1rem;"></i>
+                                                                </a>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+
+                                                <img class="card-img my-img" src="@R.Imagen" alt="Card image">
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                            <!-- Modal for Editing -->
+                            <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Editar Plantilla</h5>
+                                            <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" id="editTemplateId">
+                                            <div class="form-group">
+                                                <label for="editTemplateName">Nombre</label>
+                                                <input type="text" class="form-control" id="editTemplateName">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                                            <button type="button" class="btn btn-primary" onclick="saveChanges()">Guardar Cambios</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/assets/summernote/summernote-lite.js"></script>
+<script src="~/assets/summernote/lang/summernote-es-ES.js"></script>
+
+<script>
+    $('#Nv1Marketing').addClass("active open");
+    $('#Nv1MarketinTemplate').addClass("active");
+
+     //setInterval(GuardadoAutomatico, 300000);
+    function GuardadoAutomatico() {
+         var Template = $('#summernote').summernote('code');
+
+        if (!Template || Template.trim() === '') {
+            AlertDanger("Error", "Tu plantilla esta vacia");
+            return;
+        }
+        var val2 = search('config');
+
+        var Model = {
+            Formato: $('#summernote').summernote('code'),
+            Id: val2
+        }
+        $.ajax({
+        type: "POST",
+        url: "@Url.Action("Template_Save_Id", "Plantilla")",
+        async: false,
+        data: JSON.stringify(Model),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+                if (result.Id == -1) {
+                    AlertWarning("Problemas al registrar ", "Verifica tu conexión.");
+                } else if (result.Id == 0) {
+                    AlertDanger("Problemas al registrar ", "cambios no guardados.");
+                } else if (result.Id > 0) {
+                    marcarCambiosGuardados();
+                    AlertPrimary("Exito", "Cambios Guardados de forma automatica");
+                }
+            }
+        });
+    }
+    
+    var cambiosGuardados = false;
+    var contenidoOriginal;
+    $(document).ready(function () {
+        var toolbarOptions = [
+            ['1', ['style']],
+            ['2', ['bold', 'underline', 'italic']],
+            ['3', ['fontname']],
+            ['4', ['fontsize', 'color']],
+            ['5', ['ul', 'ol', 'paragraph']],
+            ['6', ['table']],
+            ['7', ['link', 'picture']],
+            ['8', ['codeview', 'undo', 'redo', 'help']],
+            ['9', ['save']],
+            ['10', ['send']]
+        ];
+
+        $('#summernote').summernote({
+            lang: 'es-ES',
+            height: 900,
+            maxHeight: 1000,
+            toolbar: toolbarOptions,
+            buttons: {
+                save: GuardarCorreo,
+                send: EnviarPrueba
+            }
+        });
+    });
+
+    //CONTROL PARA EVITAR PERDIDA DE datos accidentales
+    $(document).on('summernote.init', function () {
+        contenidoOriginal = $('#summernote').summernote('code');
+    }); //Establece el contenido principal para detectar camnbios
+    function detectarCambios() {
+        var contenidoActual = $('#summernote').summernote('code');
+        return contenidoOriginal !== contenidoActual;
+    }
+    function marcarCambiosGuardados() {
+        cambiosGuardados = true;
+    }
+    $('#summernote').on('summernote.change', function () {
+        if (cambiosGuardados && detectarCambios()) {
+            cambiosGuardados = false;
+        }
+    });
+    window.addEventListener('beforeunload', function (e) {
+        if (!cambiosGuardados && detectarCambios()) {
+            e.preventDefault();
+            e.returnValue = '¡Atención! Parece que tienes cambios no guardados en el contenido. ¿Estás seguro de que deseas cerrar la página?';
+        }
+    });
+
+
+
+
+
+     function GuardarCorreo(context) {
+        var ui = $.summernote.ui;
+
+        var button = ui.button({
+            contents: '<i class="tf-icons bx bxs-save"></i> Guardar',
+            tooltipText: 'Guardar cambios',
+            click: function () {
+                var Template = $('#summernote').summernote('code');
+
+                if (!Template || Template.trim() === '') {
+                    AlertDanger("Error", "Tu plantilla esta vacia");
+                    return;
+                }
+
+                var val2 = search('config');
+
+                var Model = {
+                    Formato: $('#summernote').summernote('code'),
+                    Id: val2
+                }
+                $.ajax({
+                type: "POST",
+                url: "@Url.Action("Template_Save_Id", "Plantilla")",
+                async: false,
+                data: JSON.stringify(Model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                        if (result.Id == -1) {
+                            AlertWarning("Problemas al registrar ", "Verifica tu conexión.");
+                        } else if (result.Id == 0) {
+                            AlertDanger("Problemas al registrar ", "cambios no guardados.");
+                        } else if (result.Id > 0) {
+                            marcarCambiosGuardados();
+                            AlertSuccess("Exito", "Cambios Guardados");
+                        }
+                    }
+                });
+            }
+        });
+
+        return button.render();
+    }  
+
+
+
+
+
+
+
+
+
+
+    function EnviarPrueba() {
+
+        var ui = $.summernote.ui;
+
+        var button = ui.button({
+            contents: '<i class="tf-icons bx bx-mail-send"></i> Enviar Prueba',
+            tooltipText: 'Envia un email a tu correo',
+            click: function () {
+                var Template = $('#summernote').summernote('code');
+
+                if (!Template || Template.trim() === '') {
+                    AlertDanger("Error", "Tu plantilla esta vacia");
+                    return;
+                }
+
+                var val2 = search('config');
+
+                var contact = {
+                    Id: val2
+                }
+
+                 $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("SendEmail_IdTemplate", "Email")",
+                    async: false,
+                    data: JSON.stringify(contact),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+
+                        if (result && result.length > 0) {
+                            swal({
+                                title: "Correo Enviado !",
+                                text: " ",
+                                icon: "success",
+                                button: "Aceptar",
+                            }).then((value) => {
+                            });
+                        } else {
+                            alert('No hay correos pendientes para enviar');
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
+
+            }
+        });
+
+        return button.render();
+    }
+
+    function InsertarHTML(Id) {
+      const model = {
+        Id: Id
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "@Url.Action("ObtenerPlantilla", "Plantilla")",
+        async: false, 
+        data: JSON.stringify(model),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+          $('#summernote').summernote('code', result.Formato);
+
+          var currentURL = window.location.href.split('?')[0];
+          var urlParams = new URLSearchParams(window.location.search);
+          urlParams.set('config', result.Id); 
+          var newURL = currentURL + '?' + urlParams.toString();
+
+          window.history.replaceState({}, '', newURL);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error("AJAX Error:", textStatus, errorThrown);
+        }
+      });
+    }
+
+
+    //Eliminar Mis plantillas
+    function eliminarPlantilla(Id) {
+
+    swal({
+        title: "Eliminar Plantilla",
+        text: "¿Deseas eliminar esta plantilla?",
+        icon: "error",
+        buttons: {
+            Si: {
+                text: "Sí, eliminar",
+                value: "si"
+            },
+            cancel: "Cancelar"
+        },
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+
+            switch (willDelete) {
+
+                case "si":
+                    DeleteConfirmado(Id);
+                    break;
+            }
+        });
+    }
+    function DeleteConfirmado(Id) {
+        const Plantilla = {
+            Id: Id
+        };
+
+        $.ajax({
+            url: '@Url.Action("Template_Eliminar", "Plantilla")',
+            data: JSON.stringify(Plantilla),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                if (data && data.Id === 1) {
+                swal({
+                    title: "Plantilla Eliminada !",
+                    text: " ",
+                    icon: "success",
+                    button: "Aceptar",
+                }).then(() => {
+                    $("#"+Id).hide();
+                });
+                } else {
+                    swal({
+                        title: "Error",
+                        text: "No se pudo eliminar la plantilla.",
+                        icon: "error",
+                        button: "Aceptar",
+                    });
+                }
+            },
+            error: function () {
+                swal({
+                    title: "Error",
+                    text: "Ocurrió un error en la solicitud.",
+                    icon: "error",
+                    button: "Aceptar",
+                });
+            }
+        });
+    }
+    function closeModal() {
+        $('#editModal').modal('hide');
+    }
+    function editarPlantilla(id) {
+        var nombre = $('#template-name-' + id).text();
+        $('#editTemplateId').val(id);
+        $('#editTemplateName').val(nombre);
+        $('#editModal').modal('show');
+    }
+    function saveChanges() {
+        var id = $('#editTemplateId').val();
+        var nombre = $('#editTemplateName').val();
+
+        var plantilla = {
+            Id: id,
+            Nombre: nombre
+        };
+
+    $.ajax({
+        url: '@Url.Action("Template_Editar", "Plantilla")',
+        data: JSON.stringify(plantilla),
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            $('#template-name-' + id).text(nombre);
+            closeModal();
+            swal({
+                title: "Plantilla Actualizada!",
+                text: " ",
+                icon: "success",
+                button: "Aceptar",
+            });
+        },
+        error: function () {
+            alert("Error al actualizar la plantilla");
+        }
+    });
+    }
+    // Cerrar el modal
+    function BtnAbrirVariablesCorreo() {
+        $("#helpModal").modal("show");
+    }
+
+    function showOverlay(card) {
+        // Obtener la imagen dentro de la tarjeta
+        var img = card.querySelector('.my-img');
+
+        // Obtener el overlay dentro de la tarjeta
+        var overlay = card.querySelector('.card-overlay');
+
+        // Mostrar el overlay y cambiar la opacidad de la imagen
+        overlay.style.opacity = "1";
+        img.style.opacity = "0.5";
+    }
+    function hideOverlay(card) {
+        // Obtener la imagen dentro de la tarjeta
+        var img = card.querySelector('.my-img');
+
+        // Obtener el overlay dentro de la tarjeta
+        var overlay = card.querySelector('.card-overlay');
+
+        // Ocultar el overlay y restaurar la opacidad de la imagen
+        overlay.style.opacity = "0";
+        img.style.opacity = "1";
+    }
+    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+    let selectedType, selectedPlacement, toastPlacement;
+    function toastDispose(toast) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(selectedType);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, selectedPlacement);
+            }
+            toast.dispose();
+        }
+    }
+    function AlertIncompleto() {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text("Formulario incompleto");
+        $("#AlertaTexto").text("Completa la información del formulario.");
+    }
+    function AlertPrimary(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-primary';
+        selectedPlacement = ['top-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertWarning(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-warning';
+        selectedPlacement = ['bottom-0', 'end-0'];
+
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertDanger(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-danger';
+        selectedPlacement = ['bottom-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function AlertSuccess(titulo, texto) {
+
+        if (toastPlacement) {
+            toastDispose(toastPlacement);
+        }
+
+        selectedType = 'bg-success';
+        selectedPlacement = ['top-0', 'end-0'];
+        toastPlacementExample.classList.add(selectedType);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+
+        var fecha = new Date();
+        var hora = fecha.toLocaleTimeString();
+        $("#AlertaFecha").text(hora);
+        $("#AlertaTitulo").text(titulo);
+        $("#AlertaTexto").text(texto);
+    }
+    function search(variable) {
+        return new URLSearchParams(window.location.search).get(variable);
+    }
+</script>
